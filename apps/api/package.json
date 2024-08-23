@@ -15,7 +15,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "swagger-ui-react": "^5.17.14",
-    "viem": "^2.20.0"
+    "viem": "^2.20.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -24,7 +25,6 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/swagger-ui-react": "^4.18.3",
-    "supabase-to-zod": "^1.0.7",
-    "vercel": "^36.0.0"
+    "supabase-to-zod": "^1.0.7"
   }
 }
