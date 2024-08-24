@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useOutsideClick } from '@/lib/hooks/useOutsideClick';
 import AppLogo from './AppLogo';
 import Links from './Links';
+import PrivyConnectButton from './PrivyConnectButton';
 
 export default function Navbar() {
   return (
@@ -23,7 +24,9 @@ function DesktopNavbar() {
       <div className='hidden  gap-10 text-sm lg:flex'>
         <Links />
       </div>
-      <div className='hidden gap-2 lg:flex'>{/* <PrivyConnectButton /> */}</div>
+      <div className='hidden gap-2 lg:flex'>
+        <PrivyConnectButton />
+      </div>
     </nav>
   );
 }
@@ -53,6 +56,7 @@ function MobileNavbar() {
         </div>
         <div className='mb-6 mt-8 flex flex-col items-center justify-center gap-10'>
           <Links />
+          <PrivyConnectButton />
         </div>
       </div>
     </nav>

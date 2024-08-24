@@ -4,6 +4,8 @@ import './globals.css';
 import localFont from 'next/font/local';
 import { env } from '@/lib/config/env';
 import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import Providers from '@/components/providers';
 
 const pressStart2p = localFont({
   src: '../public/fonts/PressStart2P.ttf',
@@ -69,8 +71,13 @@ export default function RootLayout({
       <body
         className={clsx(pressStart2p.variable, 'font-press-start text-black')}
       >
-        <Navbar />
-        {children}
+        <Providers>
+          <div className='flex h-full flex-col px-8 py-16'>
+            <Navbar />
+            <div>{children}</div>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );
