@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { clsx } from 'clsx';
 import './globals.css';
 import localFont from 'next/font/local';
-import { env } from '@/lib/env';
+import { env } from '@/lib/config/env';
+import Navbar from '@/components/layout/Navbar';
 
 const pressStart2p = localFont({
   src: '../public/fonts/PressStart2P.ttf',
@@ -66,8 +67,9 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={clsx(pressStart2p.variable, 'font-pressStart text-black')}
+        className={clsx(pressStart2p.variable, 'font-press-start text-black')}
       >
+        <Navbar />
         {children}
       </body>
     </html>
