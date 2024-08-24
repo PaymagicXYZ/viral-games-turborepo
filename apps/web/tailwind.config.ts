@@ -71,7 +71,7 @@ const config = {
       },
       fontFamily: {
         inter: 'var(--font-inter)',
-        pressStart: 'var(--font-press-start)'
+        'press-start': 'var(--font-press-start)'
       },
       borderRadius: {
         lg: 'var(--radius)',
