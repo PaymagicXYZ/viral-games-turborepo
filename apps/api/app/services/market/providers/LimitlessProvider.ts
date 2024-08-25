@@ -1,4 +1,8 @@
-import { MarketsWithMetadata } from '@/types/market';
+import {
+  MarketGroupCardResponse,
+  MarketsWithMetadata,
+  PaginatedMarketResponse,
+} from '@/types/market';
 import { LimitlessResponse } from '@/types/limitless';
 import { transformLimitlessResponse } from '../transformers/limitlessTransformer';
 import { supabase } from '@/app/api/[...route]/utils';
@@ -17,6 +21,41 @@ export class LimitlessProvider extends BaseProvider {
     const metadata = await this.fetchMetadata(marketId);
     // Transform the response
     return transformLimitlessResponse(data, metadata);
+  }
+
+  async getMarkets(
+    limit: number,
+    offset: string = '0',
+  ): Promise<PaginatedMarketResponse> {
+    const res = await fetch(`https://api.limitless.exchange/markets/active`);
+    const events = (await res.json()) as Array<LimitlessResponse>;
+
+    if (!events) {
+      return {
+        markets: [],
+        offset: null,
+      };
+    }
+    const metadatas = await this.fetchMetadatas(
+      events.map((event) => event.address),
+    );
+
+    return {
+      markets: events.map((event): MarketGroupCardResponse => {
+        const metadata = metadatas.find((m) => m.address === event.address);
+        const _markets: never[] = []; // TODO: Once 'Groups' go live, we need to update this
+        return {
+          category: metadata?.tags?.[0] || 'General',
+          title: event.title ?? 'N/A',
+          collateralToken: event.collateralToken,
+          provider: 'limitless',
+          markets: _markets,
+          deadline: new Date(event.expirationTimestamp ?? 0).toISOString(),
+          slug: event.title.toLowerCase().replace(/ /g, '-'),
+        };
+      }),
+      offset: (offset + limit).toString(),
+    };
   }
 
   async fetchMetadata(marketId: string) {

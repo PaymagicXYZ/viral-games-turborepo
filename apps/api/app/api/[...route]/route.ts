@@ -26,7 +26,7 @@ app.use('/api/buy', bearerAuth({ token }), cors());
 // app.use("/api/admin/copy-polymarket-event", bearerAuth({ token }), cors());
 
 app.route('/api/user', user);
-app.route('/api/market', market);
+app.route('/api/markets', market);
 app.route('/api/actions', action);
 app.route('/api/buy', buy);
 

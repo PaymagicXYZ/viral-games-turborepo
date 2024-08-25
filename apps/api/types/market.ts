@@ -1,6 +1,23 @@
 import { Tables } from './database.types';
 import { CollateralToken } from './limitless';
 
+export interface PaginatedMarketResponse {
+  markets: Array<MarketGroupCardResponse>;
+  nextCursor?:  null | string;
+  offset?: string | null; // Note: To be deprecated
+}
+
+export type MarketGroupCardResponse = {
+  slug: string;
+  title: string;
+  // createdAt: string;
+  deadline: string;
+  collateralToken: CollateralToken;
+  markets: Array<Tables<'markets'>>;
+  category: string;
+  provider: 'polymarket' | 'limitless';
+};
+
 export interface MarketsWithMetadata {
   data: Array<Market>;
   metadata: MarketMetadata | null;
@@ -31,6 +48,10 @@ export interface Market {
   };
   creator: Creator;
 }
+
+type OverviewMarket = Tables<'events'> & {
+  metadata: MarketMetadata;
+};
 
 interface Creator {
   name: string;

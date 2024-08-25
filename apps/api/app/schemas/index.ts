@@ -22,6 +22,25 @@ export const CopyPolymarketEventSchema = z.object({
   }),
 });
 
+export const FetchMarketsSchema = z.object({
+  limit: z.string().openapi({
+    param: {
+      name: 'limit',
+      in: 'query',
+    },
+    example: '10',
+  }),
+  cursor: z
+    .string()
+    .openapi({
+      param: {
+        name: 'cursor',
+        in: 'query',
+      },
+    })
+    .optional(),
+});
+
 export const FetchMarketSchema = z.object({
   provider: z.string().openapi({
     param: {
@@ -87,9 +106,33 @@ const MarketSchema = z.object({
   creator: CreatorSchema,
 });
 
+export const SupabaseMarketSchema = z.object({
+  // createdAt: z.string(),
+  description: z.string(),
+  eventSlug: z.string().nullable(),
+  id: z.number(),
+  imageUrl: z.string().nullable(),
+  title: z.string(),
+});
+
 export const MarketsWithMetadataSchema = z
   .object({
     data: z.array(MarketSchema),
     metadata: MarketMetadataSchema.nullable(),
   })
   .openapi('MarketWithMetadata');
+
+const MarketGroupCardResponseSchema = z.object({
+  slug: z.string(),
+  title: z.string(),
+  // createdAt: z.string(),
+  deadline: z.string(),
+  category: z.string(),
+  collateralToken: CollateralTokenSchema,
+  markets: z.array(SupabaseMarketSchema),
+});
+
+export const PaginatedMarketResponseSchema = z.object({
+  markets: z.array(MarketGroupCardResponseSchema),
+  nextCursor: z.string().nullable(),
+});
