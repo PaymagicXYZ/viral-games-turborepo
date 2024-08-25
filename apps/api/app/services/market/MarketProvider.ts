@@ -1,7 +1,11 @@
 import { Tables } from '@/types/database.types';
-import { Market, MarketsWithMetadata } from '@/types/market';
+import {
+  Market,
+  MarketsWithMetadata,
+  PaginatedMarketResponse,
+} from '@/types/market';
 
 export interface MarketProvider {
   getMarket(marketId: string): Promise<MarketsWithMetadata>;
-  fetchMetadata(marketId: string): Promise<Tables<'markets_with_tags'> | null>;
+  getMarkets(limit: number, offset?: number): Promise<PaginatedMarketResponse>;
 }
