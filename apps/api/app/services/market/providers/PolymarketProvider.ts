@@ -66,13 +66,13 @@ export class PolymarketProvider extends BaseProvider {
             decimals: 6,
             symbol: 'USDC',
           },
-          createdAt: event.createdAt,
+          provider: 'polymarket',
           markets: _markets,
           deadline: event.endDate,
           slug: event.slug,
         };
       }),
-      offset: (offset + limit).toString(),
+      offset: offset + limit,
     };
   }
 }

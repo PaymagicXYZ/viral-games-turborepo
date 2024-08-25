@@ -116,12 +116,12 @@ market.openapi(allRoute, async (c) => {
 
   //   return c.json(validatedMarkets, 200);
   const limit = parseInt(c.req.query('limit') || '10', 10);
-  const offset = c.req.query('offset');
+  const cursor = c.req.query('cursor');
 
   try {
     const response = await aggregateMarketService.getAggregatedMarkets(
       limit,
-      JSON.stringify({ polymarket: offset, limitless: offset }),
+      cursor,
     );
     return c.json(response);
   } catch (error) {

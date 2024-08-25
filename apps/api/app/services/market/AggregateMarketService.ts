@@ -1,42 +1,64 @@
-// AggregateMarketService.ts
-import { Market, MarketGroupCardResponse, PaginatedMarketResponse } from '@/types/market';
+import {
+  MarketGroupCardResponse,
+  PaginatedMarketResponse,
+} from '@/types/market';
 import { MarketProviderFactory } from './MarketProviderFactory';
 
+interface ProviderCursors {
+  [provider: string]: string | null;
+}
 
-type ProviderCursors = Record<string, string | null>;
+interface CursorData {
+  providerCursors: ProviderCursors;
+  offset: number;
+}
 
 export class AggregateMarketService {
-  private providers = ['polymarket'];
+  private providers = ['polymarket', 'limitless'];
 
-  async getAggregatedMarkets(limit: number, cursors?: string): Promise<PaginatedMarketResponse> {
-    let providerCursors: ProviderCursors = {};
-    if (cursors) {
+  async getAggregatedMarkets(
+    limit: number,
+    cursor?: string,
+  ): Promise<PaginatedMarketResponse> {
+    let cursorData: CursorData = { providerCursors: {}, offset: 0 };
+
+    if (cursor) {
       try {
-        providerCursors = JSON.parse(cursors) as ProviderCursors;
-        console.log("providerCursors", providerCursors)
+        cursorData = JSON.parse(atob(cursor)) as CursorData;
       } catch (error) {
         throw new Error('Invalid cursor format');
       }
     }
 
     const providerResponses = await Promise.all(
-      this.providers.map(provider => 
-        MarketProviderFactory.getProvider(provider).getMarkets(limit, providerCursors[provider] || undefined)
-      )
+      this.providers.map((provider) =>
+        MarketProviderFactory.getProvider(provider).getMarkets(
+          limit,
+          cursorData.providerCursors[provider] || undefined,
+        ),
+      ),
     );
 
-    const allMarkets: MarketGroupCardResponse[] = providerResponses.flatMap(response => response.markets);
-    const nextCursors: ProviderCursors = {};
+    const allMarkets: MarketGroupCardResponse[] = providerResponses.flatMap(
+      (response) => response.markets,
+    );
 
+    const nextProviderCursors: ProviderCursors = {};
     this.providers.forEach((provider, index) => {
-      nextCursors[provider] = providerResponses[index].offset;
+      nextProviderCursors[provider] = providerResponses[index].nextCursor;
     });
 
-    const hasNextPage = Object.values(nextCursors).some(cursor => cursor !== null);
+    const hasMore = allMarkets.length > cursorData.offset + limit;
+    const nextOffset = cursorData.offset + limit;
+
+    const nextCursorData: CursorData = {
+      providerCursors: nextProviderCursors,
+      offset: nextOffset,
+    };
 
     return {
-      markets: allMarkets.slice(0, limit),
-      offset: hasNextPage ? JSON.stringify(nextCursors) : null
+      markets: allMarkets.slice(cursorData.offset, nextOffset),
+      nextCursor: hasMore ? btoa(JSON.stringify(nextCursorData)) : null,
     };
   }
 }

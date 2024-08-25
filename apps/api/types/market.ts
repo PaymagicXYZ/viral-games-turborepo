@@ -3,17 +3,19 @@ import { CollateralToken } from './limitless';
 
 export interface PaginatedMarketResponse {
   markets: Array<MarketGroupCardResponse>;
-  offset:  null | string;
+  nextCursor:  null | string;
+  offset?: string | null; // Note: To be deprecated
 }
 
 export type MarketGroupCardResponse = {
   slug: string;
   title: string;
-  createdAt: string;
+  // createdAt: string;
   deadline: string;
   collateralToken: CollateralToken;
   markets: Array<Tables<'markets'>>;
   category: string;
+  provider: 'polymarket' | 'limitless';
 };
 
 export interface MarketsWithMetadata {

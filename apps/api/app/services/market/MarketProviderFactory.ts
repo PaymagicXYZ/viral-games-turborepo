@@ -8,8 +8,8 @@ export class MarketProviderFactory {
     switch (provider.toLowerCase()) {
       case 'polymarket':
         return new PolymarketProvider();
-    //   case 'limitless':
-    //     return new LimitlessProvider();
+      case 'limitless':
+        return new LimitlessProvider();
     //   case 'custom':
     //     return new CustomProvider();
       default:

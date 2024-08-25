@@ -30,13 +30,15 @@ export const FetchMarketsSchema = z.object({
     },
     example: '10',
   }),
-  offset: z.string().openapi({
-    param: {
-      name: 'offset',
-      in: 'query',
-    },
-    example: '0',
-  }),
+  cursor: z
+    .string()
+    .openapi({
+      param: {
+        name: 'cursor',
+        in: 'query',
+      },
+    })
+    .optional(),
 });
 
 export const FetchMarketSchema = z.object({
@@ -105,7 +107,7 @@ const MarketSchema = z.object({
 });
 
 export const SupabaseMarketSchema = z.object({
-  createdAt: z.string(),
+  // createdAt: z.string(),
   description: z.string(),
   eventSlug: z.string().nullable(),
   id: z.number(),
@@ -123,7 +125,7 @@ export const MarketsWithMetadataSchema = z
 const MarketGroupCardResponseSchema = z.object({
   slug: z.string(),
   title: z.string(),
-  createdAt: z.string(),
+  // createdAt: z.string(),
   deadline: z.string(),
   category: z.string(),
   collateralToken: CollateralTokenSchema,
@@ -132,5 +134,5 @@ const MarketGroupCardResponseSchema = z.object({
 
 export const PaginatedMarketResponseSchema = z.object({
   markets: z.array(MarketGroupCardResponseSchema),
-  offset: z.string().nullable(),
+  nextCursor: z.string().nullable(),
 });
