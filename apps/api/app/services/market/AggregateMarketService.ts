@@ -5,7 +5,7 @@ import {
 import { MarketProviderFactory } from './MarketProviderFactory';
 
 interface ProviderCursors {
-  [provider: string]: string | null;
+  [provider: string]: string | null | undefined;
 }
 
 interface CursorData {
