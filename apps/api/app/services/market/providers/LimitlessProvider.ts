@@ -51,7 +51,7 @@ export class LimitlessProvider extends BaseProvider {
           provider: 'limitless',
           markets: _markets,
           deadline: new Date(event.expirationTimestamp ?? 0).toISOString(),
-          slug: event.title.toLowerCase().replace(/ /g, '-'),
+          slug: event.address,
         };
       }),
       offset: (offset + limit).toString(),

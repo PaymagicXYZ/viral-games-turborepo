@@ -114,7 +114,7 @@ market.openapi(allRoute, async (c) => {
       cursor,
     );
     const validatedMarketData = PaginatedMarketResponseSchema.parse(response);
-
+    console.log("validatedMarketData", validatedMarketData)
     return c.json(validatedMarketData, 200);
   } catch (error) {
     console.error('Error validating market data:', error);

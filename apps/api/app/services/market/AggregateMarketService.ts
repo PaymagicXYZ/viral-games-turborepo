@@ -55,7 +55,7 @@ export class AggregateMarketService {
       providerCursors: nextProviderCursors,
       offset: nextOffset,
     };
-
+    // console.log('allMarkets', allMarkets[0]);
     return {
       markets: allMarkets.slice(cursorData.offset, nextOffset),
       nextCursor: hasMore ? btoa(JSON.stringify(nextCursorData)) : null,

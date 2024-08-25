@@ -125,7 +125,7 @@ export const MarketsWithMetadataSchema = z
 const MarketGroupCardResponseSchema = z.object({
   slug: z.string(),
   title: z.string(),
-  // createdAt: z.string(),
+  provider: z.literal('polymarket').or(z.literal('limitless')),
   deadline: z.string(),
   category: z.string(),
   collateralToken: CollateralTokenSchema,
