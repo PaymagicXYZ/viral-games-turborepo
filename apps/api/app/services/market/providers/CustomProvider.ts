@@ -1,8 +1,9 @@
-import { Market } from '@/types/market';
-import { MarketProvider } from '../MarketProvider';
+import { MarketsWithMetadata } from '@/types/market';
+import { BaseProvider } from './BaseProvider';
 
-export class CustomProvider implements MarketProvider {
-  async getMarket(marketId: string): Promise<Market> {
-    // Implement Polymarket-specific fetching logic
+export class CustomProvider extends BaseProvider {
+  async getMarket(marketId: string): Promise<MarketsWithMetadata> {
+    // TODO: Implement CustomProvider-specific fetching logic
+    return null as any;
   }
 }

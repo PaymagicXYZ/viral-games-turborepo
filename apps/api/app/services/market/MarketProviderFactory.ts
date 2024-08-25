@@ -10,8 +10,8 @@ export class MarketProviderFactory {
         return new PolymarketProvider();
       case 'limitless':
         return new LimitlessProvider();
-      case 'custom':
-        return new CustomProvider();
+    //   case 'custom':
+    //     return new CustomProvider();
       default:
         throw new Error(`Unsupported provider: ${provider}`);
     }

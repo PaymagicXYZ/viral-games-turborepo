@@ -21,3 +21,20 @@ export const CopyPolymarketEventSchema = z.object({
     example: 'will-kamala-go-on-snl',
   }),
 });
+
+export const FetchMarketSchema = z.object({
+  provider: z.string().openapi({
+    param: {
+      name: 'provider',
+      in: 'path',
+    },
+    example: 'polymarket',
+  }),
+  identifier: z.string().openapi({
+    param: {
+      name: 'identifier',
+      in: 'path',
+    },
+    example: 'will-kamala-go-on-snl',
+  }),
+});
