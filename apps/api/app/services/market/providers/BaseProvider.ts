@@ -12,7 +12,7 @@ export abstract class BaseProvider implements MarketProvider {
   abstract getMarket(marketId: string): Promise<MarketsWithMetadata>;
   abstract getMarkets(
     limit: number,
-    offset?: number,
+    offset?: string,
   ): Promise<PaginatedMarketResponse>;
 
   async fetchMetadata(marketId: string): Promise<MarketMetadata | null> {

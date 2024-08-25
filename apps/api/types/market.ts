@@ -3,7 +3,7 @@ import { CollateralToken } from './limitless';
 
 export interface PaginatedMarketResponse {
   markets: Array<MarketGroupCardResponse>;
-  offset: number | null;
+  offset:  null | string;
 }
 
 export type MarketGroupCardResponse = {

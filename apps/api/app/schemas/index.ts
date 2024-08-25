@@ -132,5 +132,5 @@ const MarketGroupCardResponseSchema = z.object({
 
 export const PaginatedMarketResponseSchema = z.object({
   markets: z.array(MarketGroupCardResponseSchema),
-  offset: z.number().nullable(),
+  offset: z.string().nullable(),
 });

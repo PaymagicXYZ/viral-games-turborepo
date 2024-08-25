@@ -7,5 +7,5 @@ import {
 
 export interface MarketProvider {
   getMarket(marketId: string): Promise<MarketsWithMetadata>;
-  getMarkets(limit: number, offset?: number): Promise<PaginatedMarketResponse>;
+  getMarkets(limit: number, offset?: string): Promise<PaginatedMarketResponse>;
 }

@@ -22,13 +22,15 @@ export class PolymarketProvider extends BaseProvider {
 
   async getMarkets(
     limit: number,
-    offset: number = 0,
+    offset: string = '0',
   ): Promise<PaginatedMarketResponse> {
+    console.log('IN PROVIDER', { offset, limit });
     const { data: events, error } = await supabase
       .from('events')
       .select('*')
       .eq('provider', 'polymarket')
-      .range(offset, offset + limit - 1);
+      .order('endDate', { ascending: false })
+      .range(+offset, +offset + limit - 1);
 
     if (!events) {
       // console.error('Error fetching markets from Supabase:', error);
@@ -45,6 +47,7 @@ export class PolymarketProvider extends BaseProvider {
       .from('markets')
       .select('*')
       .in('eventSlug', eventSlugs);
+    console.log('OFFSET IN PROVIDER', offset);
     //   const eventsWithMetadata = data.reduce((acc, event) => {
     //   const events = await supabase.from()
     // const data = (await response.json()) as Array<PolymarketResponse>;
@@ -69,7 +72,7 @@ export class PolymarketProvider extends BaseProvider {
           slug: event.slug,
         };
       }),
-      offset: offset + limit,
+      offset: (offset + limit).toString(),
     };
   }
 }
