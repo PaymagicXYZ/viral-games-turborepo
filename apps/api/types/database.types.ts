@@ -12,7 +12,6 @@ export type Database = {
       activities: {
         Row: {
           asset_ticker: string
-          asset_uri: string | null
           chain: string
           chain_id: number | null
           created_at: string
@@ -32,7 +31,6 @@ export type Database = {
         }
         Insert: {
           asset_ticker: string
-          asset_uri?: string | null
           chain: string
           chain_id?: number | null
           created_at?: string
@@ -52,7 +50,6 @@ export type Database = {
         }
         Update: {
           asset_ticker?: string
-          asset_uri?: string | null
           chain?: string
           chain_id?: number | null
           created_at?: string
@@ -72,71 +69,168 @@ export type Database = {
         }
         Relationships: []
       }
-      bets: {
+      events: {
         Row: {
-          active: boolean
-          address: string
-          amount: number
-          created_at: string
-          id: string
-          position: string | null
-          price: number
-          userId: string
+          createdAt: string
+          description: string | null
+          endDate: string
+          id: number
+          imageUrl: string | null
+          isActive: boolean
+          provider: Database["public"]["Enums"]["market_provider"]
+          slug: string
+          startDate: string
+          title: string | null
         }
         Insert: {
-          active?: boolean
-          address: string
-          amount?: number
-          created_at?: string
-          id?: string
-          position?: string | null
-          price: number
-          userId: string
+          createdAt?: string
+          description?: string | null
+          endDate: string
+          id?: number
+          imageUrl?: string | null
+          isActive?: boolean
+          provider?: Database["public"]["Enums"]["market_provider"]
+          slug: string
+          startDate: string
+          title?: string | null
         }
         Update: {
-          active?: boolean
-          address?: string
-          amount?: number
-          created_at?: string
-          id?: string
-          position?: string | null
-          price?: number
-          userId?: string
+          createdAt?: string
+          description?: string | null
+          endDate?: string
+          id?: number
+          imageUrl?: string | null
+          isActive?: boolean
+          provider?: Database["public"]["Enums"]["market_provider"]
+          slug?: string
+          startDate?: string
+          title?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "bets_userId_fkey"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "temp_player"
-            referencedColumns: ["userId"]
-          },
-        ]
+        Relationships: []
       }
       markets: {
         Row: {
-          address: string
-          chainId: string
           createdAt: string
-          expirationDate: string | null
-          outcomeTokens: string[] | null
+          description: string
+          eventSlug: string | null
+          id: number
+          imageUrl: string | null
+          title: string
+        }
+        Insert: {
+          createdAt?: string
+          description: string
+          eventSlug?: string | null
+          id?: number
+          imageUrl?: string | null
+          title: string
+        }
+        Update: {
+          createdAt?: string
+          description?: string
+          eventSlug?: string | null
+          id?: number
+          imageUrl?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "markets_eventSlug_fkey"
+            columns: ["eventSlug"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      markets_metadata: {
+        Row: {
+          address: string
+          created_at: string
+          image_uri: string
+          provider: string
           title: string
         }
         Insert: {
           address: string
-          chainId: string
-          createdAt?: string
-          expirationDate?: string | null
-          outcomeTokens?: string[] | null
+          created_at?: string
+          image_uri?: string
+          provider?: string
           title: string
         }
         Update: {
           address?: string
-          chainId?: string
-          createdAt?: string
-          expirationDate?: string | null
-          outcomeTokens?: string[] | null
+          created_at?: string
+          image_uri?: string
+          provider?: string
           title?: string
+        }
+        Relationships: []
+      }
+      markets_tags: {
+        Row: {
+          created_at: string
+          id: number
+          market_address: string
+          tag_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          market_address: string
+          tag_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          market_address?: string
+          tag_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "markets_tags_market_address_fkey"
+            columns: ["market_address"]
+            isOneToOne: false
+            referencedRelation: "markets_metadata"
+            referencedColumns: ["address"]
+          },
+          {
+            foreignKeyName: "markets_tags_market_address_fkey"
+            columns: ["market_address"]
+            isOneToOne: false
+            referencedRelation: "markets_with_tags"
+            referencedColumns: ["address"]
+          },
+          {
+            foreignKeyName: "markets_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          created_at: string
+          id: number
+          index: number
+          label: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          index?: number
+          label: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          index?: number
+          label?: string
+          value?: string
         }
         Relationships: []
       }
@@ -147,6 +241,7 @@ export type Database = {
           created_at: string
           points: number
           portfolio: Json | null
+          provider: string | null
           updated_at: string | null
           userId: string
           uuid: string
@@ -157,6 +252,7 @@ export type Database = {
           created_at?: string
           points?: number
           portfolio?: Json | null
+          provider?: string | null
           updated_at?: string | null
           userId: string
           uuid?: string
@@ -167,6 +263,7 @@ export type Database = {
           created_at?: string
           points?: number
           portfolio?: Json | null
+          provider?: string | null
           updated_at?: string | null
           userId?: string
           uuid?: string
@@ -175,13 +272,23 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      markets_with_tags: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          image_uri: string | null
+          provider: string | null
+          tags: string[] | null
+          title: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      market_provider: "limitless" | "polymarket" | "custom"
     }
     CompositeTypes: {
       [_ in never]: never
