@@ -1,5 +1,4 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import { fetchMarket } from '../utils';
 import {
   FetchMarketSchema,
   FetchMarketsSchema,
@@ -8,8 +7,8 @@ import {
 } from '@/app/schemas';
 import { MarketProviderFactory } from '@/app/services/market/MarketProviderFactory';
 import { AggregateMarketService } from '@/app/services/market/AggregateMarketService';
-const aggregateMarketService = new AggregateMarketService();
 
+const aggregateMarketService = new AggregateMarketService();
 const market = new OpenAPIHono();
 
 const ErrorSchema = z
@@ -88,7 +87,6 @@ const route = createRoute({
 
 market.openapi(route, async (c) => {
   const { identifier, provider } = c.req.valid('param');
-  // const marketData = await fetchMarket(address);
 
   if (!provider || !identifier) {
     return c.json({ error: 'Missing provider or marketId parameter' }, 404);
