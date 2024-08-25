@@ -107,14 +107,6 @@ market.openapi(route, async (c) => {
 });
 
 market.openapi(allRoute, async (c) => {
-  // const { limit, offset } = c.req.valid('query');
-
-  // try {
-  //   const marketProvider = MarketProviderFactory.getProvider('polymarket');
-  //   const markets = await marketProvider.getMarkets(+limit, +offset);
-  //   const validatedMarkets = PaginatedMarketResponseSchema.parse(markets);
-
-  //   return c.json(validatedMarkets, 200);
   const limit = parseInt(c.req.query('limit') || '10', 10);
   const cursor = c.req.query('cursor');
 
@@ -123,7 +115,9 @@ market.openapi(allRoute, async (c) => {
       limit,
       cursor,
     );
-    return c.json(response);
+    const validatedMarketData = PaginatedMarketResponseSchema.parse(response);
+
+    return c.json(validatedMarketData, 200);
   } catch (error) {
     console.error('Error validating market data:', error);
     return c.json({ error: 'Invalid market data structure' }, 500);
