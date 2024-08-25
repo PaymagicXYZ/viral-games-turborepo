@@ -1,21 +1,21 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import { fetchMarket } from '../utils';
-import { FetchMarketSchema } from '@/app/schemas';
+import { FetchMarketSchema, MarketsWithMetadataSchema } from '@/app/schemas';
 import { MarketProviderFactory } from '@/app/services/market/MarketProviderFactory';
 
 const market = new OpenAPIHono();
 
-const MarketSchema = z
-  .object({
-    address: z.string(),
-    title: z.string(),
-    ogImageURI: z.string().nullable(),
-    chain: z.string(),
-    chain_id: z.number(),
-    collateralAddress: z.string(),
-    provider: z.string(),
-  })
-  .openapi('Market');
+// const MarketSchema = z
+//   .object({
+//     address: z.string(),
+//     title: z.string(),
+//     ogImageURI: z.string().nullable(),
+//     chain: z.string(),
+//     chain_id: z.number(),
+//     collateralAddress: z.string(),
+//     provider: z.string(),
+//   })
+//   .openapi('Market');
 
 const ErrorSchema = z
   .object({
@@ -33,7 +33,7 @@ const route = createRoute({
     200: {
       content: {
         'application/json': {
-          schema: MarketSchema,
+          schema: MarketsWithMetadataSchema,
         },
       },
       description: 'Retrieve the market data',
@@ -62,14 +62,15 @@ market.openapi(route, async (c) => {
   // const marketData = await fetchMarket(address);
 
   if (!provider || !identifier) {
-    return c.json({ error: 'Missing provider or marketId parameter' }, 400);
+    return c.json({ error: 'Missing provider or marketId parameter' }, 404);
   }
 
   try {
     const marketProvider = MarketProviderFactory.getProvider(provider);
     const market = await marketProvider.getMarket(identifier);
-    console.log('market', market);
-    return c.json(market);
+    const validatedMarketData = MarketsWithMetadataSchema.parse(market);
+
+    return c.json(validatedMarketData, 200);
   } catch (error) {
     console.error('Error validating market data:', error);
     return c.json({ error: 'Invalid market data structure' }, 500);
