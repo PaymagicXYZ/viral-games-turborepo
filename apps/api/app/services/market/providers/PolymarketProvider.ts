@@ -24,7 +24,6 @@ export class PolymarketProvider extends BaseProvider {
     limit: number,
     offset: string = '0',
   ): Promise<PaginatedMarketResponse> {
-    console.log('IN PROVIDER', { offset, limit });
     const { data: events, error } = await supabase
       .from('events')
       .select('*')
@@ -33,7 +32,6 @@ export class PolymarketProvider extends BaseProvider {
       .range(+offset, +offset + limit - 1);
 
     if (!events) {
-      // console.error('Error fetching markets from Supabase:', error);
       return {
         markets: [],
         offset: null,
@@ -47,11 +45,6 @@ export class PolymarketProvider extends BaseProvider {
       .from('markets')
       .select('*')
       .in('eventSlug', eventSlugs);
-    console.log('OFFSET IN PROVIDER', offset);
-    //   const eventsWithMetadata = data.reduce((acc, event) => {
-    //   const events = await supabase.from()
-    // const data = (await response.json()) as Array<PolymarketResponse>;
-    // const marketsMetadata =
 
     return {
       markets: events.map((event): MarketGroupCardResponse => {

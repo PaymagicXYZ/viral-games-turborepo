@@ -27,12 +27,10 @@ export class LimitlessProvider extends BaseProvider {
     limit: number,
     offset: string = '0',
   ): Promise<PaginatedMarketResponse> {
-    console.log('IN PROVIDER', { offset, limit });
     const res = await fetch(`https://api.limitless.exchange/markets/active`);
     const events = (await res.json()) as Array<LimitlessResponse>;
 
     if (!events) {
-      // console.error('Error fetching markets from Supabase:', error);
       return {
         markets: [],
         offset: null,
@@ -41,16 +39,6 @@ export class LimitlessProvider extends BaseProvider {
     const metadatas = await this.fetchMetadatas(
       events.map((event) => event.address),
     );
-    const eventAddresses = events.map((event) => event.address);
-    // const { data: markets } = await supabase
-    //   .from('markets')
-    //   .select('*')
-    //   .in('eventSlug', eventSlugs);
-    console.log('OFFSET IN PROVIDER', offset);
-    //   const eventsWithMetadata = data.reduce((acc, event) => {
-    //   const events = await supabase.from()
-    // const data = (await response.json()) as Array<PolymarketResponse>;
-    // const marketsMetadata =
 
     return {
       markets: events.map((event): MarketGroupCardResponse => {
@@ -60,7 +48,7 @@ export class LimitlessProvider extends BaseProvider {
           category: metadata?.tags?.[0] || 'General',
           title: event.title ?? 'N/A',
           collateralToken: event.collateralToken,
-            provider: 'limitless',
+          provider: 'limitless',
           markets: _markets,
           deadline: new Date(event.expirationTimestamp ?? 0).toISOString(),
           slug: event.title.toLowerCase().replace(/ /g, '-'),
