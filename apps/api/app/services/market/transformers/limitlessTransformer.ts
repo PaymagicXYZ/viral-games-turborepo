@@ -26,7 +26,9 @@ export async function transformLimitlessResponse(
         id: response.address,
         liquidity: response.liquidity,
         liquidityFormatted: response.liquidityFormatted,
-        ogImageURI: metadata?.image_uri ?? response.ogImageURI,
+        ogImageURI:
+          metadata?.image_uri ??
+          'https://nzavwarwntmwtfrkfput.supabase.co/storage/v1/object/public/markets_images/app-logo.svg?t=2024-08-23T09%3A29%3A21.086Z',
         tags: [
           ...response.tags.map((t) => t.toLowerCase()),
           ...metadataTags,

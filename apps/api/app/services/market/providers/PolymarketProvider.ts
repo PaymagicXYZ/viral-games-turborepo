@@ -68,7 +68,10 @@ export class PolymarketProvider extends BaseProvider {
           markets: _markets,
           deadline: event.endDate,
           slug: event.slug,
-          imageUrl: metadata?.image_uri ?? event.imageUrl ?? undefined,
+          imageUrl:
+            metadata?.image_uri ??
+            event.imageUrl ??
+            'https://nzavwarwntmwtfrkfput.supabase.co/storage/v1/object/public/markets_images/app-logo.svg?t=2024-08-23T09%3A29%3A21.086Z',
         };
       }),
       offset: offset + limit,

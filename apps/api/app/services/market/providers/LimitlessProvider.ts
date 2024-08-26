@@ -57,7 +57,9 @@ export class LimitlessProvider extends BaseProvider {
           markets: _markets,
           deadline: new Date(event.expirationTimestamp ?? 0).toISOString(),
           slug: event.address,
-          imageUrl: metadata?.image_uri ?? event.ogImageURI,
+          imageUrl:
+            metadata?.image_uri ??
+            'https://nzavwarwntmwtfrkfput.supabase.co/storage/v1/object/public/markets_images/app-logo.svg?t=2024-08-23T09%3A29%3A21.086Z',
         };
       }),
       offset: (offset + limit).toString(),
