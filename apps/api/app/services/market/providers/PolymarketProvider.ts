@@ -68,6 +68,7 @@ export class PolymarketProvider extends BaseProvider {
           markets: _markets,
           deadline: event.endDate,
           slug: event.slug,
+          imageUrl: metadata?.image_uri ?? event.imageUrl ?? undefined,
         };
       }),
       offset: offset + limit,

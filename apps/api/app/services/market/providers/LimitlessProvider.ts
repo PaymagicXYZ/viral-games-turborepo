@@ -57,6 +57,7 @@ export class LimitlessProvider extends BaseProvider {
           markets: _markets,
           deadline: new Date(event.expirationTimestamp ?? 0).toISOString(),
           slug: event.address,
+          imageUrl: metadata?.image_uri ?? event.ogImageURI,
         };
       }),
       offset: (offset + limit).toString(),

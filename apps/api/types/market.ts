@@ -11,6 +11,7 @@ export type MarketGroupCardResponse = {
   slug: string;
   title: string;
   // createdAt: string;
+  imageUrl?: string;
   deadline: string;
   collateralToken: CollateralToken;
   markets: Array<Tables<'markets'>>;

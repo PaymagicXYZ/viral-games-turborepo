@@ -38,7 +38,7 @@ export function transformPolymarketResponse(
         expired: market.active === false,
         liquidity: market.volume,
         liquidityFormatted: market.volumeNum.toString(),
-        ogImageURI: market.image,
+        ogImageURI: metadata?.image_uri ?? market.image,
         tags: [
           ...response.tags.map((tag) => tag.label.toLowerCase()),
           ...metadataTags,
