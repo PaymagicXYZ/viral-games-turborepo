@@ -6,7 +6,10 @@ export const env = createEnv({
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
    */
-  server: {},
+  server: {
+    SUPABASE_URL: z.string().url(),
+    SUPABASE_SERVICE_ROLE_KEY: z.string(),
+  },
   /*
    * Environment variables available on the client (and server).
    *
@@ -14,7 +17,9 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_WEB_APP_BASE_URL: z.string().url(),
-    NEXT_PUBLIC_PRIVY_APP_ID: z.string()
+    NEXT_PUBLIC_PRIVY_APP_ID: z.string(),
+    NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET: z.string(),
+    NEXT_PUBLIC_VIRAL_GAMES_BE_API: z.string().url(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -24,6 +29,12 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NEXT_PUBLIC_WEB_APP_BASE_URL: process.env.NEXT_PUBLIC_WEB_APP_BASE_URL,
-    NEXT_PUBLIC_PRIVY_APP_ID: process.env.NEXT_PUBLIC_PRIVY_APP_ID
-  }
+    NEXT_PUBLIC_PRIVY_APP_ID: process.env.NEXT_PUBLIC_PRIVY_APP_ID,
+    NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET:
+      process.env.NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET,
+    NEXT_PUBLIC_VIRAL_GAMES_BE_API: process.env.NEXT_PUBLIC_VIRAL_GAMES_BE_API,
+
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  },
 });

@@ -6,11 +6,12 @@ import { env } from '@/lib/config/env';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Providers from '@/components/providers';
+import { Suspense } from 'react';
 
 const pressStart2p = localFont({
   src: '../public/fonts/PressStart2P.ttf',
   display: 'swap',
-  variable: '--font-press-start'
+  variable: '--font-press-start',
 });
 
 const APP_NAME = 'Viral.games';
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   metadataBase: APP_URL,
   title: {
     template: `%s |${APP_NAME}`,
-    default: APP_NAME
+    default: APP_NAME,
   },
   description: METADATA_DESCRIPTION,
   applicationName: APP_NAME,
@@ -31,18 +32,18 @@ export const metadata: Metadata = {
     'Twitter',
     'Farcaster',
     'YouTube',
-    'X'
+    'X',
   ],
   alternates: {
     canonical: '/',
     languages: {
-      'en-US': '/en-US'
-    }
+      'en-US': '/en-US',
+    },
   },
   icons: {
     icon: ['/favicon.ico'],
     apple: ['/apple-touch-icon.png'],
-    shortcut: ['/apple-touch-icon.png']
+    shortcut: ['/apple-touch-icon.png'],
   },
   manifest: '/site.webmanifest',
   openGraph: {
@@ -52,17 +53,17 @@ export const metadata: Metadata = {
     siteName: APP_NAME,
     type: 'website',
     locale: 'en_US',
-    images: ['']
+    images: [''],
   },
   twitter: {
     title: APP_NAME,
     description: METADATA_DESCRIPTION,
-    site: APP_NAME
-  }
+    site: APP_NAME,
+  },
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -73,9 +74,11 @@ export default function RootLayout({
       >
         <Providers>
           <div className='flex h-full flex-col px-8 py-16'>
-            <Navbar />
-            <div>{children}</div>
-            <Footer />
+            <Suspense>
+              <Navbar />
+              <div>{children}</div>
+              <Footer />
+            </Suspense>
           </div>
         </Providers>
       </body>

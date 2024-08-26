@@ -7,21 +7,22 @@ const nextConfig = {
       'lokijs',
       'encoding',
       'bufferutil',
-      'utf-8-validate'
+      'utf-8-validate',
     );
     return config;
   },
   images: {
+    dangerouslyAllowSVG: true,
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
-      { protocol: 'http', hostname: '**' }
-    ]
+      { protocol: 'http', hostname: '**' },
+    ],
   },
   logging: {
     fetches: {
-      fullUrl: true
-    }
-  }
+      fullUrl: true,
+    },
+  },
 };
 
 module.exports = nextConfig;
