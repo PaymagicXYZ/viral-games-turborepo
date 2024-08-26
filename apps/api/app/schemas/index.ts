@@ -63,7 +63,7 @@ const MarketMetadataSchema = z.object({
   created_at: z.string().nullable(),
   image_uri: z.string().nullable(),
   provider: z.string().nullable(),
-  tags: z.array(z.string()).nullable(),
+  tags: z.array(z.string().nullable()).optional(),
   title: z.string().nullable(),
 });
 
@@ -91,7 +91,7 @@ const MarketSchema = z.object({
   expirationTimestamp: z.number(),
   winningOutcomeIndex: z.number().nullable(),
   expired: z.boolean(),
-  tags: z.array(z.string()),
+  tags: z.array(z.string()).optional(),
   volumeFormatted: z.string(),
   liquidity: z.string(),
   liquidityFormatted: z.string(),
