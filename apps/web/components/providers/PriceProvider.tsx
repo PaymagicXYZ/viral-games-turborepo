@@ -15,11 +15,11 @@ type PriceOracleContextType = {
   marketTokensPrices: GetCoingeckoPricesResponse | undefined;
   convertAssetAmountToUsd: (
     id: MarketTokensIds,
-    amount?: number | string
+    amount?: number | string,
   ) => number;
   convertTokenAmountToUsd: (
     symbol?: string,
-    amount?: number | string
+    amount?: number | string,
   ) => number;
 };
 
@@ -27,7 +27,7 @@ type PriceOracleContextType = {
  * Context for accessing price conversion functions between USD and ETH (Ethereum).
  */
 const PriceOracleContext = createContext<PriceOracleContextType | undefined>(
-  undefined
+  undefined,
 );
 
 /**
@@ -40,7 +40,7 @@ export const PriceOracleProvider = ({ children }: React.PropsWithChildren) => {
 
   const fetchTokenPrices = async () => {
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(
-      MarketTokensIds
+      MarketTokensIds,
     ).join(',')}&vs_currencies=usd`;
 
     const response = await fetch(url, { cache: 'no-store' });
@@ -66,7 +66,7 @@ export const PriceOracleProvider = ({ children }: React.PropsWithChildren) => {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    refetchInterval: 1000 * 60 * 5 // Data life span 60 seconds
+    refetchInterval: 1000 * 60 * 5, // Data life span 60 seconds
   });
 
   // const { data } = useQuery({
@@ -84,7 +84,7 @@ export const PriceOracleProvider = ({ children }: React.PropsWithChildren) => {
       }
       return Number(amount) * marketTokensPrices[id]?.usd;
     },
-    [marketTokensPrices]
+    [marketTokensPrices],
   );
 
   const convertTokenAmountToUsd = useCallback(
@@ -98,7 +98,7 @@ export const PriceOracleProvider = ({ children }: React.PropsWithChildren) => {
         Number(amount) * marketTokensPrices[coingeckoId]?.usd || 0;
       return amountUsd;
     },
-    [marketTokensPrices]
+    [marketTokensPrices],
   );
 
   return (
@@ -106,7 +106,7 @@ export const PriceOracleProvider = ({ children }: React.PropsWithChildren) => {
       value={{
         marketTokensPrices,
         convertAssetAmountToUsd,
-        convertTokenAmountToUsd
+        convertTokenAmountToUsd,
       }}
     >
       {children}

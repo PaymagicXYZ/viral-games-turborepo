@@ -1,5 +1,12 @@
 import { Address } from 'viem';
 
+interface Creator {
+  name: string;
+  imageURI?: string;
+  link?: string;
+  address?: string;
+}
+
 export type Token = {
   address: Address;
   symbol: string;
@@ -11,85 +18,10 @@ export type Token = {
 };
 
 type MarketMetadata = {};
-
-export type MarketSingleCardResponseWithMetadata = MarketSingleCardResponse & {
-  metadata: MarketMetadata;
-};
-
-export type MarketGroupCardResponseWithMetadata = Omit<
-  MarketGroupCardResponse,
-  'markets'
-> & {
-  markets: MarketSingleCardResponseWithMetadata[];
-};
-
-export type MarketSingleCardResponse = {
-  address: string;
-  title: string;
-  proxyTitle: string | null;
-  deadline: string;
-  createdAt: string;
-  volume: string;
-  volumeFormatted: string;
-  liquidity: string;
-  liquidityFormatted: string;
-  collateralToken: CollateralToken;
-  category: string;
-  prices: number[];
-};
-
-export type MarketGroupCardResponse = {
-  slug: string;
-  title: string;
-  createdAt: string;
-  deadline: string;
-  collateralToken: CollateralToken;
-  markets: MarketSingleCardResponse[];
-  category: string;
-};
-
 export interface SingleMarket extends Market {
   creator: Creator;
   metadata: MarketMetadata;
 }
-
-interface Creator {
-  name: string;
-  imageURI?: string;
-  link?: string;
-  address?: string;
-}
-
-export type MarketResponseWithMetadata =
-  | MarketGroupCardResponseWithMetadata
-  | MarketSingleCardResponseWithMetadata;
-
-export enum MarketTokensIds {
-  DEGEN = 'degen-base',
-  ETH = 'ethereum',
-  WETH = 'ethereum',
-  HIGHER = 'higher',
-  MFER = 'mfercoin',
-  ONCHAIN = 'onchain',
-  REGEN = 'regen',
-  USDC = 'usd-coin',
-  VITA = 'vitadao',
-  BETS = 'all-street-bets',
-  GHST = 'aavegotchi'
-}
-
-export type GetBalanceResult = {
-  decimals: number;
-  formatted: string;
-  symbol: string;
-  value: bigint;
-  image: string;
-  name: string;
-  contractAddress: string;
-  price: number;
-  id: MarketTokensIds;
-};
-
 export interface Market {
   address: Address;
   conditionId: Address;
@@ -125,5 +57,31 @@ export interface CollateralToken {
 export enum MarketStatus {
   RESOLVED = 'RESOLVED',
   FUNDED = 'FUNDED',
-  LOCKED = 'LOCKED'
+  LOCKED = 'LOCKED',
 }
+
+export enum MarketTokensIds {
+  DEGEN = 'degen-base',
+  ETH = 'ethereum',
+  WETH = 'ethereum',
+  HIGHER = 'higher',
+  MFER = 'mfercoin',
+  ONCHAIN = 'onchain',
+  REGEN = 'regen',
+  USDC = 'usd-coin',
+  VITA = 'vitadao',
+  BETS = 'all-street-bets',
+  GHST = 'aavegotchi',
+}
+
+export type GetBalanceResult = {
+  decimals: number;
+  formatted: string;
+  symbol: string;
+  value: bigint;
+  image: string;
+  name: string;
+  contractAddress: string;
+  price: number;
+  id: MarketTokensIds;
+};

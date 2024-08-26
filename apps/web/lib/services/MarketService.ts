@@ -1,10 +1,15 @@
-import { fixedProductMarketMakerABI } from '@/abis/fixedProductMakerABI';
-import { publicClient } from '@/lib/config/publicClient';
-import { defaultChain, newSubgraphURI } from '@/lib/constants';
-import { Market, SingleMarket } from '@/lib/types/limitless';
-import { useQuery } from '@tanstack/react-query';
+import { defaultChain, LIMIT_PER_PAGE, newSubgraphURI } from '@/lib/constants';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Address, formatUnits, getContract, parseUnits } from 'viem';
+import { publicClient } from '../config/publicClient';
+import {
+  Market,
+  MarketGroupResponse,
+  PaginatedMarketResponse,
+} from '@/lib/types/markets';
+import { fixedProductMarketMakerABI } from '@/abis/fixedProductMakerABI';
+import { env } from '../config/env';
 
 /**
  * Fetches and manages paginated active market data using the `useInfiniteQuery` hook.
@@ -12,6 +17,35 @@ import { Address, formatUnits, getContract, parseUnits } from 'viem';
  *
  * @returns {MarketData[]} which represents pages of markets
  */
+// export type Markets = {
+//   data: MarketResponseWithMetadata[];
+//   next: number;
+// };
+
+export function useMarketGroups(filter?: string | null) {
+  return useInfiniteQuery<PaginatedMarketResponse, Error>({
+    queryKey: ['markets', filter],
+    queryFn: async ({ pageParam = null }) => {
+      let baseUrl = `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets?limit=${LIMIT_PER_PAGE}`;
+      // let baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/providers/limitless?active=true`;
+
+      if (pageParam) {
+        baseUrl += `&cursor=${pageParam}`;
+      }
+
+      const response = await fetch(baseUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch markets: ${response.status}`);
+      }
+
+      const data: PaginatedMarketResponse = await response.json();
+      return data;
+    },
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    initialPageParam: null,
+    refetchOnWindowFocus: false,
+  });
+}
 
 export function useAllMarkets() {
   const { data: markets } = useQuery<{ data: Array<Market> }, Error>({
@@ -52,21 +86,23 @@ export function useMarketByConditionId(conditionId: string) {
   return useMemo(() => market ?? null, [market]);
 }
 
-export function useMarket(address?: string) {
+export function useMarketGroup(provider: string, identifier: string) {
   return useQuery({
-    queryKey: ['market', address],
-    queryFn: async () => await getMarket({ marketAddress: address! }),
-    enabled: !!address && address !== '0x',
+    queryKey: ['market', provider, identifier],
+    queryFn: async () => await getMarketGroup({ provider, identifier }),
+    enabled: Boolean(provider && identifier),
   });
 }
 
-export const getMarket = async ({
-  marketAddress,
+export const getMarketGroup = async ({
+  provider,
+  identifier,
 }: {
-  marketAddress: string;
-}): Promise<SingleMarket> => {
+  provider: string;
+  identifier: string;
+}): Promise<MarketGroupResponse> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/providers/limitless/${marketAddress}`,
+    `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets/${provider}/${identifier}`,
     {
       cache: 'no-store',
     },
@@ -77,35 +113,8 @@ export const getMarket = async ({
   }
 
   const data = await response.json();
-  const market = data.data as SingleMarket;
 
-  let prices = [50, 50];
-
-  //TODO remove this hot-fix
-  if (market.expired) {
-    if (market?.winningOutcomeIndex === 0) {
-      prices = [100, 0];
-    } else if (market?.winningOutcomeIndex === 1) {
-      prices = [0, 100];
-    } else {
-      prices = [50, 50];
-    }
-  } else {
-    const buyPrices = await getMarketOutcomeBuyPrice(
-      market.collateralToken.decimals,
-      market.address,
-    );
-
-    const sum = buyPrices[0] + buyPrices[1];
-    const outcomeTokensPercentYes = +((buyPrices[0] / sum) * 100).toFixed(1);
-    const outcomeTokensPercentNo = +((buyPrices[1] / sum) * 100).toFixed(1);
-    prices = [outcomeTokensPercentYes, outcomeTokensPercentNo];
-  }
-
-  return {
-    ...market,
-    prices,
-  };
+  return data;
 };
 
 const getMarketOutcomeBuyPrice = async (

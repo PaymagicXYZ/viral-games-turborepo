@@ -8,7 +8,7 @@ import { publicClient } from '@/lib/config/publicClient';
 import {
   GetBalanceResult,
   MarketTokensIds,
-  Token
+  Token,
 } from '@/lib/types/limitless';
 import { Logger } from '@/lib/utils/Logger';
 import { NumberUtil } from '@/lib/utils/NumberUtil';
@@ -17,7 +17,7 @@ import {
   UseMutateAsyncFunction,
   useMutation,
   UseMutationResult,
-  useQuery
+  useQuery,
 } from '@tanstack/react-query';
 import { Multicall } from 'ethereum-multicall';
 import { ethers } from 'ethers';
@@ -30,7 +30,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from 'react';
 import { Address, erc20Abi, formatEther, formatUnits, parseUnits } from 'viem';
 import { getBalance } from 'viem/actions';
@@ -110,9 +110,9 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
 
         const multicall = new Multicall({
           ethersProvider: new ethers.providers.JsonRpcProvider(
-            defaultChain.rpcUrls.default.http.toString()
+            defaultChain.rpcUrls.default.http.toString(),
           ),
-          tryAggregate: true
+          tryAggregate: true,
         });
 
         //@ts-ignore
@@ -126,10 +126,10 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
               {
                 reference: 'balance',
                 methodName: 'balanceOf',
-                methodParameters: [walletAddress]
-              }
-            ]
-          })
+                methodParameters: [walletAddress],
+              },
+            ],
+          }),
         );
         let balanceResult: GetBalanceResult[];
 
@@ -140,7 +140,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
           balanceResult = supportedTokens?.map((token) => {
             const result = results.results[token.address];
             const balance = BigInt(
-              result.callsReturnContext[0].returnValues[0].hex
+              result.callsReturnContext[0].returnValues[0].hex,
             );
             let formatted = formatUnits(balance, token.decimals);
 
@@ -160,7 +160,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
               contractAddress: token.address,
               price: marketTokensPrices
                 ? marketTokensPrices[token.priceOracleId].usd
-                : 0
+                : 0,
             } as GetBalanceResult;
           });
         } catch (err) {
@@ -177,7 +177,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
               contractAddress: token.address,
               price: marketTokensPrices
                 ? marketTokensPrices[token.priceOracleId].usd
-                : 0
+                : 0,
             } as GetBalanceResult;
           });
         }
@@ -189,17 +189,17 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
             const currentBalance = balanceOfSmartWallet.find(
               (currentBalanceEntity) => {
                 return currentBalanceEntity.id === balance.id;
-              }
+              },
             );
             if (currentBalance && balance.value > currentBalance.value) {
               !defaultChain.testnet && etherspot && whitelist();
               const depositAmount = formatUnits(
                 balance.value - currentBalance.value,
-                currentBalance.decimals
+                currentBalance.decimals,
               );
 
               const id = toast({
-                render: () => ({})
+                render: () => ({}),
                 // <Toast
                 //   title={`Balance top up: ${NumberUtil.toFixed(
                 //     depositAmount,
@@ -215,7 +215,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
         return balanceResult;
       },
       enabled: !!walletAddress && !!supportedTokens,
-      refetchInterval: 10000
+      refetchInterval: 10000,
     });
 
   const { data: ethBalance } = useQuery({
@@ -226,7 +226,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
       }
       const eth = await getBalance(publicClient, { address: walletAddress });
       return formatEther(eth);
-    }
+    },
   });
 
   const overallBalanceUsd = useMemo(() => {
@@ -234,7 +234,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
     balanceOfSmartWallet?.forEach((balanceResult) => {
       _overallBalanceUsd += convertAssetAmountToUsd(
         balanceResult.id,
-        balanceResult.formatted
+        balanceResult.formatted,
       );
     });
     return NumberUtil.toFixed(_overallBalanceUsd, 2);
@@ -269,7 +269,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
         }
 
         const id = toast({
-          render: () => {} // <Toast title={'Wrapping ETH...'} id={id} />,
+          render: () => {}, // <Toast title={'Wrapping ETH...'} id={id} />,
         });
 
         // const txHash = await etherspot.wrapEth(
@@ -287,19 +287,19 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
       }
     },
     enabled: !!walletAddress && !unwrap,
-    refetchInterval: pathname.includes('wallet') && 10000 // polling on wallet page only
+    refetchInterval: pathname.includes('wallet') && 10000, // polling on wallet page only
   });
 
   const wrapMutation = useMutation({
     mutationFn: async (amount: string) => {
       // await wrapEth(parseUnits(amount, 18));
-    }
+    },
   });
 
   const unwrapMutation = useMutation({
     mutationFn: async (amount: string) => {
       // await unwrapEth(parseUnits(amount, 18));
-    }
+    },
   });
 
   /**
@@ -308,10 +308,10 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
   const { mutate: mint, isPending: isLoadingMint } = useMutation({
     mutationFn: async (params: { address: Address; newToken?: boolean }) => {
       const id = toast({
-        render: () => {} // <Toast title={'Processing transaction...'} id={id} />,
+        render: () => {}, // <Toast title={'Processing transaction...'} id={id} />,
       });
       const token = supportedTokens?.find(
-        (token) => token.address === params.address
+        (token) => token.address === params.address,
       );
       // await mintErc20(
       //   params.address,
@@ -320,21 +320,21 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
       //   params.newToken
       // );
       const toastId = toast({
-        render: () => ({})
+        render: () => ({}),
         // <Toast title={'Confirmed. Updating balance...'} id={toastId} />
       });
       await refetchbalanceOfSmartWallet();
-    }
+    },
   });
 
   // Amount to be withdrawn
   const [amount, setAmount] = useState<string>('');
   const [token, setToken] = useState<Token | null>(
-    supportedTokens ? supportedTokens[0] : null
+    supportedTokens ? supportedTokens[0] : null,
   );
   const amountBI = useMemo(
     () => parseUnits(amount ?? '0', token?.decimals || 18),
-    [amount]
+    [amount],
   );
   const isInvalidAmount = useMemo(() => {
     if (token) {
@@ -355,7 +355,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
     mutationFn: async ({
       receiver,
       token,
-      amount
+      amount,
     }: {
       receiver: string;
       token: Token;
@@ -364,7 +364,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
       const amountBI = parseUnits(amount, token.decimals);
       if (unwrap) {
         const id = toast({
-          render: () => {} //<Toast title={'Unwrapping ETH...'} id={id} />,
+          render: () => {}, //<Toast title={'Unwrapping ETH...'} id={id} />,
         });
 
         // const unwrapReceipt = await unwrapEth(amountBI);
@@ -377,7 +377,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
         await refetchbalanceOfSmartWallet();
 
         const toastId = toast({
-          render: () => {} //<Toast title={'Sending ETH...'} id={toastId} />,
+          render: () => {}, //<Toast title={'Sending ETH...'} id={toastId} />,
         });
 
         // const transferReceipt = await transferEthers(
@@ -395,7 +395,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
         setUnwrap(false);
 
         const toastWithdrawId = toast({
-          render: () => ({})
+          render: () => ({}),
           // <ToastWithdraw
           //   transactionHash={transferReceipt}
           //   id={toastWithdrawId}
@@ -406,7 +406,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
       }
 
       const id = toast({
-        render: () => {} // <Toast title={'Processing transaction...'} id={id} />,
+        render: () => {}, // <Toast title={'Processing transaction...'} id={id} />,
       });
       // const transferReceipt = await transferErc20(
       //   token.address as Address,
@@ -422,9 +422,9 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
       setAmount('');
 
       const toastId = toast({
-        render: () => ({}) // <ToastWithdraw transactionHash={transferReceipt} id={toastId} />
+        render: () => ({}), // <ToastWithdraw transactionHash={transferReceipt} id={toastId} />
       });
-    }
+    },
   });
 
   /**
@@ -458,7 +458,7 @@ export const BalanceServiceProvider = ({ children }: PropsWithChildren) => {
         status,
         ethBalance,
         wrapMutation,
-        unwrapMutation
+        unwrapMutation,
       }}
     >
       {children}
