@@ -7,20 +7,24 @@
   "globalEnv": [
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL",
-    "TOKEN"
+    "TOKEN",
+    "CG_API_KEY",
+    "CRON_SECRET",
+    "NODEJS_HELPERS"
   ],
   "tasks": {
     "build": {
       "dependsOn": [
         "^build"
       ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*"
-      ],
       "outputs": [
         ".next/**",
         "!.next/cache/**"
+      ],
+      "env": [
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_URL",
+        "TOKEN"
       ]
     },
     "api#build": {
