@@ -63,7 +63,7 @@ const MarketMetadataSchema = z.object({
   created_at: z.string().nullable(),
   image_uri: z.string().nullable(),
   provider: z.string().nullable(),
-  tags: z.array(z.string().nullable()).optional(),
+  tags: z.nullable(z.array(z.string().nullable()).optional()),
   title: z.string().nullable(),
 });
 
