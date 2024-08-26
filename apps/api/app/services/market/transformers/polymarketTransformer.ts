@@ -1,3 +1,4 @@
+import { DEFAULT_POLYMARKET_TAG } from '@/app/api/[...route]/utils/constants';
 import { MarketMetadata, MarketsWithMetadata } from '@/types/market';
 import { PolymarketResponse } from '@/types/polymarket';
 
@@ -15,6 +16,8 @@ export function transformPolymarketResponse(
       const winningIndex = normalizedOutcomePrices.findIndex(
         (price) => price === '1',
       );
+
+      const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
 
       return {
         id: market.slug,
@@ -36,7 +39,11 @@ export function transformPolymarketResponse(
         liquidity: market.volume,
         liquidityFormatted: market.volumeNum.toString(),
         ogImageURI: market.image,
-        tags: response.tags.map((tag) => tag.label),
+        tags: [
+          ...response.tags.map((tag) => tag.label.toLowerCase()),
+          ...metadataTags,
+          DEFAULT_POLYMARKET_TAG,
+        ],
         // volume: market.volume,
         volumeFormatted: market.volume,
         winningOutcomeIndex: winningIndex >= 0 ? winningIndex : null,

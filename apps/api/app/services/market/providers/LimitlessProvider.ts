@@ -8,6 +8,7 @@ import { transformLimitlessResponse } from '../transformers/limitlessTransformer
 import { supabase } from '@/app/api/[...route]/utils';
 import { getMarketOutcomeBuyPrice } from '@/app/api/[...route]/utils/viem';
 import { BaseProvider } from './BaseProvider';
+import { DEFAULT_LIMITLESS_TAG } from '@/app/api/[...route]/utils/constants';
 
 export class LimitlessProvider extends BaseProvider {
   async getMarket(marketId: string): Promise<MarketsWithMetadata> {
@@ -44,8 +45,12 @@ export class LimitlessProvider extends BaseProvider {
       markets: events.map((event): MarketGroupCardResponse => {
         const metadata = metadatas.find((m) => m.address === event.address);
         const _markets: never[] = []; // TODO: Once 'Groups' go live, we need to update this
+        const _tags = [DEFAULT_LIMITLESS_TAG];
+        const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
+        const eventTags = event.tags?.map((tag) => tag.toLowerCase()) || [];
+        _tags.push(...metadataTags, ...eventTags);
         return {
-          category: metadata?.tags?.[0] || 'General',
+          category: _tags,
           title: event.title ?? 'N/A',
           collateralToken: event.collateralToken,
           provider: 'limitless',
@@ -91,7 +96,7 @@ export class LimitlessProvider extends BaseProvider {
         market.address,
         'base',
       );
-      console.log('buyPrices', buyPrices);
+
       const sum = buyPrices[0] + buyPrices[1];
       const outcomeTokensPercentYes = +((buyPrices[0] / sum) * 100).toFixed(1);
       const outcomeTokensPercentNo = +((buyPrices[1] / sum) * 100).toFixed(1);

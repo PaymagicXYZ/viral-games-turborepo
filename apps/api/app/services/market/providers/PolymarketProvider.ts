@@ -3,12 +3,14 @@ import {
   MarketsWithMetadata,
   PaginatedMarketResponse,
 } from '@/types/market';
-import { GAMMA_API_URL } from '@/app/api/[...route]/utils/constants';
+import {
+  DEFAULT_POLYMARKET_TAG,
+  GAMMA_API_URL,
+} from '@/app/api/[...route]/utils/constants';
 import { PolymarketResponse } from '@/types/polymarket';
 import { transformPolymarketResponse } from '../transformers/polymarketTransformer';
 import { BaseProvider } from './BaseProvider';
 import { supabase } from '@/app/api/[...route]/utils';
-
 export class PolymarketProvider extends BaseProvider {
   async getMarket(marketId: string): Promise<MarketsWithMetadata> {
     const res = await fetch(`${GAMMA_API_URL}/events?slug=${marketId}`);
@@ -51,8 +53,11 @@ export class PolymarketProvider extends BaseProvider {
         const metadata = metadatas.find((m) => m.address === event.slug);
         const _markets =
           markets?.filter((m) => m.eventSlug === event.slug) || [];
+        const _tags = [DEFAULT_POLYMARKET_TAG];
+        const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
+        _tags.push(...metadataTags);
         return {
-          category: metadata?.tags?.[0] || 'General',
+          category: _tags,
           title: event.title ?? 'N/A',
           collateralToken: {
             address: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',

@@ -127,7 +127,7 @@ const MarketGroupCardResponseSchema = z.object({
   title: z.string(),
   provider: z.literal('polymarket').or(z.literal('limitless')),
   deadline: z.string(),
-  category: z.string(),
+  category: z.array(z.string()),
   collateralToken: CollateralTokenSchema,
   markets: z.array(SupabaseMarketSchema),
 });

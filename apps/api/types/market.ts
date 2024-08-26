@@ -14,7 +14,7 @@ export type MarketGroupCardResponse = {
   deadline: string;
   collateralToken: CollateralToken;
   markets: Array<Tables<'markets'>>;
-  category: string;
+  category: string[];
   provider: 'polymarket' | 'limitless';
 };
 
