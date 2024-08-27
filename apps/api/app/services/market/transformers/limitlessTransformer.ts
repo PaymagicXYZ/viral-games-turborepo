@@ -9,10 +9,16 @@ export async function transformLimitlessResponse(
   response: LimitlessResponse,
   metadata: Tables<'markets_with_tags'> | null,
 ): Promise<MarketsWithMetadata> {
-  const outcomePrices = await LimitlessProvider.getMarketOutcomeBuyPrice(
-    response,
-  );
+  const outcomePrices =
+    await LimitlessProvider.getMarketOutcomeBuyPrice(response);
   const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
+
+  const tags = [
+    ...response.tags.map((t) => t.toLowerCase()),
+    ...metadataTags,
+    DEFAULT_LIMITLESS_TAG,
+  ];
+
   return {
     data: [
       {
@@ -29,11 +35,7 @@ export async function transformLimitlessResponse(
         ogImageURI:
           metadata?.image_uri ??
           'https://nzavwarwntmwtfrkfput.supabase.co/storage/v1/object/public/markets_images/app-logo.svg?t=2024-08-23T09%3A29%3A21.086Z',
-        tags: [
-          ...response.tags.map((t) => t.toLowerCase()),
-          ...metadataTags,
-          DEFAULT_LIMITLESS_TAG,
-        ],
+        tags,
         title: response.title,
         // volume: response.volume,
         volumeFormatted: response.volumeFormatted,
@@ -41,6 +43,15 @@ export async function transformLimitlessResponse(
         outcomePrices,
       },
     ],
-    metadata,
+    metadata: {
+      title: metadata?.title ?? response.title,
+      address: metadata?.address ?? response.address,
+      image_uri:
+        metadata?.image_uri ??
+        'https://nzavwarwntmwtfrkfput.supabase.co/storage/v1/object/public/markets_images/app-logo.svg?t=2024-08-23T09%3A29%3A21.086Z',
+      provider: metadata?.provider ?? 'limitless',
+      tags,
+      created_at: metadata?.created_at ?? null,
+    },
   };
 }
