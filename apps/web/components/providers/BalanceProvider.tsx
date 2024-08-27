@@ -10,8 +10,8 @@ import {
   MarketTokensIds,
   Token,
 } from '@/lib/types/limitless';
-import { Logger } from '@/lib/utils/Logger';
-import { NumberUtil } from '@/lib/utils/NumberUtil';
+import { Logger } from '@/lib/utils/limitless/Logger';
+import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import {
   QueryObserverResult,
   UseMutateAsyncFunction,

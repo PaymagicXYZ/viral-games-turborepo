@@ -1,11 +1,5 @@
+import { Tables } from '@/lib/types/supabase';
 import { Address } from 'viem';
-
-interface Creator {
-  name: string;
-  imageURI?: string;
-  link?: string;
-  address?: string;
-}
 
 export type Token = {
   address: Address;
@@ -17,11 +11,90 @@ export type Token = {
   id: MarketTokensIds;
 };
 
-type MarketMetadata = {};
-export interface SingleMarket extends Market {
-  creator: Creator;
-  metadata: MarketMetadata;
+export enum MarketTokensIds {
+  DEGEN = 'degen-base',
+  ETH = 'ethereum',
+  WETH = 'ethereum',
+  HIGHER = 'higher',
+  MFER = 'mfercoin',
+  ONCHAIN = 'onchain',
+  REGEN = 'regen',
+  USDC = 'usd-coin',
+  VITA = 'vitadao',
+  BETS = 'all-street-bets',
+  GHST = 'aavegotchi',
 }
+
+export type TradeQuotes = {
+  outcomeTokenAmount: string; // amount of outcome token to be traded based on collateral amount input or ctBalance
+  outcomeTokenPrice: string; // average cost per outcome token
+  roi: string; // return on investment aka profitability percentage
+  priceImpact: string; // price fluctuation percentage
+};
+
+export enum MarketStatus {
+  RESOLVED = 'RESOLVED',
+  FUNDED = 'FUNDED',
+  LOCKED = 'LOCKED',
+}
+
+type MarketMetadata = Tables<'markets_metadata'>;
+
+export type MarketSingleCardResponseWithMetadata = MarketSingleCardResponse & {
+  metadata: MarketMetadata;
+};
+
+export type MarketGroupCardResponseWithMetadata = Omit<
+  MarketGroupCardResponse,
+  'markets'
+> & {
+  markets: MarketSingleCardResponseWithMetadata[];
+};
+
+export type MarketResponseWithMetadata =
+  | MarketGroupCardResponseWithMetadata
+  | MarketSingleCardResponseWithMetadata;
+
+export type OddsData = {
+  prices: number[];
+};
+
+export type MarketSingleCardResponse = {
+  address: string;
+  title: string;
+  proxyTitle: string | null;
+  deadline: string;
+  createdAt: string;
+  volume: string;
+  volumeFormatted: string;
+  liquidity: string;
+  liquidityFormatted: string;
+  collateralToken: CollateralToken;
+  category: string;
+  prices: number[];
+};
+
+export type MarketGroupCardResponse = {
+  slug: string;
+  title: string;
+  createdAt: string;
+  deadline: string;
+  collateralToken: CollateralToken;
+  markets: MarketSingleCardResponse[];
+  category: string;
+};
+
+export type MarketData = {
+  data: (MarketGroupCardResponse | MarketSingleCardResponse)[];
+  next: number;
+};
+
+export interface CollateralToken {
+  address: Address;
+  decimals: number;
+  symbol: string;
+}
+
 export interface Market {
   address: Address;
   conditionId: Address;
@@ -48,30 +121,16 @@ export interface Market {
   };
 }
 
-export interface CollateralToken {
-  address: Address;
-  decimals: number;
-  symbol: string;
+interface Creator {
+  name: string;
+  imageURI?: string;
+  link?: string;
+  address?: string;
 }
 
-export enum MarketStatus {
-  RESOLVED = 'RESOLVED',
-  FUNDED = 'FUNDED',
-  LOCKED = 'LOCKED',
-}
-
-export enum MarketTokensIds {
-  DEGEN = 'degen-base',
-  ETH = 'ethereum',
-  WETH = 'ethereum',
-  HIGHER = 'higher',
-  MFER = 'mfercoin',
-  ONCHAIN = 'onchain',
-  REGEN = 'regen',
-  USDC = 'usd-coin',
-  VITA = 'vitadao',
-  BETS = 'all-street-bets',
-  GHST = 'aavegotchi',
+export interface SingleMarket extends Market {
+  creator: Creator;
+  metadata: MarketMetadata;
 }
 
 export type GetBalanceResult = {
@@ -84,4 +143,22 @@ export type GetBalanceResult = {
   contractAddress: string;
   price: number;
   id: MarketTokensIds;
+};
+
+export type Category = {
+  id: number;
+  name: string;
+};
+
+export type BuySuccessResponse = {
+  message: string;
+  remainingBalance: number;
+  updatedPortfolio: {
+    shares: number;
+  };
+  updatedPoints: number;
+};
+
+export type BuyErrorResponse = {
+  error: string;
 };
