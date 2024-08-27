@@ -1,7 +1,7 @@
 {
     "crons": [
         {
-            "path": "/api/reset-balance",
+            "path": "/api/admin/reset-balance",
             "schedule": "0 4 * * *"
         }
     ]
