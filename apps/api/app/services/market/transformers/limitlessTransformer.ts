@@ -9,8 +9,9 @@ export async function transformLimitlessResponse(
   response: LimitlessResponse,
   metadata: Tables<'markets_with_tags'> | null,
 ): Promise<MarketsWithMetadata> {
-  const outcomePrices =
-    await LimitlessProvider.getMarketOutcomeBuyPrice(response);
+  const outcomePrices = await LimitlessProvider.getMarketOutcomeBuyPrice(
+    response,
+  );
   const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
 
   const tags = [
@@ -41,7 +42,8 @@ export async function transformLimitlessResponse(
         volumeFormatted: response.volumeFormatted,
         winningOutcomeIndex: response.winningOutcomeIndex,
         outcomePrices,
-        chainId: 8453
+        chainId: 8453,
+        provider: 'limitless',
       },
     ],
     metadata: {

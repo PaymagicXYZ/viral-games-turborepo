@@ -48,6 +48,7 @@ export interface Market {
     slug: string;
   };
   creator: Creator;
+  provider: 'polymarket' | 'limitless';
 }
 
 export interface MarketGroupResponse {

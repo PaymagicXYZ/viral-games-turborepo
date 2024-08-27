@@ -49,6 +49,7 @@ export interface Market {
   };
   creator: Creator;
   chainId: number;
+  provider: 'polymarket' | 'limitless';
 }
 
 type OverviewMarket = Tables<'events'> & {

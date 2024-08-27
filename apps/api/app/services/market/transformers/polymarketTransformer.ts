@@ -51,6 +51,7 @@ export function transformPolymarketResponse(
         volumeFormatted: market.volume,
         winningOutcomeIndex: winningIndex >= 0 ? winningIndex : null,
         chainId: 8453,
+        provider: 'polymarket',
       };
     }),
     metadata: {

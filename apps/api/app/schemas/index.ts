@@ -104,6 +104,8 @@ const MarketSchema = z.object({
     })
     .optional(),
   creator: CreatorSchema,
+  chainId: z.number(),
+  provider: z.literal('polymarket').or(z.literal('limitless')),
 });
 
 export const SupabaseMarketSchema = z.object({
