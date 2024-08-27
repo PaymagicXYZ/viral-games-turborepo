@@ -52,6 +52,14 @@ export function transformPolymarketResponse(
         winningOutcomeIndex: winningIndex >= 0 ? winningIndex : null,
       };
     }),
-    metadata,
+    metadata: {
+      // ...metadata, NOTE: Currently metadata for Polymarket is not set in supabase
+      address: null,
+      created_at: null,
+      image_uri: null,
+      tags: null,
+      provider: 'polymarket',
+      title: response.title,
+    },
   };
 }
