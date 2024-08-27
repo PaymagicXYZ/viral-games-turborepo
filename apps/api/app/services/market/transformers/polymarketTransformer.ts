@@ -21,7 +21,7 @@ export function transformPolymarketResponse(
 
       return {
         id: market.slug,
-        title: market.question,
+        title: market.groupItemTitle ?? market.question,
         description: market.description,
         outcomePrices: normalizedOutcomePrices,
         collateralToken: {
@@ -36,8 +36,8 @@ export function transformPolymarketResponse(
         expirationDate: market.endDate,
         expirationTimestamp: new Date(market.endDate).getTime(),
         expired: market.active === false,
-        liquidity: market.volume,
-        liquidityFormatted: market.volumeNum.toString(),
+        liquidity: market.liquidity ?? '0',
+        liquidityFormatted: market.liquidity ?? '0',
         ogImageURI:
           metadata?.image_uri ??
           market.image ??
