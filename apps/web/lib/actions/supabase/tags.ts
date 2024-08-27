@@ -1,6 +1,6 @@
 'use server';
 
-import { supabaseClient } from '../config/supabaseClient';
+import { supabaseClient } from '@/lib/config/supabaseClient';
 
 export async function getTags() {
   const { data, error } = await supabaseClient

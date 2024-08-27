@@ -6,6 +6,7 @@ import { env } from '@/lib/config/env';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Providers from '@/components/providers';
+import { Toaster } from '@/components/ui/toaster';
 import { Suspense } from 'react';
 
 const pressStart2p = localFont({
@@ -81,6 +82,7 @@ export default function RootLayout({
             </Suspense>
           </div>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

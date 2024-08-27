@@ -1,15 +1,17 @@
+import { fixedProductMarketMakerABI } from '@/abis/fixedProductMakerABI';
 import { defaultChain, LIMIT_PER_PAGE, newSubgraphURI } from '@/lib/constants';
+import { MarketResponseWithMetadata } from '@/lib/types/limitless';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Address, formatUnits, getContract, parseUnits } from 'viem';
-import { publicClient } from '../config/publicClient';
+
 import {
   Market,
   MarketGroupResponse,
   PaginatedMarketResponse,
 } from '@/lib/types/markets';
-import { fixedProductMarketMakerABI } from '@/abis/fixedProductMakerABI';
-import { env } from '../config/env';
+import { publicClient } from '@/lib/config/publicClient';
+import { env } from '@/lib/config/env';
 
 /**
  * Fetches and manages paginated active market data using the `useInfiniteQuery` hook.
@@ -17,17 +19,16 @@ import { env } from '../config/env';
  *
  * @returns {MarketData[]} which represents pages of markets
  */
-// export type Markets = {
-//   data: MarketResponseWithMetadata[];
-//   next: number;
-// };
+export type Markets = {
+  data: MarketResponseWithMetadata[];
+  next: number;
+};
 
 export function useMarketGroups(filter?: string | null) {
   return useInfiniteQuery<PaginatedMarketResponse, Error>({
     queryKey: ['markets', filter],
     queryFn: async ({ pageParam = null }) => {
       let baseUrl = `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets?limit=${LIMIT_PER_PAGE}`;
-      // let baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/providers/limitless?active=true`;
 
       if (pageParam) {
         baseUrl += `&cursor=${pageParam}`;
@@ -48,10 +49,10 @@ export function useMarketGroups(filter?: string | null) {
 }
 
 export function useAllMarkets() {
-  const { data: markets } = useQuery<{ data: Array<Market> }, Error>({
+  const { data: markets } = useQuery<Array<Market>, Error>({
     queryKey: ['allMarkets'],
     queryFn: async () => {
-      const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/providers/limitless`;
+      const baseUrl = `${env.NEXT_PUBLIC_LIMITLESS_API_URL}/markets`;
 
       const response = await fetch(baseUrl);
 
@@ -59,18 +60,22 @@ export function useAllMarkets() {
         return { data: [] };
       }
 
-      return await response.json();
+      const data = await response.json();
+
+      return data;
     },
   });
 
-  return useMemo(() => markets?.data ?? [], [markets]);
+  return useMemo(() => {
+    return markets ?? [];
+  }, [markets]);
 }
 
 export function useMarketByConditionId(conditionId: string) {
   const { data: market } = useQuery({
     queryKey: ['marketByConditionId', conditionId],
     queryFn: async () => {
-      const url = `${process.env.NEXT_PUBLIC_LIMITLESS_API_URL}/markets/conditions/${conditionId}`;
+      const url = `${env.NEXT_PUBLIC_LIMITLESS_API_URL}/markets/conditions/${conditionId}`;
       const response = await fetch(url, { cache: 'no-store' });
 
       if (!response.ok) {

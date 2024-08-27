@@ -7,6 +7,7 @@ import WagmiProvider from './WagmiProvider';
 import { PriceOracleProvider } from './PriceProvider';
 import { BalanceServiceProvider } from './BalanceProvider';
 import { HistoryServiceProvider } from './HistoryProvider';
+import { TradingServiceProvider } from './TradingProvider';
 
 export default function Providers({ children }: PropsWithChildren) {
   return (
@@ -15,7 +16,9 @@ export default function Providers({ children }: PropsWithChildren) {
         <WagmiProvider>
           <PriceOracleProvider>
             <BalanceServiceProvider>
-              <HistoryServiceProvider>{children}</HistoryServiceProvider>
+              <HistoryServiceProvider>
+                <TradingServiceProvider>{children}</TradingServiceProvider>
+              </HistoryServiceProvider>
             </BalanceServiceProvider>
           </PriceOracleProvider>
         </WagmiProvider>

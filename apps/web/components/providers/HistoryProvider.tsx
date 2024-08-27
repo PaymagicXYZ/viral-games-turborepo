@@ -1,12 +1,12 @@
 import { defaultChain, newSubgraphURI } from '@/lib/constants';
-import { NumberUtil } from '@/lib/utils/NumberUtil';
+import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import { QueryObserverResult, useQuery } from '@tanstack/react-query';
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react';
 import { Hash, formatUnits, Address } from 'viem';
 import { useAccount } from 'wagmi';
 import { usePriceOracle } from './PriceProvider';
-import { useAllMarkets } from './MarketProvider';
 import useSupportedTokens from '@/lib/hooks/useSupportedTokens';
+import { useAllMarkets } from '@/lib/services/MarketService';
 
 interface IHistoryService {
   trades: HistoryTrade[] | undefined;
@@ -52,7 +52,7 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
       const response = await fetch(newSubgraphURI[defaultChain.id], {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         cache: 'no-store',
         body: JSON.stringify({
@@ -76,8 +76,8 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
                 transactionHash
               }
             }
-          `
-        })
+          `,
+        }),
       });
 
       if (!response.ok) {
@@ -89,24 +89,24 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
       const _trades = data.data?.[queryName] as HistoryTrade[];
       _trades.map((trade) => {
         const collateralToken = supportedTokens?.find(
-          (token) => token.symbol === trade.market.collateral?.symbol
+          (token) => token.symbol === trade.market.collateral?.symbol,
         );
         const outcomeTokenAmountBI = BigInt(
           trade.outcomeTokenAmounts.find(
-            (amount) => BigInt(amount) != BigInt(0)
-          ) ?? 0
+            (amount) => BigInt(amount) != BigInt(0),
+          ) ?? 0,
         );
         trade.outcomeTokenAmount = formatUnits(
           outcomeTokenAmountBI,
-          collateralToken?.decimals || 18
+          collateralToken?.decimals || 18,
         );
         trade.strategy = Number(trade.outcomeTokenAmount) > 0 ? 'Buy' : 'Sell';
         trade.outcomeIndex = trade.outcomeTokenAmounts.findIndex(
-          (amount) => BigInt(amount) != BigInt(0)
+          (amount) => BigInt(amount) != BigInt(0),
         );
         trade.collateralAmount = formatUnits(
           BigInt(trade.outcomeTokenNetCost),
-          collateralToken?.decimals || 18
+          collateralToken?.decimals || 18,
         );
         trade.outcomeTokenPrice = (
           Number(trade.collateralAmount) / Number(trade.outcomeTokenAmount)
@@ -117,12 +117,12 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
 
       _trades.sort(
         (tradeA, tradeB) =>
-          Number(tradeB.blockTimestamp) - Number(tradeA.blockTimestamp)
+          Number(tradeB.blockTimestamp) - Number(tradeA.blockTimestamp),
       );
 
       return _trades;
     },
-    enabled: !!walletAddress && !!supportedTokens?.length
+    enabled: !!walletAddress && !!supportedTokens?.length,
   });
 
   const { data: redeems, refetch: getRedeems } = useQuery({
@@ -137,7 +137,7 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
       const response = await fetch(newSubgraphURI[defaultChain.id], {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         cache: 'no-store',
         body: JSON.stringify({
@@ -157,8 +157,8 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
                 transactionHash
               }
             }
-          `
-        })
+          `,
+        }),
       });
 
       if (!response.ok) {
@@ -172,8 +172,8 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
         redeem.collateralAmount = formatUnits(
           BigInt(redeem.payout),
           supportedTokens?.find(
-            (token) => token.address === redeem.collateralToken
-          )?.decimals || 18
+            (token) => token.address === redeem.collateralToken,
+          )?.decimals || 18,
         );
         redeem.outcomeIndex = redeem.indexSets[0] == '1' ? 0 : 1;
       });
@@ -182,11 +182,11 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
 
       _redeems.sort(
         (redeemA, redeemB) =>
-          Number(redeemB.blockTimestamp) - Number(redeemA.blockTimestamp)
+          Number(redeemB.blockTimestamp) - Number(redeemA.blockTimestamp),
       );
 
       return _redeems;
-    }
+    },
   });
 
   // Todo change to useMemo
@@ -203,8 +203,7 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
         // TODO: replace hardcoded markets with dynamic
 
         const market = markets?.find(
-          (market) =>
-            market.address.toLowerCase() === trade.market.id.toLowerCase()
+          (market) => market.id.toLowerCase() === trade.market.id.toLowerCase(),
         );
 
         if (
@@ -216,12 +215,12 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
         const existingMarket = _positions.find(
           (position) =>
             position.market.id === trade.market.id &&
-            position.outcomeIndex === trade.outcomeIndex
+            position.outcomeIndex === trade.outcomeIndex,
         );
 
         const position = existingMarket ?? {
           market: trade.market,
-          outcomeIndex: trade.outcomeIndex
+          outcomeIndex: trade.outcomeIndex,
         };
         position.latestTrade = trade;
         position.collateralAmount = (
@@ -258,13 +257,13 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
       _positions = _positions.filter(
         (position) =>
           !redeems?.find(
-            (redeem) => redeem.conditionId === position.market.condition_id
-          )
+            (redeem) => redeem.conditionId === position.market.condition_id,
+          ),
       );
 
       // filter markets with super small balance
       _positions = _positions.filter(
-        (position) => Number(position.outcomeTokenAmount) > 0.00001
+        (position) => Number(position.outcomeTokenAmount) > 0.00001,
       );
 
       // Todo remove this mapping
@@ -275,12 +274,12 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
           collateral: {
             symbol: position.market.collateral?.symbol
               ? position.market.collateral?.symbol
-              : 'MFER'
-          }
-        }
+              : 'MFER',
+          },
+        },
       }));
     },
-    enabled: !!walletAddress && !!markets?.length && !!trades
+    enabled: !!walletAddress && !!markets?.length && !!trades,
   });
 
   /**
@@ -291,12 +290,12 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
     positions?.forEach((position) => {
       let positionUsdAmount = 0;
       const token = supportedTokens?.find(
-        (token) => token.symbol === position.market.collateral?.symbol
+        (token) => token.symbol === position.market.collateral?.symbol,
       );
       if (!!token) {
         positionUsdAmount = convertAssetAmountToUsd(
           token.priceOracleId,
-          position.collateralAmount
+          position.collateralAmount,
         );
       }
       _balanceInvested += positionUsdAmount;
@@ -309,12 +308,12 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
     positions?.forEach((position) => {
       let positionOutcomeUsdAmount = 0;
       const token = supportedTokens?.find(
-        (token) => token.symbol === position.market.collateral?.symbol
+        (token) => token.symbol === position.market.collateral?.symbol,
       );
       if (!!token) {
         positionOutcomeUsdAmount = convertAssetAmountToUsd(
           token.priceOracleId,
-          position.outcomeTokenAmount
+          position.outcomeTokenAmount,
         );
       }
       _balanceToWin += positionOutcomeUsdAmount;
@@ -330,7 +329,7 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
     positions,
     getPositions,
     balanceInvested,
-    balanceToWin
+    balanceToWin,
   };
 
   return (

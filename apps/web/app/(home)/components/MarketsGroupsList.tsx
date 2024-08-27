@@ -5,12 +5,47 @@ import LottieLoading from '@/components/ui/lottie-loading';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMarketGroups } from '@/lib/services/MarketService';
 import { MarketGroupCardResponse } from '@/lib/types/markets';
+
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+
+function MarketGroupsListLoadingSkeleton() {
+  return (
+    <div className='flex h-full w-full flex-col  border-2 border-black p-4 shadow-sm'>
+      <div className='mb-4'>
+        <div className='relative flex w-full justify-between'>
+          <Skeleton className='h-[62px] w-[61px] rounded-sm' />
+          <Skeleton className='h-[20px] w-[20px]' />
+        </div>
+      </div>
+      <Skeleton className='h-[64.08px] w-full' />
+      <div className='mt-4 flex flex-1 flex-col justify-end gap-2'>
+        <div className='flex items-center justify-between'>
+          <Skeleton className='h-[16px] w-[48px]' />
+          <div className='flex gap-2'>
+            {new Array(2).fill(0).map((_, idx) => (
+              <Skeleton className='h-[29px] w-[118px]' key={idx} />
+            ))}
+          </div>
+        </div>
+
+        <div className='flex items-center justify-between'>
+          <Skeleton className='h-[16px] w-[48px]' />
+          <div className='flex gap-2'>
+            {new Array(2).fill(0).map((_, idx) => (
+              <Skeleton className='h-[29px] w-[118px]' key={idx} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function MarketGroupsList() {
   const [filter] = useQueryState('filter');
@@ -105,11 +140,13 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
 
   const openMarketWithPreselectedStrategy = ({
     outcomeIndex,
+    marketIndex,
   }: {
     outcomeIndex: number;
+    marketIndex: number;
   }) => {
     router.push(
-      `/markets/${marketGroup.provider}/${marketGroup.slug}?strategy=buy&outcome_index=${outcomeIndex}`,
+      `/markets/${marketGroup.provider}/${marketGroup.slug}?strategy=buy&market_index=${marketIndex}&outcome_index=${outcomeIndex}`,
     );
   };
 
@@ -124,7 +161,9 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
         <div className='mb-4'>
           <div className='relative flex w-full items-start justify-between'>
             <Image
-              src={marketGroup.imageUrl ?? '/market-thumbnail.svg'}
+              src={
+                marketGroup.markets?.[0]?.imageUrl ?? '/market-thumbnail.svg'
+              }
               alt='market-image'
               className='h-[62px] w-[61px] rounded-sm object-cover'
               width={0}
@@ -139,7 +178,7 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
             />
           </div>
         </div>
-        <div className='mb-4 h-[64px] '>
+        <div className='mb-10 h-[64px]'>
           <Label className='line-clamp-3 flex-grow cursor-pointer text-sm'>
             {marketGroup.title}
           </Label>
@@ -150,16 +189,19 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
             openMarketWithPreselectedStrategy={
               openMarketWithPreselectedStrategy
             }
+            isSingleView
+            marketIndex={0}
           />
         ) : (
           <div className='h-[100px] overflow-auto'>
-            {marketGroup.markets.map((market) => (
+            {marketGroup.markets.map((market, marketIndex) => (
               <MarketView
                 key={market.id}
                 title={market.title}
                 openMarketWithPreselectedStrategy={
                   openMarketWithPreselectedStrategy
                 }
+                marketIndex={marketIndex}
               />
             ))}
           </div>
@@ -173,38 +215,99 @@ type MarketViewProps = {
   title?: string;
   openMarketWithPreselectedStrategy: ({
     outcomeIndex,
+    marketIndex,
   }: {
     outcomeIndex: number;
+    marketIndex: number;
   }) => void;
+  isSingleView?: boolean;
+  marketIndex: number;
 };
 
 const MarketView: React.FC<MarketViewProps> = ({
   title,
   openMarketWithPreselectedStrategy,
+  isSingleView,
+  marketIndex,
 }) => (
-  <div className='flex flex-1 flex-col justify-end gap-2'>
-    <Label className='line-clamp-3 text-[10px]'>{title}</Label>
-    <div className='flex items-center gap-2 overflow-scroll pb-2 pr-1'>
-      <Button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openMarketWithPreselectedStrategy({ outcomeIndex: 0 });
-        }}
-        className='w-full'
-      >
-        Yes
-      </Button>
-      <Button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openMarketWithPreselectedStrategy({ outcomeIndex: 1 });
-        }}
-        className='w-full'
-      >
-        No
-      </Button>
+  <div
+    className={clsx('flex flex-col', {
+      'h-full justify-between': isSingleView,
+      'h-[45px]': !isSingleView,
+    })}
+  >
+    <div
+      className={clsx('flex', {
+        'mt-auto  gap-2': isSingleView,
+        'items-center justify-between pr-2': !isSingleView,
+      })}
+    >
+      {isSingleView ? (
+        <>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openMarketWithPreselectedStrategy({
+                outcomeIndex: 0,
+                marketIndex,
+              });
+            }}
+            className='h-[29px] w-full'
+          >
+            Yes
+          </Button>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openMarketWithPreselectedStrategy({
+                outcomeIndex: 1,
+                marketIndex,
+              });
+            }}
+            className='h-[29px] w-full'
+          >
+            No
+          </Button>
+        </>
+      ) : (
+        <>
+          <div className='flex-grow overflow-hidden'>
+            <Label className='line-clamp-1 text-[12px] text-gray-500'>
+              {title}
+            </Label>
+          </div>
+          <div className='ml-2 flex gap-2'>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openMarketWithPreselectedStrategy({
+                  outcomeIndex: 0,
+                  marketIndex,
+                });
+              }}
+              className='h-[29px] w-[79px]'
+            >
+              Yes
+            </Button>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openMarketWithPreselectedStrategy({
+                  outcomeIndex: 1,
+                  marketIndex,
+                });
+              }}
+              className='h-[29px] w-[79px]'
+            >
+              No
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   </div>
 );
