@@ -9,9 +9,9 @@ export function transformPolymarketResponse(
   return {
     data: response.markets.map((market) => {
       // Note: Polymarket returns outcome prices as a stringified array
-      const normalizedOutcomePrices = JSON.parse(
-        market.outcomePrices,
-      ) as string[];
+      const normalizedOutcomePrices = (
+        JSON.parse(market.outcomePrices) as string[]
+      ).map((price) => (+price * 100).toFixed(2));
 
       const winningIndex = normalizedOutcomePrices.findIndex(
         (price) => price === '1',
