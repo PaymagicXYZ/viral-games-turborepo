@@ -48,6 +48,7 @@ export interface Market {
     slug: string;
   };
   creator: Creator;
+  chainId: number;
 }
 
 type OverviewMarket = Tables<'events'> & {

@@ -21,7 +21,7 @@ export function transformPolymarketResponse(
 
       return {
         id: market.slug,
-        title: market.groupItemTitle ?? market.question,
+        title: market.groupItemTitle || market.question,
         description: market.description,
         outcomePrices: normalizedOutcomePrices,
         collateralToken: {
@@ -50,6 +50,7 @@ export function transformPolymarketResponse(
         // volume: market.volume,
         volumeFormatted: market.volume,
         winningOutcomeIndex: winningIndex >= 0 ? winningIndex : null,
+        chainId: 8453,
       };
     }),
     metadata: {

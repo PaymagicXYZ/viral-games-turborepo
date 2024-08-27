@@ -41,6 +41,7 @@ export async function transformLimitlessResponse(
         volumeFormatted: response.volumeFormatted,
         winningOutcomeIndex: response.winningOutcomeIndex,
         outcomePrices,
+        chainId: 8453
       },
     ],
     metadata: {
