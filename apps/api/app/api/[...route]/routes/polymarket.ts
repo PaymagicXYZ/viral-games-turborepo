@@ -89,7 +89,7 @@ polymarket.openapi(route, async (c) => {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const markets: Tables<'markets'> = data.markets.map((market: any) => {
       return {
-        title: market.question,
+        title: market.groupItemTitle || market.question,
         description: market.description,
         imageUrl: market.image,
         eventSlug: slug,
