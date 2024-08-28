@@ -23,13 +23,14 @@ import { defaultChain } from '@/lib/constants';
 import { fixedProductMarketMakerABI } from '@/abis/fixedProductMakerABI';
 import { Market, MarketGroupResponse } from '@/lib/types/markets';
 import { insertActivity } from '@/lib/actions/supabase/activities';
+import { env } from '@/lib/config/env';
 
 const DEFAULT_BET_SIZE = 10;
-const apiUrl = process.env.NEXT_PUBLIC_VIRAL_GAMES_BE_API;
-const limitlessApiUrl = process.env.NEXT_PUBLIC_LIMITLESS_API_URL;
+const apiUrl = env.NEXT_PUBLIC_VIRAL_GAMES_BE_API;
+const limitlessApiUrl = env.NEXT_PUBLIC_LIMITLESS_API_URL;
 const neynarMiddleware = neynar({
   // biome-ignore lint/style/noNonNullAssertion: <explanation>
-  apiKey: process.env.NEYNAR_API_KEY!,
+  apiKey: env.NEYNAR_API_KEY,
   features: ['interactor'],
 });
 const app = new Frog<{
@@ -50,7 +51,7 @@ const app = new Frog<{
   hub:
     process.env.NODE_ENV === 'production'
       ? // biome-ignore lint/style/noNonNullAssertion: <explanation>
-        neynarHub({ apiKey: process.env.NEYNAR_API_KEY! })
+        neynarHub({ apiKey: env.NEYNAR_API_KEY! })
       : undefined,
   verify: process.env.NODE_ENV === 'production' ? true : 'silent',
   imageOptions: async () => {
@@ -129,7 +130,7 @@ app
     const { market, collateralToken, addressOfMarket } = c.previousState;
     const provider = c.req.param('provider');
     return c.res({
-      browserLocation: `${process.env.NEXT_PUBLIC_BASE_URL}/markets/${provider}/${addressOfMarket}`,
+      browserLocation: `${env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/${provider}/${addressOfMarket}`,
       action: `/paid-bet/${c.req.param('provider')}/${c.req.param('address')}`,
       image: `/initial/${c.req.param('provider')}/${c.req.param('address')}/img`,
       intents: [
@@ -140,7 +141,7 @@ app
         // eslint-disable-next-line react/jsx-key
         // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
         <Button.Link
-          href={`${process.env.NEXT_PUBLIC_BASE_URL}/markets/${provider}/${addressOfMarket}`}
+          href={`${env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/${provider}/${addressOfMarket}`}
         >
           Open Viral.games
         </Button.Link>,
@@ -206,7 +207,7 @@ app.frame('/paid-bet/:provider/:address', neynarMiddleware, async (c) => {
       <Button>Next</Button>
     );
   return c.res({
-    browserLocation: `${process.env.NEXT_PUBLIC_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`,
+    browserLocation: `${env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`,
     action: `/approve/${c.req.param('provider')}/${c.req.param('address')}`,
     image: `/paid-bet/${c.req.param('provider')}/${c.req.param('address')}/img`,
     intents: [
@@ -266,7 +267,7 @@ app
         </Button.Transaction>,
         // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
         <Button.Link
-          href={`${process.env.NEXT_PUBLIC_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`}
+          href={`${env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`}
         >
           Open Viral.games
         </Button.Link>,
@@ -332,7 +333,7 @@ app
         </Button.Transaction>,
         // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
         <Button.Link
-          href={`${process.env.NEXT_PUBLIC_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`}
+          href={`${env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`}
         >
           Open Viral.games
         </Button.Link>,
@@ -435,12 +436,12 @@ app
     });
 
     return c.res({
-      browserLocation: `${process.env.NEXT_PUBLIC_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`,
+      browserLocation: `${env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`,
       image: `/success/${c.req.param('provider')}/${c.req.param('address')}/img`,
       intents: [
         // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
         <Button.Link
-          href={`${process.env.NEXT_PUBLIC_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`}
+          href={`${env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/${c.req.param('provider')}/${addressOfMarket}`}
         >
           Open Viral.games
         </Button.Link>,
