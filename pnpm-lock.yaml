@@ -144,6 +144,9 @@ importers:
       nuqs:
         specifier: ^1.17.8
         version: 1.17.8(next@14.2.6(@babel/core@7.23.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      posthog-js:
+        specifier: ^1.158.3
+        version: 1.158.3
       react:
         specifier: ^18
         version: 18.3.1
@@ -4575,6 +4578,9 @@ packages:
   fetch-retry@5.0.6:
     resolution: {integrity: sha512-3yurQZ2hD9VISAhJJP9bpYFNQrHHBXE2JxxjY5aLEcDi46RmAzJE2OC9FAde0yis5ElW0jTTzs0zfg/Cca4XqQ==}
 
+  fflate@0.4.8:
+    resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
+
   figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
@@ -6375,6 +6381,9 @@ packages:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  posthog-js@1.158.3:
+    resolution: {integrity: sha512-5JMrvwL5wjeuwfT8+2CC/lDXWs4aIJuRo/ImQsMQo5CtLfTZyqQbK+Jp5PvrXxh/h92nXiNvlpTShFRcLRv+pg==}
+
   preact@10.23.2:
     resolution: {integrity: sha512-kKYfePf9rzKnxOAKDpsWhg/ysrHPqT+yQ7UW4JjdnqjFIeNUnNcEJvhuA8fDenxAGWzUqtd51DfVg7xp/8T9NA==}
 
@@ -7891,6 +7900,9 @@ packages:
 
   web-vitals@0.2.4:
     resolution: {integrity: sha512-6BjspCO9VriYy12z356nL6JBS0GYeEcA457YyRzD+dD6XYCQ75NKhcOHUMHentOE7OcVCIXXDvOm0jKFfQG2Gg==}
+
+  web-vitals@4.2.3:
+    resolution: {integrity: sha512-/CFAm1mNxSmOj6i0Co+iGFJ58OS4NRGVP+AWS/l509uIK5a1bSoIVaHz/ZumpHTfHSZBpgrJ+wjfpAOrTHok5Q==}
 
   web3-core-helpers@1.10.3:
     resolution: {integrity: sha512-Yv7dQC3B9ipOc5sWm3VAz1ys70Izfzb8n9rSiQYIPjpqtJM+3V4EeK6ghzNR6CO2es0+Yu9CtCkw0h8gQhrTxA==}
@@ -14372,6 +14384,8 @@ snapshots:
 
   fetch-retry@5.0.6: {}
 
+  fflate@0.4.8: {}
+
   figures@3.2.0:
     dependencies:
       escape-string-regexp: 1.0.5
@@ -16374,6 +16388,12 @@ snapshots:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
+  posthog-js@1.158.3:
+    dependencies:
+      fflate: 0.4.8
+      preact: 10.23.2
+      web-vitals: 4.2.3
+
   preact@10.23.2: {}
 
   prebuild-install@7.1.2:
@@ -18167,6 +18187,8 @@ snapshots:
     optional: true
 
   web-vitals@0.2.4: {}
+
+  web-vitals@4.2.3: {}
 
   web3-core-helpers@1.10.3:
     dependencies:

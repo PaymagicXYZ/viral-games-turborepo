@@ -8,21 +8,24 @@ import { PriceOracleProvider } from './PriceProvider';
 import { BalanceServiceProvider } from './BalanceProvider';
 import { HistoryServiceProvider } from './HistoryProvider';
 import { TradingServiceProvider } from './TradingProvider';
+import { PostHogProvider } from './PosthogProvider';
 
 export default function Providers({ children }: PropsWithChildren) {
   return (
-    <ReactQueryProvider>
-      <PrivyProvider>
-        <WagmiProvider>
-          <PriceOracleProvider>
-            <BalanceServiceProvider>
-              <HistoryServiceProvider>
-                <TradingServiceProvider>{children}</TradingServiceProvider>
-              </HistoryServiceProvider>
-            </BalanceServiceProvider>
-          </PriceOracleProvider>
-        </WagmiProvider>
-      </PrivyProvider>
-    </ReactQueryProvider>
+    <PostHogProvider>
+      <ReactQueryProvider>
+        <PrivyProvider>
+          <WagmiProvider>
+            <PriceOracleProvider>
+              <BalanceServiceProvider>
+                <HistoryServiceProvider>
+                  <TradingServiceProvider>{children}</TradingServiceProvider>
+                </HistoryServiceProvider>
+              </BalanceServiceProvider>
+            </PriceOracleProvider>
+          </WagmiProvider>
+        </PrivyProvider>
+      </ReactQueryProvider>
+    </PostHogProvider>
   );
 }

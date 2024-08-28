@@ -27,7 +27,6 @@ export function useActivitiesSubscription() {
           table: 'activities',
         },
         (payload) => {
-          console.log('new payload?', payload);
           const newActivity = payload.new;
 
           queryClient.setQueryData(
