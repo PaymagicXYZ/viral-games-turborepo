@@ -65,6 +65,7 @@ export default function MarketGroupsList() {
           // Check for specific IDs first
           const specialIds = [
             '0x6eb23e842B10D243eE3a9a2663e8E599bC98E198',
+            '0x0e03eDc2A0ba38E803DaD62b31b6e6A2f4b216cc',
             '0x9fBb8A757F1b973C65A96c964F648814Ad8D73B7',
           ];
           if (specialIds.includes(a.slug) || specialIds.includes(a.slug))

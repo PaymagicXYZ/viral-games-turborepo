@@ -8,5 +8,5 @@ export const newSubgraphURI = {
     'https://indexer.bigdevenergy.link/da7c4d3/v1/graphql',
 };
 
-export const LIMIT_PER_PAGE = 30;
+export const LIMIT_PER_PAGE = 100;
 export const ONE_HOUR_IN_MILLISECONDS = 3_600_000; // milliseconds in an hour
