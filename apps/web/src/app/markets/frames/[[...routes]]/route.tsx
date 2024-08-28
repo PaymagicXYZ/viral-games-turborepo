@@ -26,7 +26,7 @@ import { insertActivity } from '@/lib/actions/supabase/activities';
 import { env } from '@/lib/config/env';
 
 const DEFAULT_BET_SIZE = 10;
-const apiUrl = env.NEXT_PUBLIC_VIRAL_GAMES_BE_API;
+const apiUrl = env.NEXT_PUBLIC_WEB_APP_BASE_URL;
 const limitlessApiUrl = env.NEXT_PUBLIC_LIMITLESS_API_URL;
 const neynarMiddleware = neynar({
   // biome-ignore lint/style/noNonNullAssertion: <explanation>
