@@ -1,8 +1,8 @@
 'use server';
 
-import { Activity } from '@/app/api/activity/route';
 import { env } from '@/lib/config/env';
 import { supabaseClient } from '@/lib/config/supabaseClient';
+import { Activity } from '@/src/app/api/activity/route';
 import { Address } from 'viem';
 
 export async function insertActivity({ activity }: { activity: Activity }) {
