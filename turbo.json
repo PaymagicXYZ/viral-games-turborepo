@@ -1,8 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    ".env"
-  ],
+  "globalDependencies": [".env"],
   "ui": "tui",
   "globalEnv": [
     "SUPABASE_SERVICE_ROLE_KEY",
@@ -11,41 +9,37 @@
     "TOKEN",
     "CG_API_KEY",
     "CRON_SECRET",
-    "NODEJS_HELPERS"
+    "NODEJS_HELPERS",
+
+    "NEXT_PUBLIC_WEB_APP_BASE_URL",
+    "NEXT_PUBLIC_WEB_APP_API_URL",
+    "NEXT_PUBLIC_PRIVY_APP_ID",
+
+    "NEXT_PUBLIC_VIRAL_GAMES_BE_API",
+    "NEXT_PUBLIC_LIMITLESS_API_URL",
+    "NEXT_PUBLIC_SUPABASE_KEY",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "VIRAL_GAMES_BE_API_SECRET",
+    "SUPABASE_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "WEB_APP_API_SECRET",
+    "WEB_APP_CRON_SECRET",
+    "NEYNAR_API_KEY"
   ],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ],
-      "env": [
-        "SUPABASE_SERVICE_ROLE_KEY",
-        "SUPABASE_URL",
-        "TOKEN"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["SUPABASE_SERVICE_ROLE_KEY", "SUPABASE_URL", "TOKEN"]
     },
     "api#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "env": [
-        "CG_API_KEY",
-        "CRON_SECRET",
-        "NODEJS_HELPERS"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "dependsOn": ["^build"],
+      "env": ["CG_API_KEY", "CRON_SECRET", "NODEJS_HELPERS"],
+      "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
     },
     "dev": {
       "cache": false,
