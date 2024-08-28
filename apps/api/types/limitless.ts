@@ -20,6 +20,10 @@ export interface LimitlessResponse {
   liquidityFormatted: string;
 }
 
+export interface LimitlessGroupResponse {
+  
+}
+
 export interface CollateralToken {
   address: string;
   decimals: number;

@@ -12,6 +12,7 @@ export const env = createEnv({
     WEB_APP_API_SECRET: z.string(),
     WEB_APP_CRON_SECRET: z.string(),
     NEYNAR_API_KEY: z.string(),
+    VIRAL_GAMES_BE_API_SECRET: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -21,7 +22,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_WEB_APP_BASE_URL: z.string().url(),
     NEXT_PUBLIC_PRIVY_APP_ID: z.string(),
-    NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET: z.string(),
     NEXT_PUBLIC_VIRAL_GAMES_BE_API: z.string().url(),
     NEXT_PUBLIC_WEB_APP_API_URL: z.string().url(),
     NEXT_PUBLIC_LIMITLESS_API_URL: z.string().url(),
@@ -38,15 +38,13 @@ export const env = createEnv({
   runtimeEnv: {
     NEXT_PUBLIC_WEB_APP_BASE_URL: process.env.NEXT_PUBLIC_WEB_APP_BASE_URL,
     NEXT_PUBLIC_PRIVY_APP_ID: process.env.NEXT_PUBLIC_PRIVY_APP_ID,
-    NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET:
-      process.env.NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET,
+    VIRAL_GAMES_BE_API_SECRET: process.env.VIRAL_GAMES_BE_API_SECRET,
     NEXT_PUBLIC_VIRAL_GAMES_BE_API: process.env.NEXT_PUBLIC_VIRAL_GAMES_BE_API,
     NEXT_PUBLIC_WEB_APP_API_URL: process.env.NEXT_PUBLIC_WEB_APP_API_URL,
     NEXT_PUBLIC_LIMITLESS_API_URL: process.env.NEXT_PUBLIC_LIMITLESS_API_URL,
     NEXT_PUBLIC_SUPABASE_KEY: process.env.NEXT_PUBLIC_SUPABASE_KEY,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
-
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     WEB_APP_API_SECRET: process.env.WEB_APP_API_SECRET,

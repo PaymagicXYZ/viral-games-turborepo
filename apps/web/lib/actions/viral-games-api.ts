@@ -20,7 +20,7 @@ export async function getTempPlayer({
   const options: RequestInit = {
     cache: 'no-store',
     headers: {
-      Authorization: `Bearer ${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET}`,
+      Authorization: `Bearer ${env.VIRAL_GAMES_BE_API_SECRET}`,
     },
   };
 
@@ -58,7 +58,7 @@ export async function buyShares({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET}`,
+      Authorization: `Bearer ${env.VIRAL_GAMES_BE_API_SECRET}`,
     },
     body: JSON.stringify({
       socialProvider,
@@ -99,7 +99,7 @@ export async function getShares({
   const options: RequestInit = {
     cache: 'no-store',
     headers: {
-      Authorization: `Bearer ${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET}`,
+      Authorization: `Bearer ${env.VIRAL_GAMES_BE_API_SECRET}`,
     },
   };
 
@@ -122,7 +122,7 @@ export async function getPortfolio({ user_address }: { user_address: string }) {
   const options: RequestInit = {
     cache: 'no-store',
     headers: {
-      Authorization: `Bearer ${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API_SECRET}`,
+      Authorization: `Bearer ${env.VIRAL_GAMES_BE_API_SECRET}`,
     },
   };
 
