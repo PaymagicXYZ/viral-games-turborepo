@@ -41,6 +41,7 @@ export async function buyShares({
   provider,
   userId,
   marketId,
+  eventId,
   amount,
   position,
 }: {
@@ -48,6 +49,7 @@ export async function buyShares({
   provider: 'limitless' | 'polymarket';
   userId: string;
   marketId: string;
+  eventId: string;
   amount: number;
   position: 'Yes' | 'No';
 }) {
@@ -63,7 +65,8 @@ export async function buyShares({
       socialProvider,
       provider,
       userId: socialProvider === 'eoa' ? userId.toLowerCase() : userId,
-      marketId: marketId.toLowerCase(),
+      marketId,
+      eventId,
       amount,
       position,
     }),

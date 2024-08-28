@@ -11,7 +11,7 @@ export default function useErrorToast() {
         <div>
           <div className='mb-4 flex items-center gap-1 text-orange-500'>
             <Image
-              src='/viral-game/error_cross_icon.svg'
+              src='/error_cross_icon.svg'
               alt='error_icon'
               width={20}
               height={20}

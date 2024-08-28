@@ -7,11 +7,6 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { publicClient } from '@/lib/config/publicClient';
 import { useWeb3Service } from '@/lib/services/Web3Service';
-import { Market } from '@/lib/types/markets';
-import { Optional } from '@/lib/types';
-import { SingleMarket, TradeQuotes } from '@/lib/types/limitless';
-import { capitalizeFirstLetter, sleep } from '@/lib/utils';
-import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import { Loader } from 'lucide-react';
 import { useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
@@ -19,16 +14,21 @@ import { Address, parseUnits } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { BuyTab } from './BuyTab';
 import { SellTab } from './SellTab';
-import { useToken } from '@/lib/hooks/limitless/useToken';
+import { Market } from '@/lib/types/markets';
+import { capitalizeFirstLetter, sleep } from '@/lib/utils';
 import { useTradingService } from '@/components/providers/TradingProvider';
+import { Optional } from '@/lib/types';
+import { SingleMarket, TradeQuotes } from '@/lib/types/limitless';
+import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
+import { useToken } from '@/lib/hooks/limitless/useToken';
 
 type MarketExchangeProps = {
-  market: Market;
+  markets: Array<Market>;
   provider: string;
 };
 
 export default function MarketExchange({
-  market,
+  markets,
   provider,
 }: MarketExchangeProps) {
   const [isFreeBet, setIsFreeBet] = useQueryState('is_free_bet', {
@@ -42,12 +42,21 @@ export default function MarketExchange({
     defaultValue: 0,
   });
 
+  const [marketIndex] = useQueryState('market_index', {
+    parse: (value) => (value ? Number(value) : 0),
+    serialize: String,
+    defaultValue: 0,
+  });
+
   const [strategyQuery, setStrategyQuery] = useQueryState('strategy', {
     parse: (value): 'Buy' | 'Sell' =>
       capitalizeFirstLetter(value || 'buy') as 'Buy' | 'Sell',
     serialize: (value) => value.toLowerCase(),
     defaultValue: 'Buy',
   });
+  const [currentMarket, setCurrentMarket] = useState<Market | undefined>(
+    markets[marketIndex],
+  );
 
   const {
     strategy,
@@ -58,10 +67,15 @@ export default function MarketExchange({
   } = useTradingService();
 
   useEffect(() => {
-    if (provider === 'limitless' && market && market !== previousMarket) {
-      setMarket(market);
+    if (
+      provider === 'limitless' &&
+      currentMarket &&
+      currentMarket !== previousMarket
+    ) {
+      setMarket(currentMarket);
     }
-  }, [market, previousMarket, provider]);
+    setCurrentMarket(markets[marketIndex]);
+  }, [marketIndex, previousMarket, provider]);
 
   useEffect(() => {
     if (strategyQuery) {
@@ -118,9 +132,9 @@ export default function MarketExchange({
           <Label htmlFor='free-bet-toggle'>Free Bet</Label>
         </div>
         <TabsContent value='buy'>
-          {market && (
+          {currentMarket && (
             <BuyTab
-              market={market}
+              market={currentMarket}
               strategy={'Buy'}
               isFreeBet={isFreeBet}
               outcomeIndex={outcomeIndex}
@@ -130,9 +144,9 @@ export default function MarketExchange({
           )}
         </TabsContent>
         <TabsContent value='sell'>
-          {market && (
+          {currentMarket && (
             <SellTab
-              market={market}
+              market={currentMarket}
               strategy={'Sell'}
               isFreeBet={isFreeBet}
               outcomeIndex={outcomeIndex}
@@ -166,7 +180,7 @@ export function OutcomeTokens({
           }`}
         >
           <Label className='mr-1 cursor-pointer'>
-            {index === 0 ? 'Yes' : 'No'}({outcome}$)
+            {index === 0 ? 'Yes' : 'No'}({outcome}%)
           </Label>
         </Button>
       ))}

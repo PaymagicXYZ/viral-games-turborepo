@@ -9,7 +9,9 @@ type ProfileActivityProps = {
 export default async function ProfileActivity({
   userAddress,
 }: ProfileActivityProps) {
-  const activities = await getUserActivities({ address: userAddress });
+  const activities = await getUserActivities({
+    address: `eoa:${userAddress}` as Address,
+  });
 
   return (
     <section className='h-[320px] space-y-6 overflow-auto'>

@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     }
 
     const activity: Activity = validationResult.data;
-
+    console.log(activity);
     const { data, error } = await supabaseClient
       .from('activities')
       .insert({
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
         market_address: activity.market_address.toLowerCase(),
       })
       .select();
-    console.log(error);
+    console.log(error, data);
     if (error) throw error;
 
     return Response.json({ data }, { status: 201 });

@@ -1,4 +1,4 @@
-import { getShares } from '@/lib/actions/viral-games-be';
+import { getShares } from '@/lib/actions/viral-games-api';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 

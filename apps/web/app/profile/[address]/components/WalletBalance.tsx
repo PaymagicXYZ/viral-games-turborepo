@@ -1,7 +1,8 @@
 'use client';
 
 import { Label } from '@/components/ui/label';
-import { Address, formatEther } from 'viem';
+import { formatEther } from '@/lib/utils/formatters';
+import { Address } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
 type WalletBalanceProps = {

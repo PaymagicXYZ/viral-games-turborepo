@@ -12,7 +12,7 @@ type ProfileProps = {
 export default async function Profile({ userAddress }: ProfileProps) {
   return (
     <section className='flex flex-col items-center justify-center gap-8'>
-      <ProfileAvatar size='medium' withPfpUpload withUsername />
+      <ProfileAvatar />
       <div className='flex gap-14'>
         <div className='flex flex-col items-center gap-3'>
           <Label>ETH IN WALLET</Label>

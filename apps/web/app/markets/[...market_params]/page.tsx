@@ -12,7 +12,6 @@ type MarketPageProps = {
 
 export default async function MarketPage({ params }: MarketPageProps) {
   const [provider, identifier] = params.market_params;
-
   const marketGroup = await getMarketGroup({ identifier, provider });
 
   return (
@@ -27,7 +26,7 @@ export default async function MarketPage({ params }: MarketPageProps) {
         <MarketGroupDetails marketGroup={marketGroup} />
       </Suspense>
       <Suspense fallback={<LottieLoading />}>
-        <MarketExchange market={marketGroup.data[0]} provider={provider} />
+        <MarketExchange markets={marketGroup.data} provider={provider} />
       </Suspense>
     </main>
   );
