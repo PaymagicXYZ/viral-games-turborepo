@@ -1,24 +1,24 @@
-import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { supabase, initUser, fetchMarket } from "../utils";
+import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
+import { supabase, initUser, fetchMarket } from '../utils';
 import {
   jsonSchema,
   activitiesInsertSchema,
   tempPlayerUpdateSchema,
-} from "@/types/schemas";
+} from '@/types/schemas';
 
 const action = new OpenAPIHono();
 
 const ActionSchema = z
   .object({
-    action: z.enum(["buy", "sell"]),
+    action: z.enum(['buy', 'sell']),
     provider: z.string(),
     userId: z.string(),
     address: z.string(),
     shares: z.number(),
     price: z.number(),
-    position: z.enum(["Yes", "No"]),
+    position: z.enum(['Yes', 'No']),
   })
-  .openapi("Action");
+  .openapi('Action');
 
 const ActionResponseSchema = z
   .object({
@@ -29,13 +29,13 @@ const ActionResponseSchema = z
     }),
     updatedPoints: z.number(),
   })
-  .openapi("ActionResponse");
+  .openapi('ActionResponse');
 
 const ErrorSchema = z
   .object({
     error: z.string(),
   })
-  .openapi("Error");
+  .openapi('Error');
 
 type Portfolio = {
   [address: string]: {
@@ -45,12 +45,12 @@ type Portfolio = {
 };
 
 const route = createRoute({
-  method: "post",
-  path: "/",
+  method: 'post',
+  path: '/',
   request: {
     body: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: ActionSchema,
         },
       },
@@ -59,51 +59,51 @@ const route = createRoute({
   responses: {
     200: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: ActionResponseSchema,
         },
       },
-      description: "Action processed successfully",
+      description: 'Action processed successfully',
     },
     400: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: ErrorSchema,
         },
       },
-      description: "Bad request",
+      description: 'Bad request',
     },
     404: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: ErrorSchema,
         },
       },
-      description: "User not found",
+      description: 'User not found',
     },
     500: {
       content: {
-        "application/json": {
+        'application/json': {
           schema: ErrorSchema,
         },
       },
-      description: "Server error",
+      description: 'Server error',
     },
   },
 });
 
 action.openapi(route, async (c) => {
-  const body = c.req.valid("json");
+  const body = c.req.valid('json');
   const { action, provider, userId, address, shares, price, position } = body;
 
   const userData = await initUser(provider, userId);
   if (!userData) {
-    return c.json({ error: "User not found" }, 404);
+    return c.json({ error: 'User not found' }, 404);
   }
 
   const totalValue = shares * price;
-  if (action === "buy" && userData.balance + userData.points < totalValue) {
-    return c.json({ error: "Insufficient balance" }, 400);
+  if (action === 'buy' && userData.balance + userData.points < totalValue) {
+    return c.json({ error: 'Insufficient balance' }, 400);
   }
 
   let portfolio: Portfolio = userData.portfolio
@@ -120,21 +120,20 @@ action.openapi(route, async (c) => {
 
   const positionData = portfolio[address][position]!;
 
-  console.log(positionData);
-  if (action === "buy") {
+  if (action === 'buy') {
     positionData.shares += shares;
-  } else if (action === "sell") {
+  } else if (action === 'sell') {
     if (positionData.shares < shares) {
-      return c.json({ error: "Insufficient position to sell" }, 400);
+      return c.json({ error: 'Insufficient position to sell' }, 400);
     }
     positionData.shares -= shares;
   }
 
   const newBalance =
-    action === "buy" ? userData.balance - totalValue : userData.balance;
+    action === 'buy' ? userData.balance - totalValue : userData.balance;
 
   const newPoints =
-    action === "buy"
+    action === 'buy'
       ? newBalance > 0
         ? userData.points
         : userData.points + newBalance
@@ -142,49 +141,49 @@ action.openapi(route, async (c) => {
 
   const marketData = await fetchMarket(address);
   if (!marketData) {
-    return c.json({ error: "Invalid market input" }, 400);
+    return c.json({ error: 'Invalid market input' }, 400);
   }
 
   const { error: updateUserError } = await supabase
-    .from("temp_player")
+    .from('temp_player')
     .update(
       tempPlayerUpdateSchema.parse({
         balance: newBalance > 0 ? newBalance : 0,
         points: newPoints,
         portfolio: JSON.stringify(portfolio),
         updated_at: new Date().toISOString(),
-      })
+      }),
     )
-    .eq("provider", provider)
-    .eq("userId", userId);
+    .eq('provider', provider)
+    .eq('userId', userId);
 
   if (updateUserError) {
-    return c.json({ error: "Failed to update user", updateUserError }, 500);
+    return c.json({ error: 'Failed to update user', updateUserError }, 500);
   }
 
   const { error: updateActivitiesError } = await supabase
-    .from("activities")
+    .from('activities')
     .insert(
       activitiesInsertSchema.parse({
         user_address: `${provider}:${userId}`,
         market_address: address,
-        outcome_index: position === "Yes" ? 0 : 1,
+        outcome_index: position === 'Yes' ? 0 : 1,
         strategy: action,
         tx_hash: `${provider}-${userId}-${action}-${Date.now()}`,
         tx_value: totalValue.toString(),
-        asset_ticker: "USDV",
+        asset_ticker: 'USDV',
         market_uri: marketData.ogImageURI,
         market_title: marketData.title,
         chain: marketData.chain,
         chain_id: marketData.chain_id,
         provider: marketData.provider,
-      })
+      }),
     );
 
   if (updateActivitiesError) {
     return c.json(
-      { error: "Failed to update activities", updateActivitiesError },
-      500
+      { error: 'Failed to update activities', updateActivitiesError },
+      500,
     );
   }
 
@@ -195,7 +194,7 @@ action.openapi(route, async (c) => {
       updatedPortfolio: portfolio[address][position]!,
       updatedPoints: newPoints,
     },
-    200
+    200,
   );
 });
 

@@ -106,6 +106,7 @@ buy.openapi(route, async (c) => {
   } = body;
 
   const userData = await initUser(socialProvider, userId);
+  const normalizedMarketId = marketId.toLowerCase();
 
   if (!userData) {
     return c.json({ error: 'User not found' }, 404);
@@ -117,7 +118,9 @@ buy.openapi(route, async (c) => {
 
   const marketProvider = MarketProviderFactory.getProvider(provider);
   const markets = await marketProvider.getMarket(eventId);
-  const marketData = markets?.data?.find((m) => m.id === marketId);
+  const marketData = markets?.data?.find(
+    (m) => m.id.toLowerCase() === normalizedMarketId,
+  );
 
   if (!marketData) {
     return c.json({ error: 'Invalid market input' }, 400);
@@ -127,12 +130,12 @@ buy.openapi(route, async (c) => {
     ? (jsonSchema.parse(userData.portfolio) as Portfolio)
     : {};
 
-  if (!portfolio[marketId]) {
-    portfolio[marketId] = {};
+  if (!portfolio[normalizedMarketId]) {
+    portfolio[normalizedMarketId] = {};
   }
 
-  if (!portfolio[marketId][position]) {
-    portfolio[marketId][position] = { shares: 0 };
+  if (!portfolio[normalizedMarketId][position]) {
+    portfolio[normalizedMarketId][position] = { shares: 0 };
   }
 
   const balanceUsed = Math.min(amount, userData.balance);
@@ -147,7 +150,7 @@ buy.openapi(route, async (c) => {
     // marketData.chain,
   );
 
-  portfolio[marketId][position]!.shares += shares;
+  portfolio[normalizedMarketId][position]!.shares += shares;
 
   const { error: updateUserError } = await supabase
     .from('temp_player')
@@ -171,7 +174,7 @@ buy.openapi(route, async (c) => {
     .insert(
       activitiesInsertSchema.parse({
         user_address: `${socialProvider}:${userId}`,
-        market_address: marketId,
+        market_address: normalizedMarketId,
         outcome_index: position === 'Yes' ? 0 : 1,
         strategy: 'buy',
         tx_hash: `${socialProvider}-${userId}-buy-${Date.now()}`,
@@ -196,7 +199,7 @@ buy.openapi(route, async (c) => {
     {
       message: 'Buy operation successful',
       remainingBalance: newBalance,
-      updatedPortfolio: portfolio[marketId][position]!,
+      updatedPortfolio: portfolio[normalizedMarketId][position]!,
       updatedPoints: newPoints,
     },
     200,
