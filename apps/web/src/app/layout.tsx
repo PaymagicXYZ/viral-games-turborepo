@@ -34,6 +34,7 @@ export const metadata: Metadata = {
     'Farcaster',
     'YouTube',
     'X',
+    'Y',
   ],
   alternates: {
     canonical: '/',
