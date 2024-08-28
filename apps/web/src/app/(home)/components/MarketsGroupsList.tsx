@@ -150,7 +150,7 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
       `/markets/${marketGroup.provider}/${marketGroup.slug}?strategy=buy&market_index=${marketIndex}&outcome_index=${outcomeIndex}`,
     );
   };
-
+  console.log("MarketGroupItem -> marketGroup", marketGroup)
   const isMarketsGroup = marketGroup.markets.length > 1;
 
   return (

@@ -10,7 +10,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Suspense } from 'react';
 
 const pressStart2p = localFont({
-  src: '../public/fonts/PressStart2P.ttf',
+  src: '../../public/fonts/PressStart2P.ttf',
   display: 'swap',
   variable: '--font-press-start',
 });

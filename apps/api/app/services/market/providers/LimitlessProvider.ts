@@ -12,6 +12,7 @@ import { DEFAULT_LIMITLESS_TAG } from '@/app/api/[...route]/utils/constants';
 
 export class LimitlessProvider extends BaseProvider {
   async getMarket(marketId: string): Promise<MarketsWithMetadata> {
+    console.log('MARKET ID:', marketId);
     // Implement Polymarket-specific fetching logic
     const res = await fetch(
       `https://api.limitless.exchange/markets/${marketId}`,
@@ -57,7 +58,7 @@ export class LimitlessProvider extends BaseProvider {
           collateralToken: event.collateralToken,
           provider: 'limitless',
           markets: _markets,
-          deadline: new Date(event.expirationTimestamp ?? 0).toISOString(),
+          deadline: new Date(event.expirationTimestamp ?? event.deadline ?? 0).toISOString(),
           slug: event.address || (event as any).markets[0].address,
           imageUrl:
             metadata?.image_uri ??

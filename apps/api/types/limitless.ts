@@ -3,6 +3,7 @@ export interface LimitlessResponse {
   conditionId: string;
   description: string;
   collateralToken: CollateralToken;
+  deadline: string;
   title: string;
   proxyTitle: string | null;
   ogImageURI: string;
