@@ -10,7 +10,6 @@ import type { Tables } from '@/lib/types/supabase';
 import { generateRandomGradient } from '@/lib/utils';
 import { timeAgoFormatter, formatAddress } from '@/lib/utils/formatters';
 import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

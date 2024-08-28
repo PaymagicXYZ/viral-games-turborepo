@@ -156,7 +156,7 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
     <div className='flex h-full w-full flex-col border-2 border-black p-4 shadow-sm'>
       <Link
         className='flex h-full flex-col'
-        href={`/markets/${marketGroup.provider}/${marketGroup.slug}`}
+        href={`/markets/${marketGroup.provider}/${marketGroup.slug}?market_index=0`}
       >
         <div className='mb-4'>
           <div className='relative flex w-full items-start justify-between'>

@@ -22,7 +22,7 @@ const METADATA_DESCRIPTION = 'Viral.games - Bet on what goes viral!';
 export const metadata: Metadata = {
   metadataBase: APP_URL,
   title: {
-    template: `%s |${APP_NAME}`,
+    template: `%s | ${APP_NAME}`,
     default: APP_NAME,
   },
   description: METADATA_DESCRIPTION,

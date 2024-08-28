@@ -1,5 +1,6 @@
-import { buyShares } from '@/lib/actions/viral-games-be';
+import { buyShares } from '@/lib/actions/viral-games-api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
 import { useAccount } from 'wagmi';
 
 type ExchangePosition = {
@@ -12,6 +13,8 @@ type ExchangePosition = {
 export function useFreeBetMutation(marketProvider: 'limitless' | 'polymarket') {
   const queryClient = useQueryClient();
   const account = useAccount();
+  const params = useParams<{ market_params: Array<string> }>();
+  const [_, identifier] = params.market_params;
 
   const { mutateAsync, error, isPending, status } = useMutation({
     mutationKey: ['free-exchange'],
@@ -22,6 +25,7 @@ export function useFreeBetMutation(marketProvider: 'limitless' | 'polymarket') {
         marketId: address,
         socialProvider: 'eoa',
         provider: marketProvider,
+        eventId: identifier,
       });
       return { market_address: position.address };
     },

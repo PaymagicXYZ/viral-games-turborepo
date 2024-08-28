@@ -6,6 +6,7 @@ import { useOutsideClick } from '@/lib/hooks/useOutsideClick';
 import AppLogo from './AppLogo';
 import Links from './Links';
 import PrivyConnectButton from './PrivyConnectButton';
+import MarketsSearchBox from './MarketSearchBox';
 
 export default function Navbar() {
   return (
@@ -20,7 +21,7 @@ function DesktopNavbar() {
   return (
     <nav className='relative hidden h-[50px] flex-row items-center justify-between xl:flex'>
       <AppLogo />
-      {/* <MarketsSearchBox /> */}
+      <MarketsSearchBox />
       <div className='hidden  gap-10 text-sm lg:flex'>
         <Links />
       </div>
@@ -47,7 +48,7 @@ function MobileNavbar() {
         <Menu color='black' onClick={() => setIsBurgerMenuOpen(true)} />
       </div>
       <div className='mt-4 flex w-full justify-center'>
-        {/* <MarketsSearchBox /> */}
+        <MarketsSearchBox />
       </div>
       <div ref={ref} className={navbarClasses} aria-hidden={!isBurgerMenuOpen}>
         <div className='flex items-center justify-between px-4 pt-9'>

@@ -10,12 +10,12 @@ export default function useGenericToast() {
       action: (
         <div>
           <div className='flex items-center gap-1 text-orange-500'>
-            <Image
+            {/* <Image
               src='/error_cross_icon.svg'
               alt='error_icon'
               width={20}
               height={20}
-            />
+            /> */}
             <Label className='text-orange-200'>{message}</Label>
           </div>
         </div>

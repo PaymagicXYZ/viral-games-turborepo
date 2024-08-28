@@ -96,7 +96,7 @@ function MarketGroup({ marketGroup }: MarketGroupProps) {
           height={27}
         />
         <LinkButton
-          href={`/markets/${marketGroup.provider}/${marketGroup.slug}`}
+          href={`/markets/${marketGroup.provider}/${marketGroup.slug}?market_index=0`}
           className='w-full md:w-[132px]'
         >
           Bet Now

@@ -162,14 +162,14 @@ export function BuyTab({
         market_uri: market.ogImageURI,
         strategy: 'buy' as 'buy' | 'sell',
         outcome_index: outcomeIndex as number as 0 | 1,
-        user_address: account.address as Address,
+        user_address: `eoa:${account.address}` as Address,
         ens: null,
         pfp: null,
         asset_ticker: market.collateralToken.symbol,
         tx_hash: receipt,
         tx_value: collateralAmount,
         chain: 'base' as 'base' | 'polygon',
-        chain_id: 8453,
+        chain_id: 8453, // currently on chain bets work only on base
         provider: marketProvider,
         outcome_index_formatted: outcomeIndex === 0 ? 'Yes' : 'No',
       };

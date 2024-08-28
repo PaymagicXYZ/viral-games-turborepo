@@ -1,8 +1,17 @@
-import { Address } from 'viem';
+import { Address, formatEther as formatEtherViem } from 'viem';
+import { Optional } from '../types';
 
-export const formatAddress = (address: Address | string, slice = 4) => {
+export function formatAddress(address: Address | string, slice = 4) {
   return address.slice(0, slice + 2) + '...' + address.slice(-slice);
-};
+}
+
+export function formatEther(ethValue: Optional<bigint | string>) {
+  if (!ethValue) {
+    return '0';
+  }
+
+  return formatEtherViem(BigInt(ethValue)).toString().slice(0, 6);
+}
 
 export function timeAgoFormatter(dateString: string): string {
   const timestamp = new Date(dateString).getTime();

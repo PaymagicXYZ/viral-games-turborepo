@@ -20,6 +20,7 @@ import useGetTempPlayerQuery from '@/lib/hooks/react-query/queries/useGetTempPla
 import { useTradingService } from '@/components/providers/TradingProvider';
 import { insertActivity } from '@/lib/actions/supabase/activities';
 import { useFreeBetMutation } from '@/lib/hooks/react-query/mutations/useFreeBetMutation';
+import useGetFreeSharesQuery from '@/lib/hooks/react-query/queries/useGetFreeSharesQuery';
 
 export function SellTab({
   strategy,
@@ -60,7 +61,7 @@ export function SellTab({
 
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const { data: freeShares } = useGetSharesQuery({
+  const { data: freeShares } = useGetFreeSharesQuery({
     marketAddress: market.id,
   });
 
@@ -204,7 +205,7 @@ export function SellTab({
         market_uri: market.ogImageURI,
         strategy: 'sell' as 'buy' | 'sell',
         outcome_index: outcomeIndex as number as 0 | 1,
-        user_address: account.address as Address,
+        user_address: `eoa:${account.address}` as Address,
         ens: null,
         pfp: null,
         asset_ticker: market.collateralToken.symbol,
@@ -300,8 +301,4 @@ function AvailableShares({
       </div>
     </div>
   );
-}
-
-function useGetSharesQuery(arg0: { marketAddress: string }): { data: any } {
-  throw new Error('Function not implemented.');
 }

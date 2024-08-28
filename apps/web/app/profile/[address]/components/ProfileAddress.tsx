@@ -17,7 +17,7 @@ export default function ProfileAddress({ userAddress }: ProfileAddressProps) {
       onClick={() => copyToClipboard(userAddress)}
     >
       <Label className='cursor-pointer'>{formatAddress(userAddress)}</Label>
-      <Image src='/v2/copy_icon.png' alt='copy_icon' width={27} height={27} />
+      <Image src='/copy_icon.png' alt='copy_icon' width={27} height={27} />
     </section>
   );
 }

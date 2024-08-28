@@ -1,4 +1,4 @@
-import { getPortfolio } from '@/lib/actions/viral-games-be';
+import { getPortfolio } from '@/lib/actions/viral-games-api';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 

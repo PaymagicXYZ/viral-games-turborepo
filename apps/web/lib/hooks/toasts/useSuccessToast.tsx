@@ -18,7 +18,7 @@ export default function useSuccessToast() {
         <div>
           <div className='mb-4 flex items-center text-green-500'>
             <Image
-              src='/viral-game/success_checkmark_icon.svg'
+              src='/success_checkmark_icon.svg'
               alt='error_icon'
               width={20}
               height={20}
