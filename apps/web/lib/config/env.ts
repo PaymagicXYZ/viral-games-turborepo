@@ -11,6 +11,7 @@ export const env = createEnv({
     SUPABASE_SERVICE_ROLE_KEY: z.string(),
     WEB_APP_API_SECRET: z.string(),
     WEB_APP_CRON_SECRET: z.string(),
+    NEYNAR_API_KEY: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -50,5 +51,6 @@ export const env = createEnv({
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     WEB_APP_API_SECRET: process.env.WEB_APP_API_SECRET,
     WEB_APP_CRON_SECRET: process.env.WEB_APP_CRON_SECRET,
+    NEYNAR_API_KEY: process.env.NEYNAR_API_KEY,
   },
 });
