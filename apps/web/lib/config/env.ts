@@ -24,6 +24,8 @@ export const env = createEnv({
     NEXT_PUBLIC_VIRAL_GAMES_BE_API: z.string().url(),
     NEXT_PUBLIC_WEB_APP_API_URL: z.string().url(),
     NEXT_PUBLIC_LIMITLESS_API_URL: z.string().url(),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+    NEXT_PUBLIC_SUPABASE_KEY: z.string(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -39,6 +41,8 @@ export const env = createEnv({
     NEXT_PUBLIC_VIRAL_GAMES_BE_API: process.env.NEXT_PUBLIC_VIRAL_GAMES_BE_API,
     NEXT_PUBLIC_WEB_APP_API_URL: process.env.NEXT_PUBLIC_WEB_APP_API_URL,
     NEXT_PUBLIC_LIMITLESS_API_URL: process.env.NEXT_PUBLIC_LIMITLESS_API_URL,
+    NEXT_PUBLIC_SUPABASE_KEY: process.env.NEXT_PUBLIC_SUPABASE_KEY,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
 
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
