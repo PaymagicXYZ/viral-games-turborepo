@@ -38,3 +38,7 @@ export function generateRandomGradient(): string {
 
   return `linear-gradient(${angle}deg, ${color1}, ${color2})`;
 }
+
+export function copyToClipboard(value: string | `0x${string}` | undefined) {
+  navigator.clipboard.writeText(value ?? '');
+}
