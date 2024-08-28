@@ -15,6 +15,7 @@ const BuySchema = z
     provider: z.string(),
     userId: z.string(),
     marketId: z.string(),
+    eventId: z.string(),
     amount: z.number(),
     position: z.enum(['Yes', 'No']),
   })
@@ -94,10 +95,18 @@ const route = createRoute({
 
 buy.openapi(route, async (c) => {
   const body = c.req.valid('json');
-  const { provider, userId, marketId, amount, position, socialProvider } = body;
+  const {
+    provider,
+    userId,
+    marketId,
+    amount,
+    position,
+    socialProvider,
+    eventId,
+  } = body;
 
   const userData = await initUser(socialProvider, userId);
-  console.log("userData", userData);
+
   if (!userData) {
     return c.json({ error: 'User not found' }, 404);
   }
@@ -107,9 +116,9 @@ buy.openapi(route, async (c) => {
   }
 
   const marketProvider = MarketProviderFactory.getProvider(provider);
-  const markets = await marketProvider.getMarket(marketId);
-  const marketData = markets?.data?.[0];
-  // const marketData = await fetchMarket(address);
+  const markets = await marketProvider.getMarket(eventId);
+  const marketData = markets?.data?.find((m) => m.id === marketId);
+
   if (!marketData) {
     return c.json({ error: 'Invalid market input' }, 400);
   }
@@ -170,7 +179,7 @@ buy.openapi(route, async (c) => {
         asset_ticker: 'USDV',
         market_uri: marketData.ogImageURI,
         market_title: marketData.title,
-        chain: marketData.chainId === 8453 ? "base" : "polygon", // TODO: Update this to use the chain name
+        chain: marketData.chainId === 8453 ? 'base' : 'polygon', // TODO: Update this to use the chain name
         chain_id: marketData.chainId,
         provider: markets.metadata?.provider,
       }),
