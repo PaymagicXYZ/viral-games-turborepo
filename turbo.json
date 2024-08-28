@@ -6,6 +6,7 @@
   "ui": "tui",
   "globalEnv": [
     "SUPABASE_SERVICE_ROLE_KEY",
+    "NEXT_PUBLIC_SUPABASE_URL",
     "SUPABASE_URL",
     "TOKEN",
     "CG_API_KEY",
