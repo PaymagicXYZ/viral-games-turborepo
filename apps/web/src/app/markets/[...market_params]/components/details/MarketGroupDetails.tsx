@@ -50,7 +50,9 @@ export default function MarketGroupDetails({
 
       <MarketPositions
         marketIdentifier={
-          marketGroup.metadata?.address ?? marketGroup.metadata?.title ?? ''
+          marketGroup.metadata?.market_identifier ??
+          marketGroup.metadata?.title ??
+          ''
         }
         prices={market.outcomePrices}
         tokenSymbol={market.collateralToken.symbol}
