@@ -23,8 +23,8 @@ export async function GET(request: NextRequest) {
     // after new API changes they are not returning `tags` anymore so we can't check if
     // their tags includes our supported tags......
     const marketsMetadata = responseData.map(
-      (e: { address: string; title: string }) => ({
-        address: e.address,
+      (e: { address: string; title: string; slug: string }) => ({
+        market_identifier: e.slug ?? e.address,
         title: e.title,
         provider: 'limitless',
       }),
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabaseClient
       .from('markets_metadata')
       .upsert(marketsMetadata, {
-        onConflict: 'address',
+        onConflict: 'market_identifier',
         ignoreDuplicates: true,
       });
 

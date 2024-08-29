@@ -145,23 +145,23 @@ export type Database = {
       }
       markets_metadata: {
         Row: {
-          address: string
           created_at: string
           image_uri: string
+          market_identifier: string
           provider: string
           title: string
         }
         Insert: {
-          address: string
           created_at?: string
           image_uri?: string
+          market_identifier: string
           provider?: string
           title: string
         }
         Update: {
-          address?: string
           created_at?: string
           image_uri?: string
+          market_identifier?: string
           provider?: string
           title?: string
         }
@@ -171,32 +171,32 @@ export type Database = {
         Row: {
           created_at: string
           id: number
-          market_address: string
+          market_identifier_id: string
           tag_id: number
         }
         Insert: {
           created_at?: string
           id?: number
-          market_address: string
+          market_identifier_id: string
           tag_id: number
         }
         Update: {
           created_at?: string
           id?: number
-          market_address?: string
+          market_identifier_id?: string
           tag_id?: number
         }
         Relationships: [
           {
             foreignKeyName: "markets_tags_market_address_fkey"
-            columns: ["market_address"]
+            columns: ["market_identifier_id"]
             isOneToOne: false
             referencedRelation: "markets_metadata"
-            referencedColumns: ["address"]
+            referencedColumns: ["market_identifier"]
           },
           {
             foreignKeyName: "markets_tags_market_address_fkey"
-            columns: ["market_address"]
+            columns: ["market_identifier_id"]
             isOneToOne: false
             referencedRelation: "markets_with_tags"
             referencedColumns: ["address"]
@@ -209,6 +209,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      social_markets: {
+        Row: {
+          created_at: string
+          id: number
+          identifier: string
+          last_checked_at: string | null
+          postId: string | null
+          provider: Database["public"]["Enums"]["market_provider"]
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          identifier: string
+          last_checked_at?: string | null
+          postId?: string | null
+          provider?: Database["public"]["Enums"]["market_provider"]
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          identifier?: string
+          last_checked_at?: string | null
+          postId?: string | null
+          provider?: Database["public"]["Enums"]["market_provider"]
+        }
+        Relationships: []
       }
       tags: {
         Row: {
