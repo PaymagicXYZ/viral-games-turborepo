@@ -1,9 +1,9 @@
 import { Tables } from './database.types';
-import { CollateralToken } from './limitless';
+import { CollateralToken, LimitlessGroupMarket } from './limitless';
 
 export interface PaginatedMarketResponse {
   markets: Array<MarketGroupCardResponse>;
-  nextCursor?:  null | string;
+  nextCursor?: null | string;
   offset?: string | null; // Note: To be deprecated
 }
 
@@ -14,9 +14,15 @@ export type MarketGroupCardResponse = {
   imageUrl: string;
   deadline: string;
   collateralToken: CollateralToken;
-  markets: Array<Tables<'markets'>>;
+  markets: Array<MarketGroupOverviewRequired>;
   category: string[];
   provider: 'polymarket' | 'limitless';
+};
+
+export type MarketGroupOverviewRequired = {
+  id: number | string;
+  title: string;
+  imageUrl: string | null;
 };
 
 export interface MarketsWithMetadata {
