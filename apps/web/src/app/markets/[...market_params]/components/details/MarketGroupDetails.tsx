@@ -44,7 +44,7 @@ export default function MarketGroupDetails({
           tokenSymbol={market.collateralToken.symbol}
         />
       </div>
-      <MarketOutcome marketGroup={marketGroup} />
+      {/* <MarketOutcome marketGroup={marketGroup} /> */}
       {isAddress(market.id) && <MarketChart market={market} />}
       <MarketDescription description={market.description} />
 

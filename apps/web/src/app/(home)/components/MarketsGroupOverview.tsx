@@ -1,30 +1,39 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import LinkButton from '@/components/ui/link-button';
-import LottieLoading from '@/components/ui/lottie-loading';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMarketGroups } from '@/lib/services/MarketService';
 import { MarketGroupCardResponse } from '@/lib/types/markets';
 import Image from 'next/image';
 import { useMemo } from 'react';
 
-function MarketGroupsOverviewLoading() {
+function MarketGroupsOverviewLoadingSkeleton() {
   return (
-    <div className='flex h-[400px] w-[270px] flex-shrink-0 flex-col-reverse items-center gap-4 border-2 border-black p-5 shadow-sm md:h-[188px] md:flex-row lg:w-[505px]'>
-      <div className='flex h-full w-full flex-col justify-between gap-4'>
-        <div className='flex flex-wrap'>
-          <div className='flex h-[32px] w-[136px] flex-col justify-center bg-gray-200 px-2 py-1'>
-            <Skeleton className='h-4 w-full bg-gray-500' />
+    <section className='hidden h-[208px] overflow-x-auto md:block'>
+      <div className='flex gap-7'>
+        {Array.from({ length: 4 }, (_, index) => (
+          <div
+            key={index}
+            className='flex h-[400px] w-[270px] flex-shrink-0 flex-col-reverse items-center gap-4 border-2 border-black p-5 shadow-sm md:h-[188px] md:flex-row lg:w-[505px]'
+          >
+            <div className='flex h-full w-full flex-col justify-between gap-4'>
+              <div className='flex flex-wrap'>
+                <Skeleton className='h-12 w-full' />
+              </div>
+              <Skeleton className='h-[27px] w-[27px]' />
+              <Button disabled className='w-full md:w-[132px] min-h-[40px]'>
+                Bet Now
+              </Button>
+            </div>
+            <div className='flex-none'>
+              <Skeleton className='relative h-48 w-56 md:size-36' />
+            </div>
           </div>
-        </div>
-        <Skeleton className='h-[40px] w-full lg:w-[301px]' />
-        <Skeleton className='h-[32px] w-full md:w-[132px]' />
+        ))}
       </div>
-      <div className='flex-none'>
-        <Skeleton className='relative h-48 w-56 md:size-36' />
-      </div>
-    </div>
+    </section>
   );
 }
 
@@ -57,12 +66,9 @@ export default function MarketGroupsOverview() {
         }) || []
     );
   }, [data?.pages]);
+
   if (isLoading) {
-    return (
-      <div className='h-[208px]'>
-        <LottieLoading />
-      </div>
-    );
+    return <MarketGroupsOverviewLoadingSkeleton />;
   }
 
   if (!marketGroups.length) {
