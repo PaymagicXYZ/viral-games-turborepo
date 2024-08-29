@@ -20,7 +20,7 @@ export type MarketGroupCardResponse = {
 };
 
 export type MarketGroupOverviewRequired = {
-  id: number | number;
+  id: number | string;
   title: string;
   imageUrl: string | null;
 };
