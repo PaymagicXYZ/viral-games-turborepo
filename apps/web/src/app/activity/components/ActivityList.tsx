@@ -14,13 +14,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { isAddress } from 'viem';
+import { ActivityListLoadingSkeleton } from '../loading';
 
 export default function ActivityList() {
   const { activities, isLoading } = useFetchActivitiesQuery();
   useActivitiesSubscription();
 
   if (isLoading) {
-    return <LottieLoading />;
+    return <ActivityListLoadingSkeleton />;
   }
 
   return (

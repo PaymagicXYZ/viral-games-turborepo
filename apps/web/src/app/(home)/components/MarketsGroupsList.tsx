@@ -16,33 +16,29 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 function MarketGroupsListLoadingSkeleton() {
   return (
-    <div className='flex h-full w-full flex-col  border-2 border-black p-4 shadow-sm'>
-      <div className='mb-4'>
-        <div className='relative flex w-full justify-between'>
-          <Skeleton className='h-[62px] w-[61px] rounded-sm' />
-          <Skeleton className='h-[20px] w-[20px]' />
-        </div>
-      </div>
-      <Skeleton className='h-[64.08px] w-full' />
-      <div className='mt-4 flex flex-1 flex-col justify-end gap-2'>
-        <div className='flex items-center justify-between'>
-          <Skeleton className='h-[16px] w-[48px]' />
-          <div className='flex gap-2'>
-            {new Array(2).fill(0).map((_, idx) => (
-              <Skeleton className='h-[29px] w-[118px]' key={idx} />
-            ))}
+    <div className='grid grid-cols-1 gap-4 pb-4 pr-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      {Array.from({ length: 8 }, (_, index) => (
+        <div
+          key={index}
+          className='flex h-[247px] w-full flex-col border-2 border-black p-4 shadow-sm'
+        >
+          <div className='mb-4'>
+            <div className='relative flex w-full justify-between'>
+              <Skeleton className='h-[62px] w-[61px] rounded-sm' />
+              <Skeleton className='h-[27px] w-[27px]' />
+            </div>
+          </div>
+          <Skeleton className='h-[64.08px] w-full' />
+          <div className='mt-4 flex flex-1 justify-end  items-end gap-2'>
+            <Button disabled className='h-[29px] w-full'>
+              Yes
+            </Button>
+            <Button disabled className='h-[29px] w-full'>
+              No
+            </Button>
           </div>
         </div>
-
-        <div className='flex items-center justify-between'>
-          <Skeleton className='h-[16px] w-[48px]' />
-          <div className='flex gap-2'>
-            {new Array(2).fill(0).map((_, idx) => (
-              <Skeleton className='h-[29px] w-[118px]' key={idx} />
-            ))}
-          </div>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
@@ -99,11 +95,7 @@ export default function MarketGroupsList() {
   }, [marketGroups, filter]);
 
   if (isLoading) {
-    return (
-      <div className='h-[20px]'>
-        <LottieLoading />
-      </div>
-    );
+    return <MarketGroupsListLoadingSkeleton />;
   }
 
   const loadMore = () => {
@@ -150,7 +142,7 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
       `/markets/${marketGroup.provider}/${marketGroup.slug}?strategy=buy&market_index=${marketIndex}&outcome_index=${outcomeIndex}`,
     );
   };
-  console.log("MarketGroupItem -> marketGroup", marketGroup)
+
   const isMarketsGroup = marketGroup.markets.length > 1;
 
   return (
