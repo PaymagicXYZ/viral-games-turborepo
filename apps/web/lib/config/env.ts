@@ -10,7 +10,7 @@ export const env = createEnv({
     SUPABASE_URL: z.string().url(),
     SUPABASE_SERVICE_ROLE_KEY: z.string(),
     WEB_APP_API_SECRET: z.string(),
-    WEB_APP_CRON_SECRET: z.string(),
+    CRON_SECRET: z.string(),
     NEYNAR_API_KEY: z.string(),
     VIRAL_GAMES_BE_API_SECRET: z.string(),
   },
@@ -48,7 +48,7 @@ export const env = createEnv({
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     WEB_APP_API_SECRET: process.env.WEB_APP_API_SECRET,
-    WEB_APP_CRON_SECRET: process.env.WEB_APP_CRON_SECRET,
+    CRON_SECRET: process.env.CRON_SECRET,
     NEYNAR_API_KEY: process.env.NEYNAR_API_KEY,
   },
 });
