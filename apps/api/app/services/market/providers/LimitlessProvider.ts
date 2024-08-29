@@ -5,7 +5,7 @@ import {
   PaginatedMarketResponse,
 } from '@/types/market';
 import {
-  LimitlessGroupMarket,
+  LimitlessGroupMarketResponse,
   LimitlessGroupOverviewResponse,
   LimitlessOverviewResponse,
   LimitlessResponse,
@@ -15,20 +15,29 @@ import { supabase } from '@/app/api/[...route]/utils';
 import { getMarketOutcomeBuyPrice } from '@/app/api/[...route]/utils/viem';
 import { BaseProvider } from './BaseProvider';
 import { DEFAULT_LIMITLESS_TAG } from '@/app/api/[...route]/utils/constants';
+import { isAddress } from 'viem';
 
 export class LimitlessProvider extends BaseProvider {
   async getMarket(marketId: string): Promise<MarketsWithMetadata> {
-    console.log('MARKET ID:', marketId);
+    const isSingleMarket = isAddress(marketId);
+    const apiEndpoint = isSingleMarket ? 'markets' : 'markets-groups';
     // Implement Polymarket-specific fetching logic
     const res = await fetch(
-      `https://api.limitless.exchange/markets/${marketId}`,
+      `https://api.limitless.exchange/${apiEndpoint}/${marketId}`,
     );
-    const data = (await res.json()) as LimitlessResponse;
+    const data = (await res.json()) as
+      | LimitlessResponse
+      | LimitlessGroupMarketResponse;
 
-    // Fetch metadata from Supabase
     const metadata = await this.fetchMetadata(marketId);
-    // Transform the response
-    return transformLimitlessResponse(data, metadata);
+
+    if ('slug' in data) {
+      // Note: Response is a market group
+      return transformLimitlessResponse(data, metadata);
+    } else {
+      // Note: Response is a single market
+      return transformLimitlessResponse(data, metadata);
+    }
   }
 
   async getMarkets(
@@ -107,7 +116,12 @@ export class LimitlessProvider extends BaseProvider {
     return data;
   }
 
-  static async getMarketOutcomeBuyPrice(market: LimitlessResponse) {
+  static async getMarketOutcomeBuyPrice(market: {
+    expired: boolean;
+    winningOutcomeIndex: number | null;
+    collateralToken: { decimals: number; symbol: string };
+    address: string;
+  }) {
     let outcomePrices = ['50', '50'];
 
     //TODO remove this hot-fix

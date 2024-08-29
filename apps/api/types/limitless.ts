@@ -20,6 +20,23 @@ export interface LimitlessResponse {
   liquidityFormatted: string;
 }
 
+export interface LimitlessGroupMarketResponse {
+  slug: string
+  hidden: boolean;
+  outcomeTokens: string
+  title: string
+  ogImageURI: string
+  expirationDate: string
+  expired: boolean;
+  creator: Creator;
+  collateralToken: CollateralToken;
+  tags: string[];
+  createdAt: string
+  category: string
+  status: string
+  markets: Array<LimitlessResponse>;
+}
+
 // Note: Response for an individual event present in the limitless api /all response
 export interface LimitlessGroupOverviewResponse {
   slug: string;

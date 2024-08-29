@@ -74,8 +74,11 @@ export default function MarketExchange({
     ) {
       setMarket(currentMarket);
     }
+  }, [currentMarket, previousMarket, provider]);
+
+  useEffect(() => {
     setCurrentMarket(markets[marketIndex]);
-  }, [marketIndex, previousMarket, provider]);
+  }, [marketIndex])
 
   useEffect(() => {
     if (strategyQuery) {

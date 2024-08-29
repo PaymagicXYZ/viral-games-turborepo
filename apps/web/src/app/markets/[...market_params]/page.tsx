@@ -13,7 +13,6 @@ type MarketPageProps = {
 export default async function MarketPage({ params }: MarketPageProps) {
   const [provider, identifier] = params.market_params;
   const marketGroup = await getMarketGroup({ identifier, provider });
-
   return (
     <main className='mt-10 flex flex-col-reverse gap-10 lg:min-h-[1041px] lg:flex-row'>
       <Suspense
