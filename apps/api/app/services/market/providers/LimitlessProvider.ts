@@ -1,9 +1,15 @@
 import {
   MarketGroupCardResponse,
+  MarketGroupOverviewRequired,
   MarketsWithMetadata,
   PaginatedMarketResponse,
 } from '@/types/market';
-import { LimitlessResponse } from '@/types/limitless';
+import {
+  LimitlessGroupMarket,
+  LimitlessGroupOverviewResponse,
+  LimitlessOverviewResponse,
+  LimitlessResponse,
+} from '@/types/limitless';
 import { transformLimitlessResponse } from '../transformers/limitlessTransformer';
 import { supabase } from '@/app/api/[...route]/utils';
 import { getMarketOutcomeBuyPrice } from '@/app/api/[...route]/utils/viem';
@@ -32,7 +38,9 @@ export class LimitlessProvider extends BaseProvider {
     const res = await fetch(
       `https://api.limitless.exchange/markets/active?limit=50`,
     );
-    const events = (await res.json()) as Array<LimitlessResponse>;
+    const events = (await res.json()) as Array<
+      LimitlessOverviewResponse | LimitlessGroupOverviewResponse
+    >;
 
     if (!events) {
       return {
@@ -40,26 +48,41 @@ export class LimitlessProvider extends BaseProvider {
         offset: null,
       };
     }
+
     const metadatas = await this.fetchMetadatas(
-      events.map((event) => event.address),
+      events.map((event) => {
+        const isEventGroup = 'slug' in event; // Note: check if the event is a group or a single market
+        const marketIdentifier = isEventGroup ? event.slug : event.address;
+        return marketIdentifier;
+      }),
     );
 
     return {
       markets: events.map((event): MarketGroupCardResponse => {
-        const metadata = metadatas.find((m) => m.address === event.address);
-        const _markets: never[] = []; // TODO: Once 'Groups' go live, we need to update this
+        const isEventGroup = 'slug' in event; // Note: check if the event is a group or a single market
+        const marketIdentifier = isEventGroup ? event.slug : event.address;
+        const metadata = metadatas.find((m) => {
+          return m.address === marketIdentifier;
+        });
+        const _markets: Array<MarketGroupOverviewRequired> = isEventGroup
+          ? event.markets.map((m) => ({
+              id: m.address,
+              imageUrl: metadata?.image_uri ?? '',
+              title: m.title,
+            }))
+          : []; // TODO: Once 'Groups' go live, we need to update this
         const _tags = [DEFAULT_LIMITLESS_TAG];
         const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
-        const eventTags = event.tags?.map((tag) => tag.toLowerCase()) || [];
-        _tags.push(...metadataTags, ...eventTags);
+        // const eventTags = isEventGroup ? event.tags?.map((tag) => tag.toLowerCase()) || [];
+        _tags.push(...metadataTags);
         return {
           category: _tags,
           title: event.title ?? 'N/A',
           collateralToken: event.collateralToken,
           provider: 'limitless',
           markets: _markets,
-          deadline: new Date(event.expirationTimestamp ?? event.deadline ?? 0).toISOString(),
-          slug: event.address || (event as any).markets[0].address,
+          deadline: new Date(event.deadline).toISOString(),
+          slug: isEventGroup ? event.slug : event.address,
           imageUrl:
             metadata?.image_uri ??
             'https://nzavwarwntmwtfrkfput.supabase.co/storage/v1/object/public/markets_images/app-logo.svg?t=2024-08-23T09%3A29%3A21.086Z',

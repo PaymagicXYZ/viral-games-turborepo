@@ -1,5 +1,6 @@
 import {
   MarketGroupCardResponse,
+  MarketGroupOverviewRequired,
   MarketsWithMetadata,
   PaginatedMarketResponse,
 } from '@/types/market';
@@ -51,8 +52,14 @@ export class PolymarketProvider extends BaseProvider {
     return {
       markets: events.map((event): MarketGroupCardResponse => {
         const metadata = metadatas.find((m) => m.address === event.slug);
-        const _markets =
-          markets?.filter((m) => m.eventSlug === event.slug) || [];
+        const _markets: Array<MarketGroupOverviewRequired> =
+          markets
+            ?.filter((m) => m.eventSlug === event.slug)
+            .map((m) => ({
+              id: m.id,
+              title: m.title,
+              imageUrl: m.imageUrl,
+            })) || [];
         const _tags = [DEFAULT_POLYMARKET_TAG];
         const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
         _tags.push(...metadataTags);

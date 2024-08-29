@@ -20,8 +20,32 @@ export interface LimitlessResponse {
   liquidityFormatted: string;
 }
 
-export interface LimitlessGroupResponse {
-  
+// Note: Response for an individual event present in the limitless api /all response
+export interface LimitlessGroupOverviewResponse {
+  slug: string;
+  title: string;
+  createdAt: string;
+  deadline: string;
+  collateralToken: CollateralToken;
+  markets: Array<LimitlessGroupMarket>;
+}
+
+// Note: Response for an individual market present in the limitless api /all response
+export interface LimitlessOverviewResponse extends LimitlessGroupMarket {
+  deadline: string;
+  collateralToken: CollateralToken;
+}
+
+// Note: Response for a market that's part of an event in the limitless api /all response
+export interface LimitlessGroupMarket {
+  address: string;
+  title: string;
+  proxyTitle: string | null;
+  createdAt: string;
+  volume: string;
+  volumeFormatted: string;
+  liquidity: string;
+  liquidityFormatted: string;
 }
 
 export interface CollateralToken {

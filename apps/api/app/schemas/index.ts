@@ -117,6 +117,23 @@ export const SupabaseMarketSchema = z.object({
   title: z.string(),
 });
 
+export const MarketGroupOverviewRequiredSchema = z.object({
+  title: z.string(),
+  id: z.number().or(z.string()),
+  imageUrl: z.string().nullable()
+})
+
+export const LimitlessGroupMarketSchema = z.object({
+  address: z.string(),
+  title: z.string(),
+  proxyTitle: z.string().nullable(),
+  createdAt: z.string(),
+  volume: z.string(),
+  volumeFormatted: z.string(),
+  liquidity: z.string(),
+  liquidityFormatted: z.string()
+})
+
 export const MarketsWithMetadataSchema = z
   .object({
     data: z.array(MarketSchema),
@@ -132,7 +149,8 @@ const MarketGroupCardResponseSchema = z.object({
   deadline: z.string(),
   category: z.array(z.string()),
   collateralToken: CollateralTokenSchema,
-  markets: z.array(SupabaseMarketSchema),
+  // markets: z.array(SupabaseMarketSchema).or(z.array(LimitlessGroupMarketSchema)),
+  markets: z.array(MarketGroupOverviewRequiredSchema),
 });
 
 export const PaginatedMarketResponseSchema = z.object({
