@@ -154,9 +154,7 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
         <div className='mb-4'>
           <div className='relative flex w-full items-start justify-between'>
             <Image
-              src={
-                marketGroup.markets?.[0]?.imageUrl ?? '/market-thumbnail.svg'
-              }
+              src={marketGroup.imageUrl ?? '/market-thumbnail.svg'}
               alt='market-image'
               className='h-[62px] w-[61px] rounded-sm object-cover'
               width={0}
