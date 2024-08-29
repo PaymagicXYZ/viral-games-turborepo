@@ -14,7 +14,7 @@ export type MarketGroupCardResponse = {
   imageUrl: string;
   deadline: string;
   collateralToken: CollateralToken;
-  markets: Array<LimitlessGroupMarket>;
+  markets: Array<MarketGroupOverviewRequired>;
   category: string[];
   provider: 'polymarket' | 'limitless';
 };
