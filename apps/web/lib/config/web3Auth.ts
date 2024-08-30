@@ -12,7 +12,7 @@ import { WalletServicesPlugin } from '@web3auth/wallet-services-plugin';
 import { getDefaultExternalAdapters } from '@web3auth/default-evm-adapter';
 
 const CLIENT_ID =
-  'BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ';
+  'BEotWPvFkiUatI4KDL9h3j5Gf6dW88uATa3KpCnq6M2Gmc68ZhlJfeUA26TcFqKep-GRU9Els9MDGZOzI-4iprs';
 
 export default function Web3AuthConnectorInstance(chains: Chain[]) {
   const chainConfig: CustomChainConfig = {
