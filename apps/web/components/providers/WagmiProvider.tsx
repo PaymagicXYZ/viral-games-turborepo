@@ -1,16 +1,14 @@
 'use client';
 
 import Web3AuthConnectorInstance from '@/lib/config/web3Auth';
-// import {
-//   WagmiProvider as NextWagmiProvider,
-//   createConfig,
-// } from '@privy-io/wagmi';
-import { WagmiProvider as NextWagmiProvider } from 'wagmi';
+import {
+  WagmiProvider as NextWagmiProvider,
+  createConfig,
+} from '@privy-io/wagmi';
+// import { WagmiProvider as NextWagmiProvider , createConfig} from 'wagmi';
 import type { ReactNode } from 'react';
 import { http } from 'viem';
 import { base } from 'viem/chains';
-import { createConfig } from 'wagmi';
-
 type WagmiProviderProps = {
   children: ReactNode;
 };
@@ -20,13 +18,13 @@ export const wagmiConfig = createConfig({
   transports: {
     [base.id]: http(),
   },
-  connectors: [
-    // walletConnect({
-    //   projectId: "3314f39613059cb687432d249f1658d2",
-    //   showQrModal: true,
-    // }),
-    Web3AuthConnectorInstance([base]),
-  ],
+  // connectors: [
+  //   // walletConnect({
+  //   //   projectId: "3314f39613059cb687432d249f1658d2",
+  //   //   showQrModal: true,
+  //   // }),
+  //   Web3AuthConnectorInstance([base]),
+  // ],
 });
 
 export default function WagmiProvider({ children }: WagmiProviderProps) {

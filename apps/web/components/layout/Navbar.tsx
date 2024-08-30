@@ -27,8 +27,8 @@ function DesktopNavbar() {
         <Links />
       </div>
       <div className='hidden gap-2 lg:flex'>
-        {/* <PrivyConnectButton /> */}
-        <Web3AuthConnectButton />
+        <PrivyConnectButton />
+        {/* <Web3AuthConnectButton /> */}
       </div>
     </nav>
   );
@@ -59,8 +59,8 @@ function MobileNavbar() {
         </div>
         <div className='mb-6 mt-8 flex flex-col items-center justify-center gap-10'>
           <Links />
-          {/* <PrivyConnectButton /> */}
-          <Web3AuthConnectButton />
+          <PrivyConnectButton />
+          {/* <Web3AuthConnectButton /> */}
         </div>
       </div>
     </nav>
