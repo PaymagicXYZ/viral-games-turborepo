@@ -15,6 +15,7 @@ export const runtime = "edge";
 const app = new OpenAPIHono();
 
 const token = process.env.TOKEN!;
+console.log("TOKEN", token);
 
 app.use(
   logger(),
@@ -36,7 +37,7 @@ app.use(
   })
 );
 
-app.use("/api/user/*", bearerAuth({ token }));
+app.use("/api/user/*");
 app.use("/api/actions", bearerAuth({ token }));
 app.use("/api/buy", bearerAuth({ token }));
 // TODO: Figure out why bearer auth is not working in this turbo repo
