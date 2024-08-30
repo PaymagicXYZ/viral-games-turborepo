@@ -17,13 +17,12 @@ const SinglePortfolioSchema = z.object({
 });
 
 const PortfolioPositionSchema = z
-  .record(z.string(), PositionSchema)
+  .record(z.string(), z.array(PositionSchema))
   .openapi('PortfolioPosition');
 
 const PortfolioSchema = z
   .object({
-    // userId: z.string(),
-    positions: z.array(PortfolioPositionSchema),
+    positions: PortfolioPositionSchema.nullable(),
   })
   .openapi('Portfolio');
 
@@ -131,27 +130,48 @@ user.openapi(portfolioRoute, async (c) => {
   if (!data?.length) {
     return c.json(
       {
-        positions: [],
+        positions: null,
       },
       200,
     );
   }
 
   try {
-    const transformedPositions = data.map((position) =>
-      PortfolioPositionSchema.parse({
-        [position.eventId!]: {
-          marketId: position.marketId,
-          outcomeIndex: +position.position,
-          shares: position.shares,
-        },
-      }),
-    );
+    const transformedPositions = data.reduce((acc, position) => {
+      if (position.eventId in acc) {
+        acc[position.eventId].push(
+          PositionSchema.parse({
+            marketId: position.marketId,
+            outcomeIndex: +position.position,
+            shares: position.shares,
+          }),
+        );
+      } else {
+        acc[position.eventId] = [
+          PositionSchema.parse({
+            marketId: position.marketId,
+            outcomeIndex: +position.position,
+            shares: position.shares,
+          }),
+        ];
+      }
+
+      return acc;
+    }, {} as Record<string, Array<typeof PositionSchema._type>>);
+    // const transformedPositions = data.map((position) =>
+    //   PortfolioPositionSchema.parse({
+    //     [position.eventId!]: {
+    //       marketId: position.marketId,
+    //       outcomeIndex: +position.position,
+    //       shares: position.shares,
+    //     },
+    //   }),
+    // );
 
     return c.json(
-      {
+      PortfolioSchema.parse({
         positions: transformedPositions,
-      },
+      }),
       200,
     );
   } catch (e) {
