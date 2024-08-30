@@ -31,6 +31,8 @@ export interface MarketsWithMetadata {
   // Add other common properties
 }
 
+export type MarketProvider = 'polymarket' | 'limitless' | 'custom';
+
 export interface Market {
   id: string; // Note: For polymarkets, this is the slug. For limitless, this is the FPMM address.
   conditionId: string;

@@ -10,7 +10,7 @@ import { MarketGroupResponse } from '@/lib/types/markets';
 import { formatAddress } from '@/lib/utils/formatters';
 import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import { useMemo } from 'react';
-import { Address } from 'viem';
+import { Address, isAddress } from 'viem';
 
 export default function MarketPositions({
   marketIdentifier,
@@ -63,9 +63,10 @@ export default function MarketPositions({
       {freePositions?.positions?.map(
         (
           position: {
-            outcome_index: number;
+            marketId: string;
+            outcomeIndex: number;
             shares: number;
-            market_address: string;
+            title: string;
           },
           idx: number,
         ) => <FreePositionItem key={idx} position={position} />,
@@ -191,22 +192,24 @@ export function FreePositionItem({
   position,
 }: {
   position: {
+    marketId: string;
+    outcomeIndex: number;
     shares: number;
-    outcome_index: number;
-    market_address: string;
+    title: string;
   };
 }) {
-  const formattedVote = position.outcome_index === 0 ? 'Yes' : 'No';
+  const formattedVote = position.outcomeIndex === 0 ? 'Yes' : 'No';
+  const marketTitle = isAddress(position.marketId)
+    ? `Market Address: ${formatAddress(position.marketId)}`
+    : position.marketId;
 
   return (
     <div className='flex w-full flex-col gap-6 bg-gray-200 px-2 py-4'>
       <div className='flex justify-between'>
         <Label className='text-xs text-gray-500'>
-          Vote {formattedVote} (Free bet)
+          {position.title} - {formattedVote} (Free bet)
         </Label>
-        <Label className='text-xs text-gray-500'>
-          Market Address: {formatAddress(position.market_address)}
-        </Label>
+        <Label className='text-xs text-gray-500'>{marketTitle}</Label>
       </div>
       <div className='flex flex-col gap-2'>
         <Label className='text-xs text-gray-500'>Shares</Label>

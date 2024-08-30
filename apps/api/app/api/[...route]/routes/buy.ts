@@ -1,11 +1,11 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import { supabase, initUser, fetchMarket, calculateShares } from '../utils';
+import { supabase, initUser, calculateShares } from '../utils';
 import {
-  jsonSchema,
   activitiesInsertSchema,
   tempPlayerUpdateSchema,
 } from '@/types/schemas';
 import { MarketProviderFactory } from '@/app/services/market/MarketProviderFactory';
+import { Database } from '@/types/database.types';
 
 const buy = new OpenAPIHono();
 
@@ -25,9 +25,9 @@ const BuyResponseSchema = z
   .object({
     message: z.string(),
     remainingBalance: z.number(),
-    updatedPortfolio: z.object({
-      shares: z.number(),
-    }),
+    // updatedPortfolio: z.object({
+    //   shares: z.number(),
+    // }),
     updatedPoints: z.number(),
   })
   .openapi('BuyResponse');
@@ -37,13 +37,6 @@ const ErrorSchema = z
     error: z.string(),
   })
   .openapi('Error');
-
-type Portfolio = {
-  [address: string]: {
-    Yes?: { shares: number };
-    No?: { shares: number };
-  };
-};
 
 const route = createRoute({
   method: 'post',
@@ -126,17 +119,17 @@ buy.openapi(route, async (c) => {
     return c.json({ error: 'Invalid market input' }, 400);
   }
 
-  let portfolio: Portfolio = userData.portfolio
-    ? (jsonSchema.parse(userData.portfolio) as Portfolio)
-    : {};
+  // let portfolio: Portfolio = userData.portfolio
+  //   ? (jsonSchema.parse(userData.portfolio) as Portfolio)
+  //   : {};
 
-  if (!portfolio[normalizedMarketId]) {
-    portfolio[normalizedMarketId] = {};
-  }
+  // if (!portfolio[normalizedMarketId]) {
+  //   portfolio[normalizedMarketId] = {};
+  // }
 
-  if (!portfolio[normalizedMarketId][position]) {
-    portfolio[normalizedMarketId][position] = { shares: 0 };
-  }
+  // if (!portfolio[normalizedMarketId][position]) {
+  //   portfolio[normalizedMarketId][position] = { shares: 0 };
+  // }
 
   const balanceUsed = Math.min(amount, userData.balance);
   const pointsUsed = amount - balanceUsed;
@@ -150,7 +143,17 @@ buy.openapi(route, async (c) => {
     // marketData.chain,
   );
 
-  portfolio[normalizedMarketId][position]!.shares += shares;
+  const { error } = await supabase.from('market_positions').insert({
+    marketId: normalizedMarketId,
+    position: position === 'Yes' ? '0' : '1',
+    shares,
+    provider: provider as Database['public']['Enums']['market_provider'],
+    userId: userData.uuid,
+    eventId: eventId,
+    title: marketData.title,
+  });
+
+  console.log('error', error);
 
   const { error: updateUserError } = await supabase
     .from('temp_player')
@@ -158,7 +161,7 @@ buy.openapi(route, async (c) => {
       tempPlayerUpdateSchema.parse({
         balance: newBalance,
         points: newPoints,
-        portfolio: JSON.stringify(portfolio),
+        // portfolio: JSON.stringify(portfolio),
         updated_at: new Date().toISOString(),
       }),
     )
@@ -199,7 +202,7 @@ buy.openapi(route, async (c) => {
     {
       message: 'Buy operation successful',
       remainingBalance: newBalance,
-      updatedPortfolio: portfolio[normalizedMarketId][position]!,
+      // updatedPortfolio: portfolio[normalizedMarketId][position]!,
       updatedPoints: newPoints,
     },
     200,

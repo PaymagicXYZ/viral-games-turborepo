@@ -15,6 +15,7 @@ export const runtime = 'edge';
 const app = new OpenAPIHono();
 
 const token = process.env.TOKEN!;
+console.log('TOKEN', token);
 
 app.use(
   logger(),
