@@ -108,6 +108,47 @@ export type Database = {
         }
         Relationships: []
       }
+      market_positions: {
+        Row: {
+          createdAt: string
+          eventId: string | null
+          id: number
+          marketId: string
+          position: Database["public"]["Enums"]["market_position"]
+          provider: Database["public"]["Enums"]["market_provider"]
+          shares: number
+          userId: string
+        }
+        Insert: {
+          createdAt?: string
+          eventId?: string | null
+          id?: number
+          marketId: string
+          position: Database["public"]["Enums"]["market_position"]
+          provider: Database["public"]["Enums"]["market_provider"]
+          shares: number
+          userId: string
+        }
+        Update: {
+          createdAt?: string
+          eventId?: string | null
+          id?: number
+          marketId?: string
+          position?: Database["public"]["Enums"]["market_position"]
+          provider?: Database["public"]["Enums"]["market_provider"]
+          shares?: number
+          userId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_positions_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "temp_player"
+            referencedColumns: ["uuid"]
+          },
+        ]
+      }
       markets: {
         Row: {
           createdAt: string
@@ -315,6 +356,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      market_position: "0" | "1"
       market_provider: "limitless" | "polymarket" | "custom"
     }
     CompositeTypes: {

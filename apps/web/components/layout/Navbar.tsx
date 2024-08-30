@@ -7,6 +7,7 @@ import AppLogo from './AppLogo';
 import Links from './Links';
 import PrivyConnectButton from './PrivyConnectButton';
 import MarketsSearchBox from './MarketSearchBox';
+import Web3AuthConnectButton from './Web3AuthConnectButton';
 
 export default function Navbar() {
   return (
@@ -26,7 +27,8 @@ function DesktopNavbar() {
         <Links />
       </div>
       <div className='hidden gap-2 lg:flex'>
-        <PrivyConnectButton />
+        {/* <PrivyConnectButton /> */}
+        <Web3AuthConnectButton />
       </div>
     </nav>
   );
@@ -57,7 +59,8 @@ function MobileNavbar() {
         </div>
         <div className='mb-6 mt-8 flex flex-col items-center justify-center gap-10'>
           <Links />
-          <PrivyConnectButton />
+          {/* <PrivyConnectButton /> */}
+          <Web3AuthConnectButton />
         </div>
       </div>
     </nav>
