@@ -6,6 +6,7 @@ import { Market, MarketGroupResponse } from '@/lib/types/markets';
 import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import clsx from 'clsx';
 import { useQueryState } from 'nuqs';
+import { Address } from 'viem';
 
 export default function MarketOutcome({
   marketGroup,
@@ -73,7 +74,7 @@ function MarketOptions({
                 isMarketSelected && outcomeIndex === idx,
             })}
           >
-            {idx === 0 ? 'Yes' : 'No'} {NumberUtil.toFixed(price, 2)}$
+            {idx === 0 ? 'Yes' : 'No'} {NumberUtil.toFixed(price, 2)}%
           </Button>
         ))}
       </div>

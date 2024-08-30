@@ -10,9 +10,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const [provider, identifier] = params.market_params;
 
-    // const frameMetadata = await getFrameMetadata(
-    // 	`${process.env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/frames/initial/${provider}/${identifier}`,
-    // );
+    const frameMetadata = await getFrameMetadata(
+      `${process.env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/frames/initial/${provider}/${identifier}`,
+    );
     return {
       // title: market?.proxyTitle ?? market?.title ?? 'Noname market',
       // openGraph: {

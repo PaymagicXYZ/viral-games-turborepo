@@ -11,8 +11,12 @@ type MarketPageProps = {
 };
 
 export default async function MarketPage({ params }: MarketPageProps) {
-  const [provider, identifier] = params.market_params;
-  const marketGroup = await getMarketGroup({ identifier, provider });
+  const [provider, marketIdentifier] = params.market_params;
+  const marketGroup = await getMarketGroup({
+    identifier: marketIdentifier,
+    provider,
+  });
+
   return (
     <main className='mt-10 flex flex-col-reverse gap-10 lg:min-h-[1041px] lg:flex-row'>
       <Suspense
@@ -22,7 +26,10 @@ export default async function MarketPage({ params }: MarketPageProps) {
           </div>
         }
       >
-        <MarketGroupDetails marketGroup={marketGroup} />
+        <MarketGroupDetails
+          marketGroup={marketGroup}
+          marketIdentifier={marketIdentifier}
+        />
       </Suspense>
       <Suspense fallback={<LottieLoading />}>
         <MarketExchange markets={marketGroup.data} provider={provider} />

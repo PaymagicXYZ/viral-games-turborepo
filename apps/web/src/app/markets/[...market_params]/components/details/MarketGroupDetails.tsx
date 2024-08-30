@@ -10,10 +10,12 @@ import { MarketGroupResponse } from '@/lib/types/markets';
 
 type MarketDetailsProps = {
   marketGroup: MarketGroupResponse;
+  marketIdentifier: string;
 };
 
 export default function MarketGroupDetails({
   marketGroup,
+  marketIdentifier,
 }: MarketDetailsProps) {
   const market = marketGroup.data?.[0];
 
@@ -49,11 +51,8 @@ export default function MarketGroupDetails({
       <MarketDescription description={market.description} />
 
       <MarketPositions
-        marketIdentifier={
-          marketGroup.metadata?.market_identifier ??
-          marketGroup.metadata?.title ??
-          ''
-        }
+        marketIdentifier={marketIdentifier}
+        marketGroup={marketGroup}
         prices={market.outcomePrices}
         tokenSymbol={market.collateralToken.symbol}
       />

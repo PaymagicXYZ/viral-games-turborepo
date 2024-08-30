@@ -198,12 +198,14 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
     queryKey: ['positions', trades, redeems],
     queryFn: async () => {
       let _positions: HistoryPosition[] = [];
-
+      console.log(trades);
+      console.log(markets);
       trades?.forEach((trade) => {
         // TODO: replace hardcoded markets with dynamic
 
         const market = markets?.find(
-          (market) => market.id.toLowerCase() === trade.market.id.toLowerCase(),
+          (market) =>
+            market.address.toLowerCase() === trade.market.id.toLowerCase(),
         );
 
         if (
