@@ -8,11 +8,13 @@ export const PaidBetPromptScreen = ({
   collateralSymbol,
   iconSrc,
   hasUsedFreeBet,
+  imageUrl
 }: {
   marketTitle: string;
   collateralSymbol: string;
   iconSrc?: string;
   hasUsedFreeBet?: boolean;
+  imageUrl?: string | null
 }) => {
   return (
     <div
@@ -31,7 +33,7 @@ export const PaidBetPromptScreen = ({
       }}
     >
       <img
-        src={'/frames/default.png'}
+        src={imageUrl ?? '/frames/default.png'}
         width={'100%'}
         alt='Confirm Country'
         style={{

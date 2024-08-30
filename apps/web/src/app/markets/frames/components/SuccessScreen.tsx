@@ -6,9 +6,11 @@ import { TextWrapper } from './TextWrapper';
 export const SuccessScreen = ({
   collateralSymbol,
   amount,
+  imageUrl
 }: {
   collateralSymbol: string;
   amount: string;
+  imageUrl?: string | null
 }) => {
   return (
     <div
@@ -27,7 +29,7 @@ export const SuccessScreen = ({
       }}
     >
       <img
-        src={'/frames/default.png'}
+        src={imageUrl ?? '/frames/default.png'}
         width={'100%'}
         alt='Confirm Country'
         style={{

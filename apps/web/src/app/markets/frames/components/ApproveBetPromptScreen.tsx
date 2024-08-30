@@ -9,12 +9,14 @@ export const ApproveBetPromptScreen = ({
   amount,
   title,
   subtitle,
+  imageUrl
 }: {
   marketTitle: string;
   collateralSymbol: string;
   amount: string;
   title: string;
   subtitle: string;
+  imageUrl?: string | null
 }) => {
   return (
     <div
@@ -33,7 +35,7 @@ export const ApproveBetPromptScreen = ({
       }}
     >
       <img
-        src={'/frames/default.png'}
+        src={imageUrl ?? '/frames/default.png'}
         width={'100%'}
         alt='Confirm Country'
         style={{

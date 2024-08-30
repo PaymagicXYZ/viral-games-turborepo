@@ -160,6 +160,7 @@ app
         <InitialScreen
           marketTitle={market.market.title}
           collateralSymbol={collateralToken.symbol}
+          imageUrl={market.market.ogImageURI}
         />
       ),
     });
@@ -234,6 +235,7 @@ app.image('/paid-bet/:provider/:address/img', (c) => {
         collateralSymbol={collateralToken.symbol}
         hasUsedFreeBet={hasUsedFreeBet}
         iconSrc={hasUsedFreeBet ? '/frames/success_icon.png' : undefined}
+        imageUrl={market.market.ogImageURI}
       />
     ),
   });
@@ -292,6 +294,7 @@ app
           subtitle={`You are going to approve ${accountToInvestmentAmountRaw} ${collateralToken.symbol} for betting on
 					the outcome below`}
           title={`Approve ${accountToInvestmentAmountRaw} ${collateralToken.symbol}?`}
+          imageUrl={market.market.ogImageURI}
         />
       ),
     });
@@ -360,6 +363,7 @@ app
           subtitle={`You are going to bet ${accountToInvestmentAmountRaw} ${collateralToken.symbol} on
 			the outcome below`}
           title={`${accountToInvestmentAmountRaw} ${collateralToken.symbol} approved`}
+          imageUrl={market.market.ogImageURI}
         />
       ),
     });
@@ -451,7 +455,7 @@ app
     });
   })
   .image('/success/:provider/:address/img', (c) => {
-    const { accountToInvestmentAmountRaw, collateralToken } = c.previousState;
+    const { accountToInvestmentAmountRaw, collateralToken, market } = c.previousState;
     return c.res({
       headers: {
         'Cache-Control': 'max-age=0',
@@ -460,6 +464,7 @@ app
         <SuccessScreen
           amount={accountToInvestmentAmountRaw ?? '0'}
           collateralSymbol={collateralToken.symbol}
+          imageUrl={market.market.ogImageURI}
         />
       ),
     });
