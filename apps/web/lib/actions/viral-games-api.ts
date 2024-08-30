@@ -95,7 +95,7 @@ export async function getShares({
 }) {
   const url = `${
     env.NEXT_PUBLIC_VIRAL_GAMES_BE_API
-  }/user/eoa/${user_address.toLowerCase()}/${market_address.toLowerCase()}`;
+  }/user/eoa/${user_address.toLowerCase()}/${market_address}`;
   const options: RequestInit = {
     cache: 'no-store',
     headers: {

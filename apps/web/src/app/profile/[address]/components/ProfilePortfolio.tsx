@@ -20,16 +20,23 @@ export default function ProfilePortfolio() {
           tokenSymbol={position.latestTrade?.market.collateral?.symbol}
         />
       ))}
-      {portfolio?.positions?.map(
+      {portfolio &&
+        Object.entries(portfolio.positions).map(([key, positions]) =>
+          positions.map((position, idx) => (
+            <FreePositionItem key={`${key}-${idx}`} position={position} />
+          )),
+        )}
+      {/* {portfolio?.positions?.map(
         (
           position: {
-            outcome_index: number;
+            marketId: string;
+            outcomeIndex: number;
             shares: number;
-            market_address: string;
+            title: number;
           },
           idx: number,
         ) => <FreePositionItem key={idx} position={position} />,
-      )}
+      )} */}
     </section>
   );
 }

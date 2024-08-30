@@ -1,12 +1,11 @@
 import { fixedProductMarketMakerABI } from '@/abis/fixedProductMakerABI';
 import { defaultChain, LIMIT_PER_PAGE, newSubgraphURI } from '@/lib/constants';
-import { MarketResponseWithMetadata } from '@/lib/types/limitless';
+import { MarketResponseWithMetadata, Market } from '@/lib/types/limitless';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Address, formatUnits, getContract, parseUnits } from 'viem';
 
 import {
-  Market,
   MarketGroupResponse,
   PaginatedMarketResponse,
 } from '@/lib/types/markets';

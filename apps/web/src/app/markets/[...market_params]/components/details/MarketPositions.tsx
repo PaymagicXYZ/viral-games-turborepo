@@ -6,18 +6,22 @@ import {
 } from '@/components/providers/HistoryProvider';
 import { Label } from '@/components/ui/label';
 import useGetFreeSharesQuery from '@/lib/hooks/react-query/queries/useGetFreeSharesQuery';
+import { MarketGroupResponse } from '@/lib/types/markets';
 import { formatAddress } from '@/lib/utils/formatters';
 import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import { useMemo } from 'react';
+import { Address, isAddress } from 'viem';
 
 export default function MarketPositions({
   marketIdentifier,
   tokenSymbol,
   prices,
+  marketGroup,
 }: {
   marketIdentifier: string;
   tokenSymbol: string;
   prices: Array<string>;
+  marketGroup: MarketGroupResponse;
 }) {
   const { positions: allMarketsPositions } = useHistory();
   const { data: freePositions } = useGetFreeSharesQuery({
@@ -26,15 +30,23 @@ export default function MarketPositions({
 
   const positions = useMemo(
     () =>
-      allMarketsPositions?.filter(
-        (position) =>
-          position.market.id.toLowerCase() === marketIdentifier.toLowerCase(),
+      allMarketsPositions?.filter((position) =>
+        marketGroup.data.some(
+          (market) =>
+            position.market.id.toLowerCase() === market?.id.toLowerCase(),
+        ),
       ),
-    [allMarketsPositions, marketIdentifier],
+    [allMarketsPositions, marketGroup.data],
   );
 
   const isPortfolioVisible =
     positions?.length || freePositions?.positions?.length;
+
+  const getMarketTitle = (address: Address) => {
+    return marketGroup.data.find(
+      (market) => market.id.toLowerCase() === address.toLowerCase(),
+    )?.title;
+  };
 
   return isPortfolioVisible ? (
     <div className='flex flex-col gap-2'>
@@ -45,14 +57,16 @@ export default function MarketPositions({
           position={position}
           tokenSymbol={tokenSymbol}
           prices={prices}
+          title={getMarketTitle(position.market.id)}
         />
       ))}
       {freePositions?.positions?.map(
         (
           position: {
-            outcome_index: number;
+            marketId: string;
+            outcomeIndex: number;
             shares: number;
-            market_address: string;
+            title: string;
           },
           idx: number,
         ) => <FreePositionItem key={idx} position={position} />,
@@ -65,10 +79,12 @@ export function PositionItem({
   position,
   tokenSymbol,
   prices,
+  title,
 }: {
   position: HistoryPosition;
   tokenSymbol?: string;
   prices?: Array<string>;
+  title?: string;
 }) {
   const getOutcomeNotation = () => {
     const outcomeTokenId = position.outcomeIndex ?? 0;
@@ -126,7 +142,7 @@ export function PositionItem({
     <div className='flex w-full flex-col gap-6 bg-gray-200 px-2 py-4'>
       <div className='flex flex-col flex-wrap justify-between gap-4 md:flex-row'>
         <div className='flex gap-2'>
-          <Label className='text-xs text-gray-500'>Vote</Label>
+          <Label className='text-xs text-gray-500 font-bold'>{title} - </Label>
           <Label className='text-xs text-gray-500'>
             {getOutcomeNotation()}
           </Label>
@@ -176,22 +192,24 @@ export function FreePositionItem({
   position,
 }: {
   position: {
+    marketId: string;
+    outcomeIndex: number;
     shares: number;
-    outcome_index: number;
-    market_address: string;
+    title: string;
   };
 }) {
-  const formattedVote = position.outcome_index === 0 ? 'Yes' : 'No';
+  const formattedVote = position.outcomeIndex === 0 ? 'Yes' : 'No';
+  const marketTitle = isAddress(position.marketId)
+    ? `Market Address: ${formatAddress(position.marketId)}`
+    : position.marketId;
 
   return (
     <div className='flex w-full flex-col gap-6 bg-gray-200 px-2 py-4'>
       <div className='flex justify-between'>
         <Label className='text-xs text-gray-500'>
-          Vote {formattedVote} (Free bet)
+          {position.title} - {formattedVote} (Free bet)
         </Label>
-        <Label className='text-xs text-gray-500'>
-          Market Address: {formatAddress(position.market_address)}
-        </Label>
+        <Label className='text-xs text-gray-500'>{marketTitle}</Label>
       </div>
       <div className='flex flex-col gap-2'>
         <Label className='text-xs text-gray-500'>Shares</Label>

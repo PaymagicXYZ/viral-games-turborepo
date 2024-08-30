@@ -203,7 +203,8 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
         // TODO: replace hardcoded markets with dynamic
 
         const market = markets?.find(
-          (market) => market.id.toLowerCase() === trade.market.id.toLowerCase(),
+          (market) =>
+            market.address.toLowerCase() === trade.market.id.toLowerCase(),
         );
 
         if (
