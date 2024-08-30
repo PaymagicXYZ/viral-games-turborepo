@@ -118,6 +118,7 @@ export type Database = {
           provider: Database["public"]["Enums"]["market_provider"]
           resolved: boolean
           shares: number
+          title: string | null
           userId: string
         }
         Insert: {
@@ -129,6 +130,7 @@ export type Database = {
           provider: Database["public"]["Enums"]["market_provider"]
           resolved?: boolean
           shares: number
+          title?: string | null
           userId: string
         }
         Update: {
@@ -140,6 +142,7 @@ export type Database = {
           provider?: Database["public"]["Enums"]["market_provider"]
           resolved?: boolean
           shares?: number
+          title?: string | null
           userId?: string
         }
         Relationships: [

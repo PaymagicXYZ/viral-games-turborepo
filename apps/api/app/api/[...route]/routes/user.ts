@@ -1,6 +1,7 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import { supabase, initUser } from '../utils';
 import { tempPlayerRowSchema } from '@/types/schemas';
+import { title } from 'process';
 
 const user = new OpenAPIHono();
 
@@ -10,6 +11,7 @@ const PositionSchema = z.object({
   marketId: z.string(),
   outcomeIndex: z.number(),
   shares: z.number(),
+  title: z.string(),
 });
 
 const SinglePortfolioSchema = z.object({
@@ -144,6 +146,7 @@ user.openapi(portfolioRoute, async (c) => {
             marketId: position.marketId,
             outcomeIndex: +position.position,
             shares: position.shares,
+            title: position.title,
           }),
         );
       } else {
@@ -152,6 +155,7 @@ user.openapi(portfolioRoute, async (c) => {
             marketId: position.marketId,
             outcomeIndex: +position.position,
             shares: position.shares,
+            title: position.title,
           }),
         ];
       }
@@ -271,6 +275,7 @@ user.openapi(marketPortfolioRoute, async (c) => {
       marketId: position.marketId,
       outcomeIndex: +position.position,
       shares: position.shares,
+      title: position.title,
     }),
   );
 

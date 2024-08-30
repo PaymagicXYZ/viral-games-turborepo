@@ -150,6 +150,7 @@ buy.openapi(route, async (c) => {
     provider: provider as Database['public']['Enums']['market_provider'],
     userId: userData.uuid,
     eventId: eventId,
+    title: marketData.title,
   });
 
   console.log('error', error);
