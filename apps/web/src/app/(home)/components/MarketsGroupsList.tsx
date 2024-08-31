@@ -20,7 +20,7 @@ function MarketGroupsListLoadingSkeleton() {
       {Array.from({ length: 8 }, (_, index) => (
         <div
           key={index}
-          className='flex h-[247px] w-full flex-col border-2 border-black p-4 shadow-sm'
+          className='flex h-[282px] w-full flex-col border-2 border-black p-4 shadow-sm'
         >
           <div className='mb-4'>
             <div className='relative flex w-full justify-between'>
@@ -146,7 +146,7 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
   const isMarketsGroup = marketGroup.markets.length > 1;
 
   return (
-    <div className='flex h-full w-full flex-col border-2 border-black p-4 shadow-sm'>
+    <div className='flex h-[282px] w-full flex-col border-2 border-black p-4 shadow-sm'>
       <Link
         className='flex h-full flex-col'
         href={`/markets/${marketGroup.provider}/${marketGroup.slug}?market_index=0`}

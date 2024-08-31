@@ -14,7 +14,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { isAddress } from 'viem';
-import { ActivityListLoadingSkeleton } from '../loading';
+import { ActivityListLoadingSkeleton } from './ActivityListLoadingSkeleton';
 
 export default function ActivityList() {
   const { activities, isLoading } = useFetchActivitiesQuery();

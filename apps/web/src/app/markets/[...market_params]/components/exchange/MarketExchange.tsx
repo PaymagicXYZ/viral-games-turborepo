@@ -21,16 +21,16 @@ import { Optional } from '@/lib/types';
 import { SingleMarket, TradeQuotes } from '@/lib/types/limitless';
 import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import { useToken } from '@/lib/hooks/limitless/useToken';
+import { useParams } from 'next/navigation';
+import useGetMarketGroupQuery from '@/lib/hooks/react-query/queries/useGetMarketGroupQuery';
+import { MarketExchangeLoadingSkeleton } from './MarketExchangeLoadingSkeleton';
 
-type MarketExchangeProps = {
-  markets: Array<Market>;
-  provider: string;
-};
+export default function MarketExchange() {
+  const params = useParams<{ market_params: Array<string> }>();
+  const [provider] = params.market_params;
 
-export default function MarketExchange({
-  markets,
-  provider,
-}: MarketExchangeProps) {
+  const { data: marketGroup, isLoading } = useGetMarketGroupQuery();
+
   const [isFreeBet, setIsFreeBet] = useQueryState('is_free_bet', {
     parse: (value) => value === 'true',
     serialize: (value) => value.toString(),
@@ -55,7 +55,7 @@ export default function MarketExchange({
     defaultValue: 'Buy',
   });
   const [currentMarket, setCurrentMarket] = useState<Market | undefined>(
-    markets[marketIndex],
+    marketGroup?.data[marketIndex],
   );
 
   const {
@@ -77,8 +77,12 @@ export default function MarketExchange({
   }, [currentMarket, previousMarket, provider]);
 
   useEffect(() => {
-    setCurrentMarket(markets[marketIndex]);
-  }, [marketIndex])
+    if (!marketGroup) {
+      return;
+    }
+
+    setCurrentMarket(marketGroup.data[marketIndex]);
+  }, [marketIndex, marketGroup]);
 
   useEffect(() => {
     if (strategyQuery) {
@@ -100,6 +104,10 @@ export default function MarketExchange({
       setCollateralAmount('');
     }
   };
+
+  if (isLoading) {
+    return <MarketExchangeLoadingSkeleton />;
+  }
 
   const defaultSwitchValue = provider === 'polymarket' ? true : isFreeBet;
 

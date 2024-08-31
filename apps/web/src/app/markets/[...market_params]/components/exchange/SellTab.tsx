@@ -112,12 +112,12 @@ export function SellTab({
       return new BigNumber(collateralAmount).isGreaterThan(
         new BigNumber(
           outcomeChoice === 'yes'
-            ? freeShares?.positions.find(
+            ? (freeShares?.positions.find(
                 (p: { outcome_index: number }) => p.outcome_index === 0,
-              )?.shares ?? 0
-            : freeShares?.positions.find(
+              )?.shares ?? 0)
+            : (freeShares?.positions.find(
                 (p: { outcome_index: number }) => p.outcome_index === 1,
-              )?.shares ?? 0,
+              )?.shares ?? 0),
         ),
       );
     }
