@@ -6,27 +6,21 @@ import { isAddress } from 'viem';
 import MarketChart from './MarketChart';
 import MarketOutcome from './MarketOutcome';
 import MarketPositions from './MarketPositions';
-import { MarketGroupResponse } from '@/lib/types/markets';
 import { getMarketGroup } from '@/lib/services/MarketService';
-import { setTimeout } from 'timers/promises';
+import { MarketGroupResponse } from '@/lib/types/markets';
 
 type MarketDetailsProps = {
-  provider: string;
-  marketIdentifier: string;
+  marketGroupAsync: Promise<MarketGroupResponse>;
 };
 
 export default async function MarketGroupDetails({
-  provider,
-  marketIdentifier,
+  marketGroupAsync,
 }: MarketDetailsProps) {
-  const marketGroup = await getMarketGroup({
-    identifier: marketIdentifier,
-    provider,
-  });
+  const marketGroup = await marketGroupAsync;
   const market = marketGroup.data?.[0];
 
   return (
-    <section className='flex w-full flex-col gap-10 border-2 border-black p-5 shadow-sm lg:min-h-[1041px] lg:max-w-[75%]'>
+    <section className='flex w-full flex-col gap-10 border-2 border-black p-5 shadow-sm h-fit lg:max-w-[75%]'>
       <MarketTags tags={market?.tags} />
       <div className='flex flex-col items-center gap-4 lg:flex-row'>
         <MarketImage
@@ -36,7 +30,7 @@ export default async function MarketGroupDetails({
             '/viral-game/market-thumbnail.svg'
           }
         />
-        <div className='flex h-full flex-col justify-between py-2'>
+        <div className='flex flex-col justify-between h-auto py-2 w-full lg:h-[250px]'>
           <MarketTitle title={marketGroup.metadata.title} />
           <MarketCreator creator={market.creator} />
         </div>
@@ -56,12 +50,12 @@ export default async function MarketGroupDetails({
       {isAddress(market.id) && <MarketChart market={market} />}
       <MarketDescription description={market.description} />
 
-      <MarketPositions
-        marketIdentifier={marketIdentifier}
+      {/* <MarketPositions
+        // marketIdentifier={marketIdentifier}
         marketGroup={marketGroup}
         prices={market.outcomePrices}
         tokenSymbol={market.collateralToken.symbol}
-      />
+      /> */}
     </section>
   );
 }
@@ -88,12 +82,13 @@ type MarketImageProps = {
 
 function MarketImage({ src }: MarketImageProps) {
   return (
-    <div className='relative h-auto w-full lg:h-[200px] lg:w-[300px]'>
+    <div className='relative h-auto flex-shrink-0 w-full lg:h-[250px] lg:w-[250px]'>
       <Image
         src={src ?? '/viral-game/app-logo.png'}
         alt='market-image'
         fill
         sizes='100vw'
+        className='object-cover'
       />
     </div>
   );
