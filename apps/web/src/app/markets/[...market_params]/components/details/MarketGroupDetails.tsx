@@ -10,10 +10,12 @@ import { getMarketGroup } from '@/lib/services/MarketService';
 import { MarketGroupResponse } from '@/lib/types/markets';
 
 type MarketDetailsProps = {
+  marketIdentifier: string;
   marketGroupAsync: Promise<MarketGroupResponse>;
 };
 
 export default async function MarketGroupDetails({
+  marketIdentifier,
   marketGroupAsync,
 }: MarketDetailsProps) {
   const marketGroup = await marketGroupAsync;
@@ -50,12 +52,12 @@ export default async function MarketGroupDetails({
       {isAddress(market.id) && <MarketChart market={market} />}
       <MarketDescription description={market.description} />
 
-      {/* <MarketPositions
-        // marketIdentifier={marketIdentifier}
+      <MarketPositions
+        marketIdentifier={marketIdentifier}
         marketGroup={marketGroup}
         prices={market.outcomePrices}
         tokenSymbol={market.collateralToken.symbol}
-      /> */}
+      />
     </section>
   );
 }

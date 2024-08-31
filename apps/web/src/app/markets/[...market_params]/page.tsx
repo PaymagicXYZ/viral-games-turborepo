@@ -24,7 +24,10 @@ export default async function MarketPage({ params }: MarketPageProps) {
         key={`${provider}-${marketIdentifier}`}
         fallback={<MarketDetailsLoadingSkeleton />}
       >
-        <MarketGroupDetails marketGroupAsync={marketGroupAsync} />
+        <MarketGroupDetails
+          marketGroupAsync={marketGroupAsync}
+          marketIdentifier={marketIdentifier}
+        />
       </Suspense>
       <Suspense>
         <MarketExchange />
