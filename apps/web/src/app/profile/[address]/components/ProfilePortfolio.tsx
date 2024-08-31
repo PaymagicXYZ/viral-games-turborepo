@@ -21,7 +21,7 @@ export default function ProfilePortfolio() {
         />
       ))}
       {portfolio &&
-        Object.entries(portfolio.positions).map(([key, positions]) =>
+        Object.entries(portfolio?.positions ?? {}).map(([key, positions]) =>
           positions.map((position, idx) => (
             <FreePositionItem key={`${key}-${idx}`} position={position} />
           )),

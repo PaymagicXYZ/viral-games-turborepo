@@ -7,16 +7,22 @@ import MarketChart from './MarketChart';
 import MarketOutcome from './MarketOutcome';
 import MarketPositions from './MarketPositions';
 import { MarketGroupResponse } from '@/lib/types/markets';
+import { getMarketGroup } from '@/lib/services/MarketService';
+import { setTimeout } from 'timers/promises';
 
 type MarketDetailsProps = {
-  marketGroup: MarketGroupResponse;
+  provider: string;
   marketIdentifier: string;
 };
 
-export default function MarketGroupDetails({
-  marketGroup,
+export default async function MarketGroupDetails({
+  provider,
   marketIdentifier,
 }: MarketDetailsProps) {
+  const marketGroup = await getMarketGroup({
+    identifier: marketIdentifier,
+    provider,
+  });
   const market = marketGroup.data?.[0];
 
   return (

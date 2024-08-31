@@ -76,11 +76,9 @@ export default function RootLayout({
       >
         <Providers>
           <div className='flex h-full flex-col px-8 py-16'>
-            <Suspense>
-              <Navbar />
-              <div>{children}</div>
-              <Footer />
-            </Suspense>
+            <Navbar />
+            <div>{children}</div>
+            <Footer />
           </div>
         </Providers>
         <Toaster />
