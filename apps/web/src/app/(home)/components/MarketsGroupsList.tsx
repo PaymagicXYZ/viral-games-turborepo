@@ -1,126 +1,76 @@
-'use client';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import LottieLoading from '@/components/ui/lottie-loading';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useMarketGroups } from '@/lib/services/MarketService';
-import { MarketGroupCardResponse } from '@/lib/types/markets';
-
+import LinkButton from '@/components/ui/link-button';
+import { env } from '@/lib/config/env';
+import { LIMIT_PER_PAGE } from '@/lib/constants';
+import { Optional } from '@/lib/types';
+import {
+  MarketGroupCardResponse,
+  PaginatedMarketResponse,
+} from '@/lib/types/markets';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useQueryState } from 'nuqs';
-import React, { useMemo } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
 
-function MarketGroupsListLoadingSkeleton() {
-  return (
-    <div className='grid grid-cols-1 gap-4 pb-4 pr-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-      {Array.from({ length: 8 }, (_, index) => (
-        <div
-          key={index}
-          className='flex h-[282px] w-full flex-col border-2 border-black p-4 shadow-sm'
-        >
-          <div className='mb-4'>
-            <div className='relative flex w-full justify-between'>
-              <Skeleton className='h-[62px] w-[61px] rounded-sm' />
-              <Skeleton className='h-[27px] w-[27px]' />
-            </div>
-          </div>
-          <Skeleton className='h-[64.08px] w-full' />
-          <div className='mt-4 flex flex-1 justify-end  items-end gap-2'>
-            <Button disabled className='h-[29px] w-full'>
-              Yes
-            </Button>
-            <Button disabled className='h-[29px] w-full'>
-              No
-            </Button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+type MarketGroupsListProps = {
+  filter: Optional<string>;
+};
+
+export async function fetchMarkets() {
+  let baseUrl = `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets?limit=${LIMIT_PER_PAGE}`;
+
+  // if (pageParam) {
+  //   baseUrl += `&cursor=${pageParam}`;
+  // }
+
+  const response = await fetch(baseUrl, { cache: 'no-cache' });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch markets: ${response.status}`);
+  }
+
+  const data: PaginatedMarketResponse = await response.json();
+  return data;
 }
 
-export default function MarketGroupsList() {
-  const [filter] = useQueryState('filter');
-  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-    useMarketGroups();
+export default async function MarketGroupsList({
+  filter,
+}: MarketGroupsListProps) {
+  const data = await fetchMarkets();
 
-  const dataLength =
-    data?.pages.reduce((counter, page) => {
-      return counter + page.markets.length;
-    }, 0) ?? 0;
+  const marketGroups =
+    data?.markets.sort((a, b) => {
+      // Check for specific IDs first
+      const specialIds = [
+        '0x6eb23e842B10D243eE3a9a2663e8E599bC98E198',
+        '0x0e03eDc2A0ba38E803DaD62b31b6e6A2f4b216cc',
+        '0x9fBb8A757F1b973C65A96c964F648814Ad8D73B7',
+      ];
+      if (specialIds.includes(a.slug) || specialIds.includes(a.slug)) return -1;
+      if (specialIds.includes(b.slug) || specialIds.includes(b.slug)) return 1;
 
-  const marketGroups = useMemo(() => {
-    return (
-      data?.pages
-        .flatMap((page) => page.markets)
-        .sort((a, b) => {
-          // Check for specific IDs first
-          const specialIds = [
-            '0x6eb23e842B10D243eE3a9a2663e8E599bC98E198',
-            '0x0e03eDc2A0ba38E803DaD62b31b6e6A2f4b216cc',
-            '0x9fBb8A757F1b973C65A96c964F648814Ad8D73B7',
-          ];
-          if (specialIds.includes(a.slug) || specialIds.includes(a.slug))
-            return -1;
-          if (specialIds.includes(b.slug) || specialIds.includes(b.slug))
-            return 1;
+      // Then sort by provider
+      if (a.provider === 'limitless' && b.provider !== 'limitless') return -1;
+      if (a.provider !== 'limitless' && b.provider === 'limitless') return 1;
 
-          // Then sort by provider
-          if (a.provider === 'limitless' && b.provider !== 'limitless')
-            return -1;
-          if (a.provider !== 'limitless' && b.provider === 'limitless')
-            return 1;
+      return 0;
+    }) || [];
 
-          return 0;
-        }) || []
-    );
-  }, [data?.pages]);
+  const filteredMarketsGroups = !filter
+    ? marketGroups
+    : marketGroups.filter((market: MarketGroupCardResponse) => {
+        if (!market.category) {
+          return false;
+        }
 
-  const filteredMarketsGroups = useMemo(() => {
-    if (!filter) {
-      return marketGroups; // Return all markets groups if no filter is selected
-    }
-
-    return marketGroups.filter((market: MarketGroupCardResponse) => {
-      if (!market.category) {
-        return false;
-      }
-
-      return market.category.includes(filter.toLowerCase());
-    });
-  }, [marketGroups, filter]);
-
-  if (isLoading) {
-    return <MarketGroupsListLoadingSkeleton />;
-  }
-
-  const loadMore = () => {
-    if (!isFetching && hasNextPage) {
-      fetchNextPage();
-    }
-  };
-
-  if (!marketGroups.length) {
-    return <Label>No data</Label>;
-  }
+        return market.category.includes(filter.toLowerCase());
+      });
 
   return (
-    <InfiniteScroll
-      dataLength={dataLength}
-      next={loadMore}
-      hasMore={hasNextPage}
-      loader={<Label>Loading...</Label>}
-    >
-      <div className='grid grid-cols-1 gap-4 pb-4 pr-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {filteredMarketsGroups.map((marketGroup, idx) => (
-          <MarketGroupItem key={idx} marketGroup={marketGroup} />
-        ))}
-      </div>
-    </InfiniteScroll>
+    <div className='grid grid-cols-1 gap-4 pb-4 pr-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      {filteredMarketsGroups.map((marketGroup, idx) => (
+        <MarketGroupItem key={idx} marketGroup={marketGroup} />
+      ))}
+    </div>
   );
 }
 
@@ -129,27 +79,13 @@ type MarketGroupItemProps = {
 };
 
 function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
-  const router = useRouter();
-
-  const openMarketWithPreselectedStrategy = ({
-    outcomeIndex,
-    marketIndex,
-  }: {
-    outcomeIndex: number;
-    marketIndex: number;
-  }) => {
-    router.push(
-      `/markets/${marketGroup.provider}/${marketGroup.slug}?strategy=buy&market_index=${marketIndex}&outcome_index=${outcomeIndex}`,
-    );
-  };
-
   const isMarketsGroup = marketGroup.markets.length > 1;
 
   return (
     <div className='flex h-[282px] w-full flex-col border-2 border-black p-4 shadow-sm'>
       <Link
         className='flex h-full flex-col'
-        href={`/markets/${marketGroup.provider}/${marketGroup.slug}?market_index=0`}
+        href={`/markets/${marketGroup.provider}/${marketGroup.slug}`}
       >
         <div className='mb-4'>
           <div className='relative flex w-full items-start justify-between'>
@@ -177,11 +113,10 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
 
         {!isMarketsGroup ? (
           <MarketView
-            openMarketWithPreselectedStrategy={
-              openMarketWithPreselectedStrategy
-            }
             isSingleView
             marketIndex={0}
+            provider={marketGroup.provider}
+            slug={marketGroup.slug}
           />
         ) : (
           <div className='h-[100px] overflow-auto'>
@@ -189,10 +124,9 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
               <MarketView
                 key={market.id}
                 title={market.title}
-                openMarketWithPreselectedStrategy={
-                  openMarketWithPreselectedStrategy
-                }
                 marketIndex={marketIndex}
+                provider={marketGroup.provider}
+                slug={marketGroup.slug}
               />
             ))}
           </div>
@@ -204,22 +138,18 @@ function MarketGroupItem({ marketGroup }: MarketGroupItemProps) {
 
 type MarketViewProps = {
   title?: string;
-  openMarketWithPreselectedStrategy: ({
-    outcomeIndex,
-    marketIndex,
-  }: {
-    outcomeIndex: number;
-    marketIndex: number;
-  }) => void;
   isSingleView?: boolean;
   marketIndex: number;
+  provider: string;
+  slug: string;
 };
 
 const MarketView: React.FC<MarketViewProps> = ({
   title,
-  openMarketWithPreselectedStrategy,
   isSingleView,
   marketIndex,
+  provider,
+  slug,
 }) => (
   <div
     className={clsx('flex flex-col', {
@@ -235,32 +165,18 @@ const MarketView: React.FC<MarketViewProps> = ({
     >
       {isSingleView ? (
         <>
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              openMarketWithPreselectedStrategy({
-                outcomeIndex: 0,
-                marketIndex,
-              });
-            }}
+          <LinkButton
+            href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=0`}
             className='h-[29px] w-full'
           >
             Yes
-          </Button>
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              openMarketWithPreselectedStrategy({
-                outcomeIndex: 1,
-                marketIndex,
-              });
-            }}
+          </LinkButton>
+          <LinkButton
+            href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=1`}
             className='h-[29px] w-full'
           >
             No
-          </Button>
+          </LinkButton>
         </>
       ) : (
         <>
@@ -270,32 +186,18 @@ const MarketView: React.FC<MarketViewProps> = ({
             </Label>
           </div>
           <div className='ml-2 flex gap-2'>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openMarketWithPreselectedStrategy({
-                  outcomeIndex: 0,
-                  marketIndex,
-                });
-              }}
+            <LinkButton
               className='h-[29px] w-[79px]'
+              href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=0`}
             >
               Yes
-            </Button>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openMarketWithPreselectedStrategy({
-                  outcomeIndex: 1,
-                  marketIndex,
-                });
-              }}
+            </LinkButton>
+            <LinkButton
+              href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=1`}
               className='h-[29px] w-[79px]'
             >
               No
-            </Button>
+            </LinkButton>
           </div>
         </>
       )}

@@ -1,79 +1,29 @@
-'use client';
-
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import LinkButton from '@/components/ui/link-button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useMarketGroups } from '@/lib/services/MarketService';
 import { MarketGroupCardResponse } from '@/lib/types/markets';
 import Image from 'next/image';
-import { useMemo } from 'react';
+import { fetchMarkets } from './MarketsGroupsList';
 
-function MarketGroupsOverviewLoadingSkeleton() {
-  return (
-    <section className='hidden h-[208px] overflow-x-auto md:block'>
-      <div className='flex gap-7'>
-        {Array.from({ length: 4 }, (_, index) => (
-          <div
-            key={index}
-            className='flex h-[400px] w-[270px] flex-shrink-0 flex-col-reverse items-center gap-4 border-2 border-black p-5 shadow-sm md:h-[188px] md:flex-row lg:w-[505px]'
-          >
-            <div className='flex h-full w-full flex-col justify-between gap-4'>
-              <div className='flex flex-wrap'>
-                <Skeleton className='h-12 w-full' />
-              </div>
-              <Skeleton className='h-[27px] w-[27px]' />
-              <Button disabled className='w-full md:w-[132px] min-h-[40px]'>
-                Bet Now
-              </Button>
-            </div>
-            <div className='flex-none'>
-              <Skeleton className='relative h-48 w-56 md:size-36' />
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+export default async function MarketGroupsOverview() {
+  const data = await fetchMarkets();
 
-export default function MarketGroupsOverview() {
-  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-    useMarketGroups(null);
+  const marketGroups =
+    data?.markets.sort((a, b) => {
+      // Check for specific IDs first
+      const specialIds = [
+        '0x6eb23e842B10D243eE3a9a2663e8E599bC98E198',
+        '0x0e03eDc2A0ba38E803DaD62b31b6e6A2f4b216cc',
+        '0x9fBb8A757F1b973C65A96c964F648814Ad8D73B7',
+      ];
+      if (specialIds.includes(a.slug) || specialIds.includes(a.slug)) return -1;
+      if (specialIds.includes(b.slug) || specialIds.includes(b.slug)) return 1;
 
-  const marketGroups = useMemo(() => {
-    return (
-      data?.pages
-        .flatMap((page) => page.markets)
-        .sort((a, b) => {
-          // Check for specific IDs first
-          const specialIds = [
-            '0x6eb23e842B10D243eE3a9a2663e8E599bC98E198',
-            '0x9fBb8A757F1b973C65A96c964F648814Ad8D73B7',
-          ];
-          if (specialIds.includes(a.slug) || specialIds.includes(a.slug))
-            return -1;
-          if (specialIds.includes(b.slug) || specialIds.includes(b.slug))
-            return 1;
+      // Then sort by provider
+      if (a.provider === 'limitless' && b.provider !== 'limitless') return -1;
+      if (a.provider !== 'limitless' && b.provider === 'limitless') return 1;
 
-          // Then sort by provider
-          if (a.provider === 'limitless' && b.provider !== 'limitless')
-            return -1;
-          if (a.provider !== 'limitless' && b.provider === 'limitless')
-            return 1;
-
-          return 0;
-        }) || []
-    );
-  }, [data?.pages]);
-
-  if (isLoading) {
-    return <MarketGroupsOverviewLoadingSkeleton />;
-  }
-
-  if (!marketGroups.length) {
-    return <Label>No data</Label>;
-  }
+      return 0;
+    }) || [];
 
   return (
     <section className='hidden h-[208px] overflow-x-auto md:block'>

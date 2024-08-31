@@ -93,7 +93,6 @@ export function BuyTab({
   }
 
   const isButtonDisabled = useMemo(() => {
-    if (isFreeBet) return false;
     if (Number(collateralAmount) === 0) return true; // Disable button when no amount is entered
     if (isProcessing) return true;
     if (isExceedsBalance) return true;
@@ -208,13 +207,15 @@ export function BuyTab({
           withLoading={isButtonDisabled && Number(collateralAmount) !== 0}
         />
       </div>
-      <OrderDetails
-        quotes={quote}
-        tokenSymbol={market.collateralToken.symbol}
-        withPriceImpact
-        withROI
-        withReturn
-      />
+      {!isFreeBet && (
+        <OrderDetails
+          quotes={quote}
+          tokenSymbol={market.collateralToken.symbol}
+          withPriceImpact
+          withROI
+          withReturn
+        />
+      )}
     </section>
   );
 }
