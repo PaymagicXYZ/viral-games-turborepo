@@ -1,16 +1,21 @@
 'use server';
 
 import { supabaseClient } from '@/lib/config/supabaseClient';
+import { unstable_cache as cache } from 'next/cache';
 
-export async function getTags() {
-  const { data, error } = await supabaseClient
-    .from('tags')
-    .select('*')
-    .order('index');
+export const getTags = cache(
+  async () => {
+    const { data, error } = await supabaseClient
+      .from('tags')
+      .select('*')
+      .order('index');
 
-  if (error) {
-    throw new Error('Failed to fetch tags');
-  }
+    if (error) {
+      throw new Error('Failed to fetch tags');
+    }
 
-  return data;
-}
+    return data;
+  },
+  ['tags'],
+  { revalidate: 60 },
+);
