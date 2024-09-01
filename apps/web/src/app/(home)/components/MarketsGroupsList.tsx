@@ -1,5 +1,6 @@
 import { Label } from '@/components/ui/label';
 import LinkButton from '@/components/ui/link-button';
+import { fetchMarkets } from '@/lib/actions/viral-games-api';
 import { env } from '@/lib/config/env';
 import { LIMIT_PER_PAGE } from '@/lib/constants';
 import { Optional } from '@/lib/types';
@@ -14,23 +15,6 @@ import Link from 'next/link';
 type MarketGroupsListProps = {
   filter: Optional<string>;
 };
-
-export async function fetchMarkets() {
-  let baseUrl = `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets?limit=${LIMIT_PER_PAGE}`;
-
-  // if (pageParam) {
-  //   baseUrl += `&cursor=${pageParam}`;
-  // }
-
-  const response = await fetch(baseUrl, { cache: 'no-cache' });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch markets: ${response.status}`);
-  }
-
-  const data: PaginatedMarketResponse = await response.json();
-  return data;
-}
 
 export default async function MarketGroupsList({
   filter,
