@@ -1,8 +1,8 @@
+import { Optional } from '@/lib/types';
+import { Suspense } from 'react';
 import MarketGroupsList from './components/MarketsGroupsList';
 import MarketGroupsOverview from './components/MarketsGroupOverview';
 import MarketGroupsTags from './components/MarketGroupsTags';
-import { Optional } from '@/lib/types';
-import { Suspense } from 'react';
 import MarketsGroupOverviewLoadingSkeleton from './components/loading-skeletons/MarketsGroupOverviewLoadingSkeleton';
 import MarketGroupsListLoadingSkeleton from './components/loading-skeletons/MarketGroupsListLoadingSkeleton';
 import MarketGroupsTagsLoadingSkeleton from './components/loading-skeletons/MarketGroupsTagsLoadingSkeleton';

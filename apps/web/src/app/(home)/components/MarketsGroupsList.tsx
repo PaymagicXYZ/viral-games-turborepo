@@ -150,12 +150,14 @@ const MarketView: React.FC<MarketViewProps> = ({
       {isSingleView ? (
         <>
           <LinkButton
+            scroll
             href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=0`}
             className='h-[29px] w-full'
           >
             Yes
           </LinkButton>
           <LinkButton
+            scroll
             href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=1`}
             className='h-[29px] w-full'
           >
@@ -171,12 +173,14 @@ const MarketView: React.FC<MarketViewProps> = ({
           </div>
           <div className='ml-2 flex gap-2'>
             <LinkButton
+              scroll
               className='h-[29px] w-[79px]'
               href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=0`}
             >
               Yes
             </LinkButton>
             <LinkButton
+              scroll
               href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=1`}
               className='h-[29px] w-[79px]'
             >

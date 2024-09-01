@@ -108,7 +108,7 @@ export const getMarketGroup = async ({
   const response = await fetch(
     `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets/${provider}/${identifier}`,
     {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     },
   );
 
