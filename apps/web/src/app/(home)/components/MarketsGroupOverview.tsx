@@ -1,8 +1,8 @@
 import { Label } from '@/components/ui/label';
 import LinkButton from '@/components/ui/link-button';
+import { fetchMarkets } from '@/lib/actions/viral-games-api';
 import { MarketGroupCardResponse } from '@/lib/types/markets';
 import Image from 'next/image';
-import { fetchMarkets } from './MarketsGroupsList';
 
 export default async function MarketGroupsOverview() {
   const data = await fetchMarkets();

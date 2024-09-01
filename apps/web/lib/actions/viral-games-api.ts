@@ -6,6 +6,8 @@ import type {
 } from '@/lib/types/limitless';
 import type { Tables } from '../types/supabase';
 import { env } from '../config/env';
+import { PaginatedMarketResponse } from '../types/markets';
+import { LIMIT_PER_PAGE } from '../constants';
 
 export async function getTempPlayer({
   user_address,
@@ -134,5 +136,22 @@ export async function getPortfolio({ user_address }: { user_address: string }) {
 
   const data = await response.json();
 
+  return data;
+}
+
+export async function fetchMarkets() {
+  let baseUrl = `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets?limit=${LIMIT_PER_PAGE}`;
+
+  // if (pageParam) {
+  //   baseUrl += `&cursor=${pageParam}`;
+  // }
+
+  const response = await fetch(baseUrl, { next: { revalidate: 60 } });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch markets: ${response.status}`);
+  }
+
+  const data: PaginatedMarketResponse = await response.json();
   return data;
 }
