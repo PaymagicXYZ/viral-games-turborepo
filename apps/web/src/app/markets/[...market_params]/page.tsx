@@ -5,13 +5,16 @@ import MarketExchange from './components/exchange/MarketExchange';
 import { getMarketGroup } from '@/lib/services/MarketService';
 import { fetchMarkets } from '@/lib/actions/viral-games-api';
 
-export async function generateStaticParams() {
-  const data = await fetchMarkets();
+//
+// export const dynamicParams = false;
 
-  return data.markets.map((market) => ({
-    market_params: [market.provider, market.slug],
-  }));
-}
+// export async function generateStaticParams() {
+//   const data = await fetchMarkets();
+
+//   return data.markets.map((market) => ({
+//     market_params: [market.provider, market.slug],
+//   }));
+// }
 
 type MarketPageProps = {
   params: {
