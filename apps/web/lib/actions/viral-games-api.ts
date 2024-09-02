@@ -4,10 +4,10 @@ import type {
   BuyErrorResponse,
   BuySuccessResponse,
 } from '@/lib/types/limitless';
-import type { Tables } from '../types/supabase';
 import { env } from '../config/env';
 import { PaginatedMarketResponse } from '../types/markets';
 import { LIMIT_PER_PAGE } from '../constants';
+import { Tables } from '@repo/shared-types';
 
 export async function getTempPlayer({
   user_address,

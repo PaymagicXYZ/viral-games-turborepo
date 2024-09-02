@@ -1,4 +1,3 @@
-import { Tables } from '@/types/database.types';
 import {
   LimitlessGroupMarketResponse,
   LimitlessResponse,
@@ -6,6 +5,7 @@ import {
 import { MarketsWithMetadata } from '@/types/market';
 import { LimitlessProvider } from '../providers/LimitlessProvider';
 import { DEFAULT_LIMITLESS_TAG } from '@/app/api/[...route]/utils/constants';
+import { Tables } from '@repo/shared-types';
 
 export async function transformLimitlessResponse(
   response: LimitlessResponse | LimitlessGroupMarketResponse,

@@ -1,4 +1,3 @@
-import type { Tables } from '@/types/database.types';
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
 import { supabase } from '../utils';
 import { GAMMA_API_URL } from '../utils/constants';
@@ -7,6 +6,7 @@ import {
   ErrorSchema,
   UnauthorizedResponseSchema,
 } from '@/app/schemas';
+import type { Tables } from '@repo/shared-types';
 
 const polymarket = new OpenAPIHono();
 

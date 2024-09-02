@@ -53,7 +53,8 @@
     "use-debounce": "^10.0.3",
     "viem": "^2.20.0",
     "wagmi": "^2.12.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@repo/shared-types": "*"
   },
   "devDependencies": {
     "@types/node": "^20",

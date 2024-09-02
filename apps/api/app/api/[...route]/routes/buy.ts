@@ -5,8 +5,7 @@ import {
   tempPlayerUpdateSchema,
 } from '@/types/schemas';
 import { MarketProviderFactory } from '@/app/services/market/MarketProviderFactory';
-import { Database } from '@/types/database.types';
-
+import type { Database } from '@repo/shared-types';
 const buy = new OpenAPIHono();
 
 const BuySchema = z

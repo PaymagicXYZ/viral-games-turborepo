@@ -1,5 +1,4 @@
 import { MarketProvider } from './MarketProvider';
-import { CustomProvider } from './providers/CustomProvider';
 import { LimitlessProvider } from './providers/LimitlessProvider';
 import { PolymarketProvider } from './providers/PolymarketProvider';
 

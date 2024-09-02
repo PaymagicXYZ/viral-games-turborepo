@@ -1,4 +1,4 @@
-import { Tables } from '@/lib/types/supabase';
+import { Tables } from '@repo/shared-types';
 import { Address } from 'viem';
 
 export type Token = {

@@ -16,7 +16,7 @@ import { PaidBetPromptScreen } from '../components/PaidBetPromptScreen';
 import { SuccessScreen } from '../components/SuccessScreen';
 import { getViemClient } from './queries';
 
-import { Tables } from '@/lib/types/supabase';
+import { Tables } from '@repo/shared-types';
 import { Token, TradeQuotes } from '@/lib/types/limitless';
 import { buyShares, getTempPlayer } from '@/lib/actions/viral-games-api';
 import { defaultChain } from '@/lib/constants';

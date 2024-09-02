@@ -6,7 +6,7 @@ import LottieLoading from '@/components/ui/lottie-loading';
 import useFetchActivitiesQuery, {
   useActivitiesSubscription,
 } from '@/lib/hooks/react-query/subscriptions/activitiesSubscription';
-import type { Tables } from '@/lib/types/supabase';
+import type { Tables } from '@repo/shared-types';
 import { generateRandomGradient } from '@/lib/utils';
 import { timeAgoFormatter, formatAddress } from '@/lib/utils/formatters';
 import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';

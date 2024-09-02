@@ -1,6 +1,6 @@
 import { fetchActivities } from '@/lib/actions/supabase/activities';
 import { supabaseBrowserClient } from '@/lib/config/supabaseBrowserClient';
-import { Tables } from '@/lib/types/supabase';
+import { Tables } from '@repo/shared-types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
