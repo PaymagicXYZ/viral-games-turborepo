@@ -31,7 +31,8 @@ export default function Web3AuthConnectButton() {
       return;
     }
 
-    const userInfo = await web3AuthInstance.getUserInfo();
+    const userInfo = await web3AuthInstance?.getUserInfo();
+    console.log(userInfo);
   }, [account.address]);
 
   const handleConnect = async () => {

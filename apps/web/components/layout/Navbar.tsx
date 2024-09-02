@@ -27,8 +27,8 @@ function DesktopNavbar() {
         <Links />
       </div>
       <div className='hidden gap-2 lg:flex'>
-        <PrivyConnectButton />
-        {/* <Web3AuthConnectButton /> */}
+        {/* <PrivyConnectButton /> */}
+        <Web3AuthConnectButton />
       </div>
     </nav>
   );
