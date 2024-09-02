@@ -14,6 +14,8 @@ import { Label } from '../ui/label';
 import Image from 'next/image';
 import { copyToClipboard } from '@/lib/utils';
 import useGetTempPlayerQuery from '@/lib/hooks/react-query/queries/useGetTempPlayerQuery';
+import { useAsyncEffect } from '@/lib/hooks/useAsyncEffect';
+import { web3AuthInstance } from '@/lib/config/web3Auth';
 
 export default function Web3AuthConnectButton() {
   const { isClient } = useIsClient();
@@ -23,6 +25,14 @@ export default function Web3AuthConnectButton() {
   const account = useAccount();
 
   const { data } = useGetTempPlayerQuery();
+
+  useAsyncEffect(async () => {
+    if (!account.address) {
+      return;
+    }
+
+    const userInfo = await web3AuthInstance.getUserInfo();
+  }, [account.address]);
 
   const handleConnect = async () => {
     await connectAsync({ connector: connectors[0] });
