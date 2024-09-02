@@ -10,9 +10,9 @@ import {
 import { base, Chain } from 'wagmi/chains';
 import { WalletServicesPlugin } from '@web3auth/wallet-services-plugin';
 import { getDefaultExternalAdapters } from '@web3auth/default-evm-adapter';
+import { env } from './env';
 
-const CLIENT_ID =
-  'BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ';
+const CLIENT_ID = env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID;
 
 const chainConfig: CustomChainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,

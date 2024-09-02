@@ -28,6 +28,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_KEY: z.string(),
     NEXT_PUBLIC_POSTHOG_KEY: z.string(),
+    NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID: z.string(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -45,6 +46,9 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_KEY: process.env.NEXT_PUBLIC_SUPABASE_KEY,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID:
+      process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID,
+
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     WEB_APP_API_SECRET: process.env.WEB_APP_API_SECRET,
