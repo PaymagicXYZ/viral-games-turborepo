@@ -108,6 +108,9 @@ importers:
       '@radix-ui/react-toast':
         specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
+      '@repo/shared-types':
+        specifier: '*'
+        version: link:../../packages/shared-types
       '@supabase/ssr':
         specifier: ^0.5.0
         version: 0.5.0(@supabase/supabase-js@2.45.2)
