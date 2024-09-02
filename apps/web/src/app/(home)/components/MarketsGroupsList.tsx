@@ -190,13 +190,7 @@ const MarketView: React.FC<MarketViewProps> = ({
       return;
     }
 
-    console.log(inView, slug);
-
-    // Prefetch Yes Button
-    router.prefetch(yesOutcomeHref);
-
-    // Prefetch No Button
-    router.prefetch(noOutcomeHref);
+    router.prefetch(`/markets/${provider}/${slug}`);
   }, [inView, router, provider, slug, marketIndex]);
 
   return (
