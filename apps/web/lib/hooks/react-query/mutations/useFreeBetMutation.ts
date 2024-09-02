@@ -10,7 +10,7 @@ type ExchangePosition = {
   position: 'Yes' | 'No';
 };
 
-export function useFreeBetMutation(marketProvider: 'limitless' | 'polymarket') {
+export function useFreeBetMutation(marketProvider: 'limitless' | 'polymarket' | 'custom') {
   const queryClient = useQueryClient();
   const account = useAccount();
   const params = useParams<{ market_params: Array<string> }>();
