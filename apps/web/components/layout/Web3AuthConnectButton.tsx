@@ -55,7 +55,7 @@ export default function Web3AuthConnectButton() {
         <DropdownMenuTrigger className='w-[210px] text-xs text-black border-2 border-black shadow-sm h-[40px]'>
           {formatAddress(account.address)}
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='rounded-none w-[210px] mt-4 border-2 border-black shadow-sm space-y-3'>
+        <DropdownMenuContent className='hidden lg:block rounded-none w-[210px] mt-4 border-2 border-black shadow-sm space-y-3'>
           <DropdownMenuItem className='flex items-center justify-between'>
             <Label className='text-xs'>{formatAddress(account.address)}</Label>
             <Image

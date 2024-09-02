@@ -10,7 +10,7 @@ export default async function MarketGroupsTags({
   const tags = await getTags();
 
   return (
-    <div className='w-full space-x-4'>
+    <div className='w-full flex gap-4 flex-wrap'>
       {tags?.map((tag) => (
         <Tag
           key={tag.id}
