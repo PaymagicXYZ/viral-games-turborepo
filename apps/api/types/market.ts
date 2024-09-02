@@ -1,4 +1,4 @@
-import { Tables } from './database.types';
+import { Tables } from '@repo/shared-types';
 import { CollateralToken, LimitlessGroupMarket } from './limitless';
 
 export interface PaginatedMarketResponse {
