@@ -1,7 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import { supabase, initUser } from '../utils';
 import { tempPlayerRowSchema } from '@/types/schemas';
-import { title } from 'process';
 
 const user = new OpenAPIHono();
 

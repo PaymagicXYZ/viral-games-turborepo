@@ -1,5 +1,4 @@
-import { Market } from '@/types/market';
-import { SupportedChain, getClient } from './viem';
+import type { Market } from '@/types/market';
 
 export const abi = [
   {

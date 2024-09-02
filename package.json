@@ -5,7 +5,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "gen-types": "supabase gen types typescript --project-id 'nzavwarwntmwtfrkfput' --schema public > packages/shared-types/src/supabase.ts"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
