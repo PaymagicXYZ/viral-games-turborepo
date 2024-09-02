@@ -1,16 +1,18 @@
 'use client';
 
+import { useInView } from 'react-intersection-observer';
 import { Label } from '@/components/ui/label';
-import LinkButton from '@/components/ui/link-button';
 import { useMarketGroups } from '@/lib/services/MarketService';
 import { Optional } from '@/lib/types';
 import { MarketGroupCardResponse } from '@/lib/types/markets';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MarketGroupsListLoadingSkeleton from './loading-skeletons/MarketGroupsListLoadingSkeleton';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 type MarketGroupsListProps = {
   filter: Optional<string>;
@@ -172,61 +174,96 @@ const MarketView: React.FC<MarketViewProps> = ({
   marketIndex,
   provider,
   slug,
-}) => (
-  <div
-    className={clsx('flex flex-col', {
-      'h-full justify-between': isSingleView,
-      'h-[45px]': !isSingleView,
-    })}
-  >
+}) => {
+  const router = useRouter();
+
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.5,
+  });
+
+  const yesOutcomeHref = `/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=0`;
+  const noOutcomeHref = `/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=1`;
+
+  useEffect(() => {
+    if (!inView) {
+      return;
+    }
+
+    console.log(inView, slug);
+
+    // Prefetch Yes Button
+    router.prefetch(yesOutcomeHref);
+
+    // Prefetch No Button
+    router.prefetch(noOutcomeHref);
+  }, [inView, router, provider, slug, marketIndex]);
+
+  return (
     <div
-      className={clsx('flex', {
-        'mt-auto  gap-2': isSingleView,
-        'items-center justify-between pr-2': !isSingleView,
+      ref={ref}
+      className={clsx('flex flex-col', {
+        'h-full justify-between': isSingleView,
+        'h-[45px]': !isSingleView,
       })}
     >
-      {isSingleView ? (
-        <>
-          <LinkButton
-            scroll
-            href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=0`}
-            className='h-[29px] w-full'
-          >
-            Yes
-          </LinkButton>
-          <LinkButton
-            scroll
-            href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=1`}
-            className='h-[29px] w-full'
-          >
-            No
-          </LinkButton>
-        </>
-      ) : (
-        <>
-          <div className='flex-grow overflow-hidden'>
-            <Label className='line-clamp-1 text-[12px] text-gray-500'>
-              {title}
-            </Label>
-          </div>
-          <div className='ml-2 flex gap-2'>
-            <LinkButton
-              scroll
-              className='h-[29px] w-[79px]'
-              href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=0`}
+      <div
+        className={clsx('flex', {
+          'mt-auto gap-2': isSingleView,
+          'items-center justify-between pr-2': !isSingleView,
+        })}
+      >
+        {isSingleView ? (
+          <>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(yesOutcomeHref);
+              }}
+              className='h-[29px] w-full'
             >
               Yes
-            </LinkButton>
-            <LinkButton
-              scroll
-              href={`/markets/${provider}/${slug}?strategy=buy&market_index=${marketIndex}&outcome_index=1`}
-              className='h-[29px] w-[79px]'
+            </Button>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(noOutcomeHref);
+              }}
+              className='h-[29px] w-full'
             >
               No
-            </LinkButton>
-          </div>
-        </>
-      )}
+            </Button>
+          </>
+        ) : (
+          <>
+            <div className='flex-grow overflow-hidden'>
+              <Label className='line-clamp-1 text-[12px] text-gray-500'>
+                {title}
+              </Label>
+            </div>
+            <div className='ml-2 flex gap-2'>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(yesOutcomeHref);
+                }}
+                className='h-[29px] w-[79px]'
+              >
+                Yes
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(noOutcomeHref);
+                }}
+                className='h-[29px] w-[79px]'
+              >
+                No
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};

@@ -1,10 +1,10 @@
 {
-    "name": "@repo/shared-types",
-    "version": "1.0.0",
-    "main": "./index.ts",
-    "types": "./index.ts",
-    "license": "MIT",
-    "dependencies": {
-      "typescript": "^5.4.5"
-    }
+  "name": "@repo/shared-types",
+  "version": "1.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.4.5"
+  }
 }
