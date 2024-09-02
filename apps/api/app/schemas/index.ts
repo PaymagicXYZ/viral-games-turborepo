@@ -105,7 +105,7 @@ const MarketSchema = z.object({
     .optional(),
   creator: CreatorSchema,
   chainId: z.number(),
-  provider: z.literal('polymarket').or(z.literal('limitless')),
+  provider: z.literal('polymarket').or(z.literal('limitless')).or(z.literal('custom')),
 });
 
 export const SupabaseMarketSchema = z.object({
@@ -145,7 +145,7 @@ const MarketGroupCardResponseSchema = z.object({
   slug: z.string(),
   title: z.string(),
   imageUrl: z.string(),
-  provider: z.literal('polymarket').or(z.literal('limitless')),
+  provider: z.literal('polymarket').or(z.literal('limitless')).or(z.literal('custom')),
   deadline: z.string(),
   category: z.array(z.string()),
   collateralToken: CollateralTokenSchema,

@@ -138,7 +138,7 @@ export default function MarketExchange() {
             id='free-bet-toggle'
             checked={defaultSwitchValue}
             onCheckedChange={handleFreeBetToggle}
-            disabled={provider === 'polymarket'}
+            disabled={provider === 'polymarket' || provider === 'custom'}
           />
           <Label htmlFor='free-bet-toggle'>Free Bet</Label>
         </div>

@@ -47,7 +47,7 @@ export async function buyShares({
   position,
 }: {
   socialProvider: 'eoa' | 'farcaster';
-  provider: 'limitless' | 'polymarket';
+  provider: 'limitless' | 'polymarket' | 'custom';
   userId: string;
   marketId: string;
   eventId: string;

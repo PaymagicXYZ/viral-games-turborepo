@@ -52,7 +52,7 @@ export function BuyTab({
     mutateAsync: freeBet,
     error: freeExchangeError,
     isPending: isSubmittingFreeBet,
-  } = useFreeBetMutation(marketProvider as 'limitless' | 'polymarket');
+  } = useFreeBetMutation(marketProvider as 'limitless' | 'polymarket' | 'custom');
   const { triggerSuccessToast } = useSuccessToast();
 
   const [isProcessing, setIsProcessing] = useState(false);
