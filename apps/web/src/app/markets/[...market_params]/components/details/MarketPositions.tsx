@@ -143,10 +143,10 @@ export function PositionItem({
       <div className='flex flex-col flex-wrap justify-between gap-4 md:flex-row'>
         <div className='flex gap-2'>
           <Label className='text-xs text-gray-500 font-bold w-[65%]'>
-            {title} -{' '}
+            {title}
           </Label>
           <Label className='text-xs text-green-600'>
-            {getOutcomeNotation()}
+            - {getOutcomeNotation()}
           </Label>
         </div>
         <div className='flex flex-col gap-4 lg:flex-row'>
@@ -207,10 +207,12 @@ export function FreePositionItem({
 
   return (
     <div className='flex w-full flex-col gap-6 bg-gray-200 px-2 py-4'>
-      <div className='flex justify-between'>
-        <Label className='text-xs text-gray-500'>
+      <div className='flex justify-between w-full'>
+        <Label className='text-xs text-gray-500 w-[50%]'>
           {position.title} -{' '}
-          <Label className='text-green-600 text-xs'>{formattedVote}</Label>{' '}
+          <Label className='text-green-600 text-xs overflow-auto'>
+            {formattedVote}
+          </Label>{' '}
           (Free bet)
         </Label>
         <Label className='text-xs text-gray-500'>{marketTitle}</Label>
