@@ -25,9 +25,8 @@ export default function MarketsPage({
         <Suspense fallback={<MarketGroupsTagsLoadingSkeleton />}>
           <MarketGroupsTags filter={filter} />
         </Suspense>
-        <Suspense fallback={<MarketGroupsListLoadingSkeleton />}>
-          <MarketGroupsList filter={filter} />
-        </Suspense>
+
+        <MarketGroupsList filter={filter} />
       </div>
     </main>
   );
