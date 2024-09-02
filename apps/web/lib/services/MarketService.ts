@@ -105,7 +105,6 @@ export const getMarketGroup = async ({
   provider: string;
   identifier: string;
 }): Promise<MarketGroupResponse> => {
-  console.log(provider, identifier);
   const response = await fetch(
     `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/markets/${provider}/${identifier}`,
     {
@@ -113,7 +112,6 @@ export const getMarketGroup = async ({
     },
   );
 
-  console.log(response.status);
   if (!response.ok) {
     throw new Error('Failed to fetch market data');
   }

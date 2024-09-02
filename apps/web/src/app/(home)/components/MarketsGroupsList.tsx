@@ -1,60 +1,98 @@
+'use client';
+
 import { Label } from '@/components/ui/label';
 import LinkButton from '@/components/ui/link-button';
-import { fetchMarkets } from '@/lib/actions/viral-games-api';
-import { env } from '@/lib/config/env';
-import { LIMIT_PER_PAGE } from '@/lib/constants';
+import { useMarketGroups } from '@/lib/services/MarketService';
 import { Optional } from '@/lib/types';
-import {
-  MarketGroupCardResponse,
-  PaginatedMarketResponse,
-} from '@/lib/types/markets';
+import { MarketGroupCardResponse } from '@/lib/types/markets';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import MarketGroupsListLoadingSkeleton from './loading-skeletons/MarketGroupsListLoadingSkeleton';
 
 type MarketGroupsListProps = {
   filter: Optional<string>;
 };
 
-export default async function MarketGroupsList({
-  filter,
-}: MarketGroupsListProps) {
-  const data = await fetchMarkets();
+export default function MarketGroupsList({ filter }: MarketGroupsListProps) {
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
+    useMarketGroups();
 
-  const marketGroups =
-    data?.markets.sort((a, b) => {
-      // Check for specific IDs first
-      const specialIds = [
-        '0x6eb23e842B10D243eE3a9a2663e8E599bC98E198',
-        '0x0e03eDc2A0ba38E803DaD62b31b6e6A2f4b216cc',
-        '0x9fBb8A757F1b973C65A96c964F648814Ad8D73B7',
-      ];
-      if (specialIds.includes(a.slug) || specialIds.includes(a.slug)) return -1;
-      if (specialIds.includes(b.slug) || specialIds.includes(b.slug)) return 1;
+  const dataLength =
+    data?.pages.reduce((counter, page) => {
+      return counter + page.markets.length;
+    }, 0) ?? 0;
 
-      // Then sort by provider
-      if (a.provider === 'limitless' && b.provider !== 'limitless') return -1;
-      if (a.provider !== 'limitless' && b.provider === 'limitless') return 1;
+  const marketGroups = useMemo(() => {
+    return (
+      data?.pages
+        .flatMap((page) => page.markets)
+        .sort((a, b) => {
+          // Check for specific IDs first
+          const specialIds = [
+            '0x6eb23e842B10D243eE3a9a2663e8E599bC98E198',
+            '0x0e03eDc2A0ba38E803DaD62b31b6e6A2f4b216cc',
+            '0x9fBb8A757F1b973C65A96c964F648814Ad8D73B7',
+          ];
+          if (specialIds.includes(a.slug) || specialIds.includes(a.slug))
+            return -1;
+          if (specialIds.includes(b.slug) || specialIds.includes(b.slug))
+            return 1;
 
-      return 0;
-    }) || [];
+          // Then sort by provider
+          if (a.provider === 'limitless' && b.provider !== 'limitless')
+            return -1;
+          if (a.provider !== 'limitless' && b.provider === 'limitless')
+            return 1;
 
-  const filteredMarketsGroups = !filter
-    ? marketGroups
-    : marketGroups.filter((market: MarketGroupCardResponse) => {
-        if (!market.category) {
-          return false;
-        }
+          return 0;
+        }) || []
+    );
+  }, [data?.pages]);
 
-        return market.category.includes(filter.toLowerCase());
-      });
+  const filteredMarketsGroups = useMemo(() => {
+    if (!filter) {
+      return marketGroups; // Return all markets groups if no filter is selected
+    }
+
+    return marketGroups.filter((market: MarketGroupCardResponse) => {
+      if (!market.category) {
+        return false;
+      }
+
+      return market.category.includes(filter.toLowerCase());
+    });
+  }, [marketGroups, filter]);
+
+  if (isLoading) {
+    return <MarketGroupsListLoadingSkeleton />;
+  }
+
+  const loadMore = () => {
+    if (!isFetching && hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  if (!marketGroups.length) {
+    return <Label>No data</Label>;
+  }
 
   return (
-    <div className='grid grid-cols-1 gap-4 pb-4 pr-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-      {filteredMarketsGroups.map((marketGroup, idx) => (
-        <MarketGroupItem key={idx} marketGroup={marketGroup} />
-      ))}
-    </div>
+    <InfiniteScroll
+      dataLength={dataLength}
+      next={loadMore}
+      hasMore={hasNextPage}
+      loader={<Label>Loading...</Label>}
+    >
+      <div className='grid grid-cols-1 gap-4 pb-4 pr-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        {filteredMarketsGroups.map((marketGroup, idx) => (
+          <MarketGroupItem key={idx} marketGroup={marketGroup} />
+        ))}
+      </div>
+    </InfiniteScroll>
   );
 }
 
