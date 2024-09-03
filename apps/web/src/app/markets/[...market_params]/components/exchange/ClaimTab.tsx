@@ -11,23 +11,14 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { useOutsideClick } from '@/lib/hooks/useOutsideClick';
-import ConfettiExplosion, { ConfettiProps } from 'react-confetti-explosion';
-import Confetti from 'react-confetti';
+import Confetti from '@/components/ui/confetti';
 
 type ClaimTabProps = {
   market: Market;
-};
-
-const confettiParams: ConfettiProps = {
-  force: 0.6,
-  duration: 3000,
-  particleCount: 400,
-  height: 1600,
-  width: 1600
 };
 
 export default function ClaimTab({ market }: ClaimTabProps) {
@@ -38,14 +29,15 @@ export default function ClaimTab({ market }: ClaimTabProps) {
   const redeemPaidPosition = async () => {
     try {
       setIsRedeeming(true);
-      setIsSuccessDialogOpen(true);
 
       await redeem({
         conditionId: market?.conditionId as Address,
         collateralAddress: market?.collateralToken.address as Address,
         marketAddress: market?.id as Address,
-        outcomeIndex: market?.winningOutcomeIndex as number
+        outcomeIndex: market?.winningOutcomeIndex as number,
       });
+
+      setIsSuccessDialogOpen(true);
     } catch (err) {
     } finally {
       setIsRedeeming(false);
@@ -68,26 +60,27 @@ export default function ClaimTab({ market }: ClaimTabProps) {
         isOpen={isSuccessDialogOpen}
         setIsOpen={setIsSuccessDialogOpen}
       />
+      <Confetti isActive={isSuccessDialogOpen} />
     </div>
   );
 }
 
 function Positions({
   marketId,
-  tokenSymbol
+  tokenSymbol,
 }: {
   marketId: string;
   tokenSymbol: string;
 }) {
   const { positions: allMarketsPositions } = useHistory();
   const positions = allMarketsPositions?.filter(
-    (position) => position.market.id.toLowerCase() === marketId.toLowerCase()
+    (position) => position.market.id.toLowerCase() === marketId.toLowerCase(),
   );
 
   return (
     <div className='flex flex-col gap-4 mb-4'>
-      {positions?.map((position) => (
-        <Label>
+      {positions?.map((position, idx) => (
+        <Label key={idx}>
           Won ${NumberUtil.formatThousands(position.outcomeTokenAmount, 4)} $
           {tokenSymbol}
         </Label>
@@ -98,7 +91,7 @@ function Positions({
 
 function SuccessfulClaimedDialog({
   isOpen,
-  setIsOpen
+  setIsOpen,
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -107,9 +100,8 @@ function SuccessfulClaimedDialog({
 
   return (
     <div>
-      {isOpen && <Confetti className='w-full h-full absolute z-90' />}
       <Dialog open={isOpen}>
-        <DialogContent ref={containerRef}>
+        <DialogContent ref={containerRef} className='z-50'>
           <DialogTitle />
           <DialogHeader>
             <DialogDescription className='flex flex-col items-center py-10 gap-6 text-black'>

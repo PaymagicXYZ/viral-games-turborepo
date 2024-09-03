@@ -36,28 +36,28 @@ export default function MarketExchange() {
   const [isFreeBet, setIsFreeBet] = useQueryState('is_free_bet', {
     parse: (value) => value === 'true',
     serialize: (value) => value.toString(),
-    defaultValue: provider === 'polymarket'
+    defaultValue: provider === 'polymarket',
   });
   const [outcomeIndex, setOutcomeIndex] = useQueryState('outcome_index', {
     parse: (value) => (value ? Number(value) : 0),
     serialize: String,
-    defaultValue: 0
+    defaultValue: 0,
   });
 
   const [marketIndex] = useQueryState('market_index', {
     parse: (value) => (value ? Number(value) : 0),
     serialize: String,
-    defaultValue: 0
+    defaultValue: 0,
   });
 
   const [strategyQuery, setStrategyQuery] = useQueryState('strategy', {
     parse: (value): 'Buy' | 'Sell' =>
       capitalizeFirstLetter(value || 'buy') as 'Buy' | 'Sell',
     serialize: (value) => value.toLowerCase(),
-    defaultValue: 'Buy'
+    defaultValue: 'Buy',
   });
   const [currentMarket, setCurrentMarket] = useState<Market | undefined>(
-    marketGroup?.data[marketIndex]
+    marketGroup?.data[marketIndex],
   );
 
   const {
@@ -65,7 +65,7 @@ export default function MarketExchange() {
     setStrategy,
     setMarket,
     market: previousMarket,
-    setCollateralAmount
+    setCollateralAmount,
   } = useTradingService();
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export default function MarketExchange() {
         </TabsList> */}
         <div
           className={clsx('flex items-center space-x-2', {
-            hidden: expired
+            hidden: expired,
           })}
         >
           <Switch
@@ -185,7 +185,7 @@ export default function MarketExchange() {
 export function OutcomeTokens({
   outcomeTokens,
   outcomeIndex,
-  setOutcomeIndex
+  setOutcomeIndex,
 }: {
   setOutcomeIndex: (index: number) => void;
   outcomeIndex: number | undefined;
@@ -213,7 +213,7 @@ export function OutcomeTokens({
 export function BalanceAmount({
   balance,
   tokenSymbol,
-  isFreeBet
+  isFreeBet,
 }: {
   balance?: string;
   tokenSymbol?: string;
@@ -238,7 +238,7 @@ export function AmountInput({
   handleAmountChange,
   isInvalidAmount,
   errorMessage,
-  initialValue = ''
+  initialValue = '',
 }: {
   handleAmountChange: (value: string) => void;
   isInvalidAmount: boolean;
@@ -271,7 +271,7 @@ export function ActionButton({
   label,
   disabled,
   onClick,
-  withLoading
+  withLoading,
 }: {
   label: string;
   disabled: boolean;
@@ -299,7 +299,7 @@ export function OrderDetails({
   withTotal,
   withPriceImpact,
   withROI,
-  withReturn
+  withReturn,
 }: {
   quotes: Optional<TradeQuotes>;
   collateralAmount?: string;
@@ -358,7 +358,7 @@ export function useExchange({
   outcomeIndex,
   trade,
   isExceedsBalance,
-  approveBuy
+  approveBuy,
 }: {
   strategy: 'Buy' | 'Sell';
   market: SingleMarket;
@@ -376,13 +376,13 @@ export function useExchange({
     try {
       const amountBI = parseUnits(
         debouncedCollateralAmount,
-        collateralToken?.decimals || 18
+        collateralToken?.decimals || 18,
       );
 
       const txHash = await approveBuy();
 
       const txReceipt = await waitForTransactionReceipt(publicClient, {
-        hash: txHash as Address
+        hash: txHash as Address,
       });
 
       if (txReceipt && txReceipt.status) {
