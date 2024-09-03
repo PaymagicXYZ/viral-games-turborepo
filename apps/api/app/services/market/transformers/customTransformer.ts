@@ -26,7 +26,7 @@ export function transformCustomResponse(
         },
         expirationDate: market.createdAt, // TODO
         expirationTimestamp: new Date(market.createdAt).getTime(), // TODO
-        expired: false,
+        expired: new Date() < new Date(event.endDate), // TODO
         liquidity: '0',
         liquidityFormatted: '0',
         ogImageURI:

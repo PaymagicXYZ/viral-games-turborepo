@@ -31,13 +31,7 @@ export class LimitlessProvider extends BaseProvider {
 
     const metadata = await this.fetchMetadata(marketId);
 
-    if ('slug' in data) {
-      // Note: Response is a market group
-      return transformLimitlessResponse(data, metadata);
-    } else {
-      // Note: Response is a single market
-      return transformLimitlessResponse(data, metadata);
-    }
+    return transformLimitlessResponse(data, metadata);
   }
 
   async getMarkets(
