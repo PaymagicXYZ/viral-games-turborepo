@@ -4,7 +4,7 @@ export const initUser = async (provider: string, userId: string) => {
   const { data, error } = await supabase
     .from("temp_player")
     .select("*")
-    .eq("userId", userId)
+    .ilike("userId", userId)
     .eq("provider", provider);
   if (error) {
     console.error(error);

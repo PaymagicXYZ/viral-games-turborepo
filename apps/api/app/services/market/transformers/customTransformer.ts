@@ -24,8 +24,8 @@ export function transformCustomResponse(
         creator: {
           name: `@${event.creator}`,
         },
-        expirationDate: market.createdAt, // TODO
-        expirationTimestamp: new Date(market.createdAt).getTime(), // TODO
+        expirationDate: event.endDate,
+        expirationTimestamp: new Date(event.endDate).getTime(), // TODO
         expired: new Date() > new Date(event.endDate), // TODO
         liquidity: '0',
         liquidityFormatted: '0',

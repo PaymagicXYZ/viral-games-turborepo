@@ -9,6 +9,7 @@ import { action } from './routes/action';
 import { buy } from './routes/buy';
 import { resetBalance } from './routes/resetBalance';
 import { polymarket } from './routes/polymarket';
+import { sell } from './routes/sell';
 
 export const runtime = 'edge';
 
@@ -40,6 +41,7 @@ app.use(
 app.use('/api/user/*', bearerAuth({ token }));
 app.use('/api/actions', bearerAuth({ token }));
 app.use('/api/buy', bearerAuth({ token }));
+app.use('/api/sell', bearerAuth({ token }));
 // TODO: Figure out why bearer auth is not working in this turbo repo
 // app.use("/api/admin/copy-polymarket-event", bearerAuth({ token }), cors());
 
@@ -47,6 +49,7 @@ app.route('/api/user', user);
 app.route('/api/markets', market);
 app.route('/api/actions', action);
 app.route('/api/buy', buy);
+app.route('/api/sell', sell);
 
 app.route('/api/admin/reset-balance', resetBalance);
 app.route('/api/admin/polymarket', polymarket);
