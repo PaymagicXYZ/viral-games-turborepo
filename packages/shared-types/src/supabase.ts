@@ -72,6 +72,7 @@ export type Database = {
       events: {
         Row: {
           createdAt: string
+          creator: string
           description: string | null
           endDate: string
           id: number
@@ -79,11 +80,13 @@ export type Database = {
           isActive: boolean
           provider: Database["public"]["Enums"]["market_provider"]
           slug: string
+          socialLink: string | null
           startDate: string
           title: string | null
         }
         Insert: {
           createdAt?: string
+          creator?: string
           description?: string | null
           endDate: string
           id?: number
@@ -91,11 +94,13 @@ export type Database = {
           isActive?: boolean
           provider?: Database["public"]["Enums"]["market_provider"]
           slug: string
+          socialLink?: string | null
           startDate: string
           title?: string | null
         }
         Update: {
           createdAt?: string
+          creator?: string
           description?: string | null
           endDate?: string
           id?: number
@@ -103,6 +108,7 @@ export type Database = {
           isActive?: boolean
           provider?: Database["public"]["Enums"]["market_provider"]
           slug?: string
+          socialLink?: string | null
           startDate?: string
           title?: string | null
         }
@@ -257,6 +263,38 @@ export type Database = {
           },
         ]
       }
+      resolve_criteria: {
+        Row: {
+          created_at: string
+          criteriaType: Database["public"]["Enums"]["criteria"]
+          id: number
+          marketId: number | null
+          threshold: number
+        }
+        Insert: {
+          created_at?: string
+          criteriaType: Database["public"]["Enums"]["criteria"]
+          id?: number
+          marketId?: number | null
+          threshold: number
+        }
+        Update: {
+          created_at?: string
+          criteriaType?: Database["public"]["Enums"]["criteria"]
+          id?: number
+          marketId?: number | null
+          threshold?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resolve_criteria_marketId_fkey"
+            columns: ["marketId"]
+            isOneToOne: false
+            referencedRelation: "markets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       social_markets: {
         Row: {
           created_at: string
@@ -359,9 +397,22 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      create_event_market_criteria: {
+        Args: {
+          market_slug: string
+          likes_count: number
+          resolve_criteria_type: string
+        }
+        Returns: {
+          market_id: number
+          title: string
+          description: string
+          event_slug: string
+        }[]
+      }
     }
     Enums: {
+      criteria: "likes" | "recasts"
       market_position: "0" | "1"
       market_provider: "limitless" | "polymarket" | "custom"
     }

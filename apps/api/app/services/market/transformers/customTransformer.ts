@@ -4,6 +4,7 @@ import { Tables } from '@repo/shared-types';
 
 export function transformCustomResponse(
   market: Tables<'markets'>,
+  event: Tables<'events'>,
   metadata: MarketMetadata | null,
 ): MarketsWithMetadata {
   const metadataTags = metadata?.tags?.map((t) => t.toLowerCase()) ?? [];
@@ -21,7 +22,7 @@ export function transformCustomResponse(
         },
         conditionId: market.id.toString(),
         creator: {
-          name: 'Viral Games',
+          name: `@${event.creator}`,
         },
         expirationDate: market.createdAt, // TODO
         expirationTimestamp: new Date(market.createdAt).getTime(), // TODO
@@ -30,6 +31,7 @@ export function transformCustomResponse(
         liquidityFormatted: '0',
         ogImageURI:
           metadata?.image_uri ??
+          event.imageUrl ??
           market.imageUrl ??
           'https://nzavwarwntmwtfrkfput.supabase.co/storage/v1/object/public/markets_images/app-logo.svg?t=2024-08-23T09%3A29%3A21.086Z',
         tags: [...metadataTags, DEFAULT_CUSTOM_PROVIDER_TAG],

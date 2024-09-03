@@ -4,6 +4,20 @@ import { supabase } from '@/app/api/[...route]/utils';
 import { transformCustomResponse } from '../transformers/customTransformer';
 export class CustomProvider extends BaseProvider {
   async getMarket(marketId: string): Promise<MarketsWithMetadata> {
+    const { data: event } = await supabase
+      .from('events')
+      .select('*')
+      .eq('slug', marketId)
+      .limit(1)
+      .maybeSingle();
+
+    if (!event) {
+      return {
+        data: [],
+        metadata: null,
+      };
+    }
+
     const { data } = await supabase
       .from('markets')
       .select('*')
@@ -20,7 +34,7 @@ export class CustomProvider extends BaseProvider {
     // Fetch metadata from Supabase
     const metadata = await this.fetchMetadata(marketId);
     // Transform the response
-    return transformCustomResponse(data, metadata);
+    return transformCustomResponse(data, event, metadata);
   }
 
   // TODO
