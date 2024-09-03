@@ -113,13 +113,13 @@ export default function MarketExchange() {
 
   const defaultSwitchValue = provider === 'polymarket' ? true : isFreeBet;
   // const expired = currentMarket?.expired;
-  const expired = true;
+  // const expired = true;
 
   return (
     <section className='w-full lg:max-w-[532px]'>
       <Tabs
         onValueChange={updateStrategy}
-        value={expired ? 'claim' : strategy.toLowerCase()}
+        value={strategy.toLowerCase()}
         defaultValue={strategy.toLowerCase() ?? 'buy'}
         className='w-full space-y-8 border-2 border-black p-6 shadow-sm'
       >
@@ -139,7 +139,7 @@ export default function MarketExchange() {
         </TabsList> */}
         <div
           className={clsx('flex items-center space-x-2', {
-            hidden: expired,
+            // hidden: expired,
           })}
         >
           <Switch

@@ -55,7 +55,7 @@ interface ITradingServiceContext {
   buy: (outcomeTokenId: number) => Promise<string | undefined>;
   sell: (outcomeTokenId: number) => Promise<string | undefined>;
   trade: (outcomeTokenId: number) => Promise<string | undefined>;
-  redeem: (params: RedeemParams) => Promise<string | undefined>
+  redeem: (params: RedeemParams) => Promise<string | undefined>;
   status: TradingServiceStatus;
   tradeStatus: TradingServiceStatus;
   approveModalOpened: boolean;
@@ -732,48 +732,49 @@ export const TradingServiceProvider = ({ children }: PropsWithChildren) => {
       collateralAddress,
       conditionId,
     }: RedeemParams) => {
-      const {data: conditionalTokenAddress} = await getConditionalTokensAddress();
-      
-      if(!conditionalTokenAddress) {
+      const { data: conditionalTokenAddress } =
+        await getConditionalTokensAddress();
+
+      if (!conditionalTokenAddress) {
         console.log('Conditional token address not found');
         return;
       }
-      
+
       const receipt = await redeemPositions(
         conditionalTokenAddress,
         collateralAddress,
         zeroHash,
         conditionId,
-        [1 << outcomeIndex]
-      )
-      
+        [1 << outcomeIndex],
+      );
+
       if (!receipt) {
         triggerErrorToast({
           message: 'Unsuccessful transaction',
         });
 
-        return
+        return;
       }
 
-      await refetchChain()
+      await refetchChain();
 
       triggerSuccessToast({
         txHash: receipt,
         message: 'Transaction was successfully processed',
       });
 
-      await sleep(1)
+      await sleep(1);
 
       triggerSuccessToast({
         message: 'Updating portfolio...',
       });
 
       // TODO: redesign subgraph refetch logic
-      sleep(10).then(() => refetchSubgraph())
+      sleep(10).then(() => refetchSubgraph());
 
-      return receipt
+      return receipt;
     },
-  })
+  });
 
   const trade = useCallback(
     (outcomeTokenId: number) => {
