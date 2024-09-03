@@ -74,7 +74,7 @@ polymarket.openapi(route, async (c) => {
     const res = await fetch(`${GAMMA_API_URL}/events?slug=${slug}`);
     const data = (await res.json())[0];
 
-    const event: Omit<Tables<'events'>, 'id'> = {
+    const event: Omit<Tables<'events'>, 'id' | 'socialLink' | 'creator'> = {
       createdAt: data.creationDate,
       startDate: data.startDate,
       endDate: data.endDate,
