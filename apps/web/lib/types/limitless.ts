@@ -162,3 +162,26 @@ export type BuySuccessResponse = {
 export type BuyErrorResponse = {
   error: string;
 };
+
+
+export type AccountMarketResponse = {
+  account_id: string
+  market: {
+    id: string
+    closed: boolean
+    collateral: {
+      id: string
+      name: string
+      symbol: string
+    }
+  }
+  collateralsInvested: string
+  collateralsLocked: string
+}
+
+export interface RedeemParams {
+  outcomeIndex: number
+  marketAddress: Address
+  collateralAddress: Address
+  conditionId: Address
+}

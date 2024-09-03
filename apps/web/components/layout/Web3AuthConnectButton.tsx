@@ -26,14 +26,14 @@ export default function Web3AuthConnectButton() {
 
   const { data } = useGetTempPlayerQuery();
 
-  useAsyncEffect(async () => {
-    if (!account.address) {
-      return;
-    }
+  // useAsyncEffect(async () => {
+  //   if (!account.address) {
+  //     return;
+  //   }
 
-    const userInfo = await web3AuthInstance?.getUserInfo();
-    console.log(userInfo);
-  }, [account.address]);
+  //   const userInfo = await web3AuthInstance?.getUserInfo();
+  //   console.log(userInfo);
+  // }, [account.address]);
 
   const handleConnect = async () => {
     await connectAsync({ connector: connectors[0] });

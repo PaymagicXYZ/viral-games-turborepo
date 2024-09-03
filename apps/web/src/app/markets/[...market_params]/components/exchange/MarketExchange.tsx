@@ -24,6 +24,8 @@ import { useToken } from '@/lib/hooks/limitless/useToken';
 import { useParams } from 'next/navigation';
 import useGetMarketGroupQuery from '@/lib/hooks/react-query/queries/useGetMarketGroupQuery';
 import { MarketExchangeLoadingSkeleton } from './MarketExchangeLoadingSkeleton';
+import ClaimTab from './ClaimTab';
+import clsx from 'clsx';
 
 export default function MarketExchange() {
   const params = useParams<{ market_params: Array<string> }>();
@@ -34,28 +36,28 @@ export default function MarketExchange() {
   const [isFreeBet, setIsFreeBet] = useQueryState('is_free_bet', {
     parse: (value) => value === 'true',
     serialize: (value) => value.toString(),
-    defaultValue: provider === 'polymarket',
+    defaultValue: provider === 'polymarket'
   });
   const [outcomeIndex, setOutcomeIndex] = useQueryState('outcome_index', {
     parse: (value) => (value ? Number(value) : 0),
     serialize: String,
-    defaultValue: 0,
+    defaultValue: 0
   });
 
   const [marketIndex] = useQueryState('market_index', {
     parse: (value) => (value ? Number(value) : 0),
     serialize: String,
-    defaultValue: 0,
+    defaultValue: 0
   });
 
   const [strategyQuery, setStrategyQuery] = useQueryState('strategy', {
     parse: (value): 'Buy' | 'Sell' =>
       capitalizeFirstLetter(value || 'buy') as 'Buy' | 'Sell',
     serialize: (value) => value.toLowerCase(),
-    defaultValue: 'Buy',
+    defaultValue: 'Buy'
   });
   const [currentMarket, setCurrentMarket] = useState<Market | undefined>(
-    marketGroup?.data[marketIndex],
+    marketGroup?.data[marketIndex]
   );
 
   const {
@@ -63,7 +65,7 @@ export default function MarketExchange() {
     setStrategy,
     setMarket,
     market: previousMarket,
-    setCollateralAmount,
+    setCollateralAmount
   } = useTradingService();
 
   useEffect(() => {
@@ -110,13 +112,15 @@ export default function MarketExchange() {
   }
 
   const defaultSwitchValue = provider === 'polymarket' ? true : isFreeBet;
+  // const expired = currentMarket?.expired;
+  const expired = true;
 
   return (
     <section className='w-full lg:max-w-[532px]'>
       <Tabs
         onValueChange={updateStrategy}
-        value={strategy.toLowerCase()}
-        defaultValue={/* strategy.toLowerCase() ?? 'buy' */ 'buy'}
+        value={expired ? 'claim' : strategy.toLowerCase()}
+        defaultValue={strategy.toLowerCase() ?? 'buy'}
         className='w-full space-y-8 border-2 border-black p-6 shadow-sm'
       >
         {/* <TabsList className='grid w-full grid-cols-2 bg-inherit'>
@@ -133,7 +137,11 @@ export default function MarketExchange() {
             Sell
           </TabsTrigger>
         </TabsList> */}
-        <div className='flex items-center space-x-2'>
+        <div
+          className={clsx('flex items-center space-x-2', {
+            hidden: expired
+          })}
+        >
           <Switch
             id='free-bet-toggle'
             checked={defaultSwitchValue}
@@ -166,6 +174,9 @@ export default function MarketExchange() {
             />
           )}
         </TabsContent>
+        <TabsContent value='claim'>
+          {currentMarket && <ClaimTab market={currentMarket} />}
+        </TabsContent>
       </Tabs>
     </section>
   );
@@ -174,7 +185,7 @@ export default function MarketExchange() {
 export function OutcomeTokens({
   outcomeTokens,
   outcomeIndex,
-  setOutcomeIndex,
+  setOutcomeIndex
 }: {
   setOutcomeIndex: (index: number) => void;
   outcomeIndex: number | undefined;
@@ -202,7 +213,7 @@ export function OutcomeTokens({
 export function BalanceAmount({
   balance,
   tokenSymbol,
-  isFreeBet,
+  isFreeBet
 }: {
   balance?: string;
   tokenSymbol?: string;
@@ -227,7 +238,7 @@ export function AmountInput({
   handleAmountChange,
   isInvalidAmount,
   errorMessage,
-  initialValue = '',
+  initialValue = ''
 }: {
   handleAmountChange: (value: string) => void;
   isInvalidAmount: boolean;
@@ -260,7 +271,7 @@ export function ActionButton({
   label,
   disabled,
   onClick,
-  withLoading,
+  withLoading
 }: {
   label: string;
   disabled: boolean;
@@ -273,10 +284,10 @@ export function ActionButton({
       onClick={onClick}
       className='relative flex w-full justify-center gap-2 border-2 border-black bg-green-600 py-6 text-black shadow-sm hover:bg-green-700'
     >
-      {withLoading && disabled && (
-        <Loader className='absolute mr-20 animate-spin' />
-      )}
-      <Label>{label}</Label>
+      <div className='flex items-center justify-center gap-2'>
+        {withLoading && disabled && <Loader className='animate-spin' />}
+        <Label>{label}</Label>
+      </div>
     </Button>
   );
 }
@@ -288,7 +299,7 @@ export function OrderDetails({
   withTotal,
   withPriceImpact,
   withROI,
-  withReturn,
+  withReturn
 }: {
   quotes: Optional<TradeQuotes>;
   collateralAmount?: string;
@@ -347,7 +358,7 @@ export function useExchange({
   outcomeIndex,
   trade,
   isExceedsBalance,
-  approveBuy,
+  approveBuy
 }: {
   strategy: 'Buy' | 'Sell';
   market: SingleMarket;
@@ -365,13 +376,13 @@ export function useExchange({
     try {
       const amountBI = parseUnits(
         debouncedCollateralAmount,
-        collateralToken?.decimals || 18,
+        collateralToken?.decimals || 18
       );
 
       const txHash = await approveBuy();
 
       const txReceipt = await waitForTransactionReceipt(publicClient, {
-        hash: txHash as Address,
+        hash: txHash as Address
       });
 
       if (txReceipt && txReceipt.status) {
