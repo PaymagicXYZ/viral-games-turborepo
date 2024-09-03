@@ -174,9 +174,9 @@ export default function MarketExchange() {
             />
           )}
         </TabsContent>
-        <TabsContent value='claim'>
+        {/* <TabsContent value='claim'>
           {currentMarket && <ClaimTab market={currentMarket} />}
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
     </section>
   );
