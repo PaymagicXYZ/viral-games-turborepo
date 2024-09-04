@@ -46,8 +46,6 @@ export default function ProfilePortfolio({
     });
   }, [allMarketsPositions, allMarkets]);
 
-  console.log(enrichedPositions?.length);
-
   return (
     <section className='h-[320px] space-y-6 overflow-auto'>
       {enrichedPositions?.map((position, idx) => (

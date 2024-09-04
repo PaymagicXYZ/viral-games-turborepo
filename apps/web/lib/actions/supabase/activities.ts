@@ -53,7 +53,6 @@ export async function getUserActivities({
     .order('created_at', { ascending: false })
     .ilike('user_address', `${socialProvider}:${userIdentifier}`);
 
-  console.log(socialProvider, userIdentifier);
   if (error) {
     throw new Error('Failed to user fetch activities');
   }

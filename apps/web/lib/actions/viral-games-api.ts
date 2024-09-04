@@ -135,7 +135,7 @@ export async function getPortfolio({
   const url = `${
     env.NEXT_PUBLIC_VIRAL_GAMES_BE_API
   }/user/${social_provider}/${userIdentifier}/portfolio`;
-  console.log(url);
+
   const options: RequestInit = {
     cache: 'no-store',
     headers: {
