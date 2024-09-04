@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { useOutsideClick } from '@/lib/hooks/useOutsideClick';
@@ -34,7 +34,7 @@ export default function ClaimTab({ market }: ClaimTabProps) {
         conditionId: market?.conditionId as Address,
         collateralAddress: market?.collateralToken.address as Address,
         marketAddress: market?.id as Address,
-        outcomeIndex: market?.winningOutcomeIndex as number,
+        outcomeIndex: market?.winningOutcomeIndex as number
       });
 
       setIsSuccessDialogOpen(true);
@@ -67,14 +67,14 @@ export default function ClaimTab({ market }: ClaimTabProps) {
 
 function Positions({
   marketId,
-  tokenSymbol,
+  tokenSymbol
 }: {
   marketId: string;
   tokenSymbol: string;
 }) {
   const { positions: allMarketsPositions } = useHistory();
   const positions = allMarketsPositions?.filter(
-    (position) => position.market.id.toLowerCase() === marketId.toLowerCase(),
+    (position) => position.market.id.toLowerCase() === marketId.toLowerCase()
   );
 
   return (
@@ -91,7 +91,7 @@ function Positions({
 
 function SuccessfulClaimedDialog({
   isOpen,
-  setIsOpen,
+  setIsOpen
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;

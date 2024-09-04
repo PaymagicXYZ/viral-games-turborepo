@@ -79,7 +79,6 @@ export const TradingServiceProvider = ({ children }: PropsWithChildren) => {
    * SERVICES
    */
   const queryClient = useQueryClient();
-  // const { getTrades, getRedeems } = useHistory();
   const account = useAccount().address;
 
   /**

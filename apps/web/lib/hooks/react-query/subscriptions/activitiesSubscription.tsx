@@ -32,7 +32,6 @@ export function useActivitiesSubscription() {
           queryClient.setQueryData(
             ['fetch_activities'],
             (oldData: Tables<'activities'>[]) => {
-              console.log(oldData);
               if (!oldData) return [newActivity];
 
               return [newActivity, ...oldData];

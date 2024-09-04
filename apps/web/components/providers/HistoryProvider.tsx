@@ -1,12 +1,20 @@
 import { defaultChain, newSubgraphURI } from '@/lib/constants';
 import { NumberUtil } from '@/lib/utils/limitless/NumberUtil';
 import { QueryObserverResult, useQuery } from '@tanstack/react-query';
-import { PropsWithChildren, createContext, useContext, useMemo } from 'react';
+import {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { Hash, formatUnits, Address } from 'viem';
 import { useAccount } from 'wagmi';
 import { usePriceOracle } from './PriceProvider';
 import useSupportedTokens from '@/lib/hooks/useSupportedTokens';
 import { useAllMarkets } from '@/lib/services/MarketService';
+import { Optional } from '@/lib/types';
 
 interface IHistoryService {
   trades: HistoryTrade[] | undefined;
@@ -17,17 +25,38 @@ interface IHistoryService {
   getPositions: () => Promise<QueryObserverResult<HistoryPosition[], Error>>;
   balanceInvested: string;
   balanceToWin: string;
+  walletAddress?: string;
+  setWalletAddress: (address: Optional<string>) => void;
 }
 
 const HistoryServiceContext = createContext({} as IHistoryService);
 
-export const useHistory = () => useContext(HistoryServiceContext);
+export const useHistory = () => {
+  return useContext(HistoryServiceContext);
+};
 
-export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
+interface HistoryServiceProviderProps extends PropsWithChildren {
+  walletAddress?: string;
+}
+
+export const HistoryServiceProvider = ({
+  children,
+  walletAddress: propWalletAddress,
+}: HistoryServiceProviderProps) => {
   /**
    * ACCOUNT
    */
-  const walletAddress = useAccount().address;
+  const accountAddress = useAccount().address;
+  const [walletAddress, setWalletAddress] = useState<string | undefined>(
+    accountAddress,
+  );
+
+  const setWalletAddressCallback = useCallback(
+    (address: Optional<string>) => {
+      setWalletAddress(address || accountAddress);
+    },
+    [accountAddress],
+  );
 
   /**
    * UTILS
@@ -331,6 +360,8 @@ export const HistoryServiceProvider = ({ children }: PropsWithChildren) => {
     getPositions,
     balanceInvested,
     balanceToWin,
+    walletAddress,
+    setWalletAddress: setWalletAddressCallback,
   };
 
   return (

@@ -1,28 +1,44 @@
-import { supabase } from "./supabase";
+import { supabase } from './supabase';
 
 export const initUser = async (provider: string, userId: string) => {
+  const user = await getUser({ userId, provider });
+
+  // if user exists -> return it
+  if (user) {
+    return user;
+  }
+
+  // else create it
   const { data, error } = await supabase
-    .from("temp_player")
-    .select("*")
-    .ilike("userId", userId)
-    .eq("provider", provider);
+    .from('temp_player')
+    .insert([{ userId, provider, balance: 100 }])
+    .select()
+    .single();
+
   if (error) {
-    console.error(error);
+    return null;
   }
-  if (data && data?.length > 0) {
-    return data[0];
-  } else {
-    const { data, error } = await supabase
-      .from("temp_player")
-      .insert([{ userId, provider, balance: 100 }])
-      .select();
-    if (error) {
-      console.error(error);
-    }
-    if (data && data?.length > 0) {
-      return data[0];
-    } else {
-      console.error("Failed to initialize user");
-    }
+
+  return data as any;
+};
+
+export const getUser = async ({
+  userId,
+  provider,
+}: {
+  userId: string;
+  provider: string;
+}) => {
+  const { data, error } = await supabase
+    .from('temp_player')
+    .select('*')
+    .eq('userId', userId)
+    .eq('provider', provider)
+    .single();
+
+  if (error) {
+    throw new Error('Failed to fetch user');
   }
+
+  return data;
 };

@@ -1,16 +1,28 @@
 import { getUserActivities } from '@/lib/actions/supabase/activities';
+import { Optional } from '@/lib/types';
 import { ActivityItem } from '@/src/app/activity/components/ActivityList';
 import { Address } from 'viem';
 
 type ProfileActivityProps = {
-  userAddress: Address;
+  socialProvider: string;
+  userAddress: Optional<string>;
+  userFid?: Optional<number>;
 };
 
 export default async function ProfileActivity({
+  socialProvider,
+  userFid,
   userAddress,
 }: ProfileActivityProps) {
+  const activityIdentifier = userFid ? userFid.toString() : userAddress;
+
+  if (!activityIdentifier) {
+    return;
+  }
+
   const activities = await getUserActivities({
-    address: `eoa:${userAddress}` as Address,
+    socialProvider,
+    userIdentifier: activityIdentifier,
   });
 
   return (

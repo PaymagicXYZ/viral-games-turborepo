@@ -40,13 +40,20 @@ export async function fetchActivities() {
   return data;
 }
 
-export async function getUserActivities({ address }: { address: Address }) {
+export async function getUserActivities({
+  socialProvider,
+  userIdentifier,
+}: {
+  socialProvider: string;
+  userIdentifier: string;
+}) {
   const { data, error } = await supabaseClient
     .from('activities')
     .select('*')
     .order('created_at', { ascending: false })
-    .eq('user_address', address.toLowerCase());
+    .ilike('user_address', `${socialProvider}:${userIdentifier}`);
 
+  console.log(socialProvider, userIdentifier);
   if (error) {
     throw new Error('Failed to user fetch activities');
   }

@@ -3,16 +3,19 @@
 import { Label } from '@/components/ui/label';
 import { formatEther } from '@/lib/utils/formatters';
 import { Address } from 'viem';
-import { useAccount, useBalance } from 'wagmi';
+import { useBalance } from 'wagmi';
 
 type WalletBalanceProps = {
-  userAddress?: Address;
+  userAddress?: string;
 };
 
 export default function WalletBalance({ userAddress }: WalletBalanceProps) {
-  const { address } = useAccount();
-
-  const balance = useBalance({ address: userAddress ?? address });
+  const balance = useBalance({
+    address: userAddress as Address,
+    query: {
+      enabled: Boolean(userAddress),
+    },
+  });
 
   return (
     <Label className='text-lg'>

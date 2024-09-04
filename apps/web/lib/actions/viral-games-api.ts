@@ -122,11 +122,20 @@ export async function getShares({
   return data;
 }
 
-export async function getPortfolio({ user_address }: { user_address: string }) {
+export async function getPortfolio({
+  user_identifier,
+  social_provider = 'eoa',
+}: {
+  user_identifier: string;
+  social_provider?: string;
+}) {
+  const userIdentifier =
+    social_provider === 'eoa' ? user_identifier.toLowerCase() : user_identifier;
+
   const url = `${
     env.NEXT_PUBLIC_VIRAL_GAMES_BE_API
-  }/user/eoa/${user_address.toLowerCase()}/portfolio`;
-
+  }/user/${social_provider}/${userIdentifier}/portfolio`;
+  console.log(url);
   const options: RequestInit = {
     cache: 'no-store',
     headers: {
