@@ -14,8 +14,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${process.env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/frames/initial/${provider}/${identifier}`,
     );
 
-    console.log('frameMetadata', frameMetadata);
-
     return {
       // title: market?.proxyTitle ?? market?.title ?? 'Noname market',
       // openGraph: {
