@@ -24,6 +24,8 @@ import { useToken } from '@/lib/hooks/limitless/useToken';
 import { useParams } from 'next/navigation';
 import useGetMarketGroupQuery from '@/lib/hooks/react-query/queries/useGetMarketGroupQuery';
 import { MarketExchangeLoadingSkeleton } from './MarketExchangeLoadingSkeleton';
+import ClaimTab from './ClaimTab';
+import clsx from 'clsx';
 
 export default function MarketExchange() {
   const params = useParams<{ market_params: Array<string> }>();
@@ -110,13 +112,15 @@ export default function MarketExchange() {
   }
 
   const defaultSwitchValue = provider === 'polymarket' ? true : isFreeBet;
+  // const expired = currentMarket?.expired;
+  // const expired = true;
 
   return (
     <section className='w-full lg:max-w-[532px]'>
       <Tabs
         onValueChange={updateStrategy}
         value={strategy.toLowerCase()}
-        defaultValue={/* strategy.toLowerCase() ?? 'buy' */ 'buy'}
+        defaultValue={strategy.toLowerCase() ?? 'buy'}
         className='w-full space-y-8 border-2 border-black p-6 shadow-sm'
       >
         {/* <TabsList className='grid w-full grid-cols-2 bg-inherit'>
@@ -133,7 +137,11 @@ export default function MarketExchange() {
             Sell
           </TabsTrigger>
         </TabsList> */}
-        <div className='flex items-center space-x-2'>
+        <div
+          className={clsx('flex items-center space-x-2', {
+            // hidden: expired,
+          })}
+        >
           <Switch
             id='free-bet-toggle'
             checked={defaultSwitchValue}
@@ -166,6 +174,9 @@ export default function MarketExchange() {
             />
           )}
         </TabsContent>
+        {/* <TabsContent value='claim'>
+          {currentMarket && <ClaimTab market={currentMarket} />}
+        </TabsContent> */}
       </Tabs>
     </section>
   );
@@ -273,10 +284,10 @@ export function ActionButton({
       onClick={onClick}
       className='relative flex w-full justify-center gap-2 border-2 border-black bg-green-600 py-6 text-black shadow-sm hover:bg-green-700'
     >
-      {withLoading && disabled && (
-        <Loader className='absolute mr-20 animate-spin' />
-      )}
-      <Label>{label}</Label>
+      <div className='flex items-center justify-center gap-2'>
+        {withLoading && disabled && <Loader className='animate-spin' />}
+        <Label>{label}</Label>
+      </div>
     </Button>
   );
 }

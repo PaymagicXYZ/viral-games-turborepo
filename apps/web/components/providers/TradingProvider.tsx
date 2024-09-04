@@ -39,6 +39,7 @@ import useSuccessToast from '@/lib/hooks/toasts/useSuccessToast';
 import { Market } from '@/lib/types/markets';
 import { useBalanceService } from './BalanceProvider';
 import { useWeb3Service } from '@/lib/services/Web3Service';
+import { RedeemParams } from '@/lib/types/limitless';
 
 interface ITradingServiceContext {
   market: Market | null;
@@ -54,7 +55,7 @@ interface ITradingServiceContext {
   buy: (outcomeTokenId: number) => Promise<string | undefined>;
   sell: (outcomeTokenId: number) => Promise<string | undefined>;
   trade: (outcomeTokenId: number) => Promise<string | undefined>;
-  redeem: (outcomeIndex: number) => Promise<string | undefined>;
+  redeem: (params: RedeemParams) => Promise<string | undefined>;
   status: TradingServiceStatus;
   tradeStatus: TradingServiceStatus;
   approveModalOpened: boolean;
@@ -725,21 +726,32 @@ export const TradingServiceProvider = ({ children }: PropsWithChildren) => {
    * REDEEM / CLAIM
    */
   const { mutateAsync: redeem, isPending: isLoadingRedeem } = useMutation({
-    mutationFn: async (outcomeIndex: number) => {
-      if (!market) {
+    mutationFn: async ({
+      outcomeIndex,
+      marketAddress,
+      collateralAddress,
+      conditionId,
+    }: RedeemParams) => {
+      const { data: conditionalTokenAddress } =
+        await getConditionalTokensAddress();
+
+      if (!conditionalTokenAddress) {
+        console.log('Conditional token address not found');
         return;
       }
 
       const receipt = await redeemPositions(
-        conditionalTokensAddress!,
-        market.collateralToken.address as Address,
+        conditionalTokenAddress,
+        collateralAddress,
         zeroHash,
-        market.conditionId as Address,
+        conditionId,
         [1 << outcomeIndex],
       );
 
       if (!receipt) {
-        triggerErrorToast({ message: 'Unsuccessful transaction' });
+        triggerErrorToast({
+          message: 'Unsuccessful transaction',
+        });
 
         return;
       }
@@ -747,13 +759,15 @@ export const TradingServiceProvider = ({ children }: PropsWithChildren) => {
       await refetchChain();
 
       triggerSuccessToast({
-        message: 'Successfully redeemed',
         txHash: receipt,
+        message: 'Transaction was successfully processed',
       });
 
       await sleep(1);
 
-      // triggerToast({ message: 'Updating portfolio...' });
+      triggerSuccessToast({
+        message: 'Updating portfolio...',
+      });
 
       // TODO: redesign subgraph refetch logic
       sleep(10).then(() => refetchSubgraph());

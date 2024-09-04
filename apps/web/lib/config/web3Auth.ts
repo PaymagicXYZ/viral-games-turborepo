@@ -21,7 +21,7 @@ const chainConfig: CustomChainConfig = {
   displayName: base.name,
   tickerName: base.nativeCurrency?.name,
   ticker: base.nativeCurrency?.symbol,
-  blockExplorerUrl: base.blockExplorers?.default.url[0] as string,
+  blockExplorerUrl: base.blockExplorers.default.url,
   logo: 'https://web3auth.io/images/web3authlog.png',
 };
 
