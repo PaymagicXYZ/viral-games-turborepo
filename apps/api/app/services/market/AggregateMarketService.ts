@@ -14,7 +14,7 @@ interface CursorData {
 }
 
 export class AggregateMarketService {
-  private providers = ['polymarket', 'limitless'];
+  private providers = ['polymarket', 'limitless', 'custom'];
 
   async getAggregatedMarkets(
     limit: number,

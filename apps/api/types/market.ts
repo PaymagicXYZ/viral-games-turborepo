@@ -16,7 +16,7 @@ export type MarketGroupCardResponse = {
   collateralToken: CollateralToken;
   markets: Array<MarketGroupOverviewRequired>;
   category: string[];
-  provider: 'polymarket' | 'limitless';
+  provider: 'polymarket' | 'limitless' | 'custom';
 };
 
 export type MarketGroupOverviewRequired = {

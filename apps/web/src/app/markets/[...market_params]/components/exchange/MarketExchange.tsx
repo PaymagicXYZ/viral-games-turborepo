@@ -36,7 +36,7 @@ export default function MarketExchange() {
   const [isFreeBet, setIsFreeBet] = useQueryState('is_free_bet', {
     parse: (value) => value === 'true',
     serialize: (value) => value.toString(),
-    defaultValue: provider === 'polymarket',
+    defaultValue: provider === 'polymarket' || provider === 'custom',
   });
   const [outcomeIndex, setOutcomeIndex] = useQueryState('outcome_index', {
     parse: (value) => (value ? Number(value) : 0),
