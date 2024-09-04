@@ -186,14 +186,14 @@ interface MarketItemProps {
 
 function MarketItem({ market }: MarketItemProps) {
   return (
-    <Link href={'#'} className='flex h-[94px] items-center gap-4'>
+    <Link
+      href={`/markets/${market.provider}/${market.slug}`}
+      className='flex h-[94px] items-center gap-4'
+    >
       <div className='flex-none'>
         <div className='relative h-[68px] w-[67px]'>
           <Image
-            src={
-              market.markets?.[0]?.imageUrl ??
-              '/viral-game/market-thumbnail.svg'
-            }
+            src={market.imageUrl ?? '/viral-game/market-thumbnail.svg'}
             fill
             className='rounded-sm object-cover'
             alt='market-image'
