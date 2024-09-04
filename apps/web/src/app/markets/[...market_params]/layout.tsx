@@ -11,8 +11,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const [provider, identifier] = params.market_params;
 
     const frameMetadata = await getFrameMetadata(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/markets/frames/initial/${provider}/${identifier}`,
+      `${process.env.NEXT_PUBLIC_WEB_APP_BASE_URL}/markets/frames/initial/${provider}/${identifier}`,
     );
+
+    console.log('frameMetadata', frameMetadata);
 
     return {
       // title: market?.proxyTitle ?? market?.title ?? 'Noname market',
