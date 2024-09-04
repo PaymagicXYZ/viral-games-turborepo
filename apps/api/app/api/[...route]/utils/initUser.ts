@@ -37,7 +37,7 @@ export const getUser = async ({
     .single();
 
   if (error) {
-    throw new Error('Failed to fetch user');
+    return null;
   }
 
   return data;
