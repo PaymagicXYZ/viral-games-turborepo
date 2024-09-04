@@ -17,6 +17,8 @@ const BuySchema = z
     eventId: z.string(),
     amount: z.number(),
     position: z.enum(['Yes', 'No']),
+    pfp: z.string().optional(),
+    username: z.string().optional(),
   })
   .openapi('Buy');
 
@@ -187,6 +189,8 @@ buy.openapi(route, async (c) => {
         chain: marketData.chainId === 8453 ? 'base' : 'polygon', // TODO: Update this to use the chain name
         chain_id: marketData.chainId,
         provider: markets.metadata?.provider,
+        pfp: body.pfp,
+        ens: body.username,
       }),
     );
 
