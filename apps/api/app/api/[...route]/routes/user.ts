@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import { supabase, initUser } from '../utils';
+import { supabase, initUser, getUser } from '../utils';
 import { tempPlayerRowSchema } from '@/types/schemas';
 
 const user = new OpenAPIHono();
@@ -65,12 +65,24 @@ const userRoute = createRoute({
       },
       description: 'Retrieve the user data',
     },
+    404: {
+      content: {
+        'application/json': {
+          schema: ErrorSchema,
+        },
+      },
+      description: 'User not found',
+    },
   },
 });
 
 user.openapi(userRoute, async (c) => {
   const { provider, userId } = c.req.valid('param');
   const userData = await initUser(provider, userId);
+
+  if (!userData) {
+    return c.json({ error: 'User not found' }, 404);
+  }
 
   return c.json(userData, 200);
 });
@@ -112,9 +124,12 @@ const portfolioRoute = createRoute({
 user.openapi(portfolioRoute, async (c) => {
   const { provider, userId } = c.req.valid('param');
 
-  const normalizedUserId = userId.toLowerCase();
-  const userData = await initUser(provider, normalizedUserId);
-
+  const normalizedUserId = provider === 'eoa' ? userId.toLowerCase() : userId;
+  const userData = await getUser({
+    provider,
+    userId: normalizedUserId,
+  });
+  console.log('userData', userData);
   if (!userData) {
     return c.json({ error: 'User not found' }, 404);
   }
@@ -138,29 +153,32 @@ user.openapi(portfolioRoute, async (c) => {
   }
 
   try {
-    const transformedPositions = data.reduce((acc, position) => {
-      if (position.eventId in acc) {
-        acc[position.eventId].push(
-          PositionSchema.parse({
-            marketId: position.marketId,
-            outcomeIndex: +position.position,
-            shares: position.shares,
-            title: position.title,
-          }),
-        );
-      } else {
-        acc[position.eventId] = [
-          PositionSchema.parse({
-            marketId: position.marketId,
-            outcomeIndex: +position.position,
-            shares: position.shares,
-            title: position.title,
-          }),
-        ];
-      }
+    const transformedPositions = data.reduce(
+      (acc, position) => {
+        if (position.eventId in acc) {
+          acc[position.eventId].push(
+            PositionSchema.parse({
+              marketId: position.marketId,
+              outcomeIndex: +position.position,
+              shares: position.shares,
+              title: position.title,
+            }),
+          );
+        } else {
+          acc[position.eventId] = [
+            PositionSchema.parse({
+              marketId: position.marketId,
+              outcomeIndex: +position.position,
+              shares: position.shares,
+              title: position.title,
+            }),
+          ];
+        }
 
-      return acc;
-    }, {} as Record<string, Array<typeof PositionSchema._type>>);
+        return acc;
+      },
+      {} as Record<string, Array<typeof PositionSchema._type>>,
+    );
     // const transformedPositions = data.map((position) =>
     //   PortfolioPositionSchema.parse({
     //     [position.eventId!]: {
@@ -243,9 +261,13 @@ const marketPortfolioRoute = createRoute({
 
 user.openapi(marketPortfolioRoute, async (c) => {
   const { provider, userId, eventId } = c.req.valid('param');
-  const normalizedUserId = userId.toLowerCase();
-  const userData = await initUser(provider, normalizedUserId);
+  const normalizedUserId = provider === 'eoa' ? userId.toLowerCase() : userId;
 
+  const userData = await getUser({
+    provider,
+    userId: normalizedUserId,
+  });
+  console.log('userData', userData);
   if (!userData) {
     return c.json({ error: 'User not found' }, 404);
   }

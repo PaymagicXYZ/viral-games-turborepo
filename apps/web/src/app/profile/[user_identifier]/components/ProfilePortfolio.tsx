@@ -3,16 +3,35 @@
 import { useHistory } from '@/components/providers/HistoryProvider';
 import useGetPortfolioQuery from '@/lib/hooks/react-query/queries/useGetFreePortfolioQuery';
 import { useAllMarkets } from '@/lib/services/MarketService';
+import { Optional } from '@/lib/types';
 import {
   FreePositionItem,
   PositionItem,
 } from '@/src/app/markets/[...market_params]/components/details/MarketPositions';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
-export default function ProfilePortfolio() {
-  const { positions: allMarketsPositions } = useHistory();
+type ProfilePortfolioProps = {
+  userAddress: Optional<string>;
+  socialProvider: string;
+  userFid: Optional<number>;
+};
+
+export default function ProfilePortfolio({
+  userAddress,
+  socialProvider,
+  userFid,
+}: ProfilePortfolioProps) {
+  const { positions: allMarketsPositions, setWalletAddress } = useHistory();
   const allMarkets = useAllMarkets();
-  const { data: portfolio } = useGetPortfolioQuery();
+  const { data: portfolio } = useGetPortfolioQuery({
+    userIdentifier:
+      socialProvider === 'eoa' ? userAddress : userFid?.toString(),
+    socialProvider,
+  });
+
+  useEffect(() => {
+    setWalletAddress(userAddress);
+  }, [userAddress, setWalletAddress]);
 
   const enrichedPositions = useMemo(() => {
     return allMarketsPositions?.map((position) => {
@@ -26,6 +45,8 @@ export default function ProfilePortfolio() {
       };
     });
   }, [allMarketsPositions, allMarkets]);
+
+  console.log(enrichedPositions?.length);
 
   return (
     <section className='h-[320px] space-y-6 overflow-auto'>

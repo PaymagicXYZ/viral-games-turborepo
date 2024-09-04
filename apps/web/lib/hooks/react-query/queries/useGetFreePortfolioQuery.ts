@@ -1,4 +1,5 @@
 import { getPortfolio } from '@/lib/actions/viral-games-api';
+import { Optional } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 
@@ -15,14 +16,21 @@ interface Portfolio {
   };
 }
 
-export default function useGetPortfolioQuery() {
-  const account = useAccount();
-
+export default function useGetPortfolioQuery({
+  userIdentifier,
+  socialProvider,
+}: {
+  userIdentifier: Optional<string>;
+  socialProvider: string;
+}) {
   const { data } = useQuery<Portfolio, Error>({
-    queryKey: ['portfolio', account.address],
+    queryKey: ['portfolio', userIdentifier, socialProvider],
     queryFn: () =>
-      getPortfolio({ user_address: account.address! }) as Promise<Portfolio>,
-    enabled: Boolean(account.address),
+      getPortfolio({
+        user_identifier: userIdentifier!,
+        social_provider: socialProvider,
+      }) as Promise<Portfolio>,
+    enabled: Boolean(userIdentifier),
   });
 
   return { data };

@@ -1,16 +1,20 @@
 'use client';
 
 import { Label } from '@/components/ui/label';
+import { Optional } from '@/lib/types';
 import { copyToClipboard } from '@/lib/utils';
 import { formatAddress } from '@/lib/utils/formatters';
 import Image from 'next/image';
-import { Address } from 'viem';
 
 type ProfileAddressProps = {
-  userAddress: Address;
+  userAddress: Optional<string>;
 };
 
 export default function ProfileAddress({ userAddress }: ProfileAddressProps) {
+  if (!userAddress) {
+    return null;
+  }
+
   return (
     <section
       className='flex cursor-pointer items-center gap-2 border border-black px-2 py-3.5 shadow-sm'

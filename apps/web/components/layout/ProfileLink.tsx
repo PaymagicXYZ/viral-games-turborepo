@@ -1,26 +1,22 @@
 'use client';
 
+import { useIsClient } from '@/lib/hooks/useIsClient';
 // import { AppRoutes } from '@/constants';
 // import { useWatchAddress } from '@/hooks/useWatchAddress';
 import Link from 'next/link';
+import { useAccount } from 'wagmi';
 // import { useAccount } from 'wagmi';
 
 export default function ProfileLink() {
-  // const { address } = useAccount();
+  const { isClient } = useIsClient();
 
-  // useWatchAddress();
-
-  // let href = `${AppRoutes.Profile}`;
-
-  // if (address) {
-  //   href += `?address=${address}`;
-  // }
-
-  // const url = !address ? AppRoutes.Profile : `${AppRoutes.Profile}/${address}`;
+  const walletAddress = useAccount().address;
 
   return (
-    <Link href='/profile' className='text-sm'>
-      Profile
-    </Link>
+    isClient && (
+      <Link href={`/profile/${walletAddress}`} className='text-sm'>
+        Profile
+      </Link>
+    )
   );
 }

@@ -63,6 +63,14 @@ export function ActivityItem({
     : item.user_address;
 
   const isFreeBet = item.asset_ticker === 'USDV';
+  const isFarcasterAccount = item.user_address.startsWith('farcaster:');
+
+  // currently handles EVM addresses and farcaster accounts
+  const profileLink = isUserAddress
+    ? `/profile/${address}`
+    : item.ens
+      ? `/profile/${item.ens}`
+      : null;
 
   return (
     <div className='flex flex-col gap-2'>
@@ -85,12 +93,14 @@ export function ActivityItem({
           )}
         </div>
         <div className='flex-grow'>
-          {isUserAddress ? (
-            <Link className='text-sm' href={`/profile/${address}`}>
+          {(isUserAddress || isFarcasterAccount) && profileLink ? (
+            <Link className='text-sm' href={profileLink}>
               {item.ens ? item.ens : formatAddress(address)}{' '}
             </Link>
           ) : (
-            <Label className='text-sm'>{item.user_address} </Label>
+            <Label className='text-sm'>
+              {item.ens ? item.ens : item.user_address}{' '}
+            </Label>
           )}
 
           <Label className='text-gray-500'>just {buyOrSellLabel} </Label>
@@ -134,7 +144,7 @@ export function ActivityItem({
           >
             Sell
           </Button>
-          <Button>Share</Button>
+          {/* <Button>Share</Button> */}
         </div>
       )}
     </div>
