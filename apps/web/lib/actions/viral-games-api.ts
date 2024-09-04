@@ -45,6 +45,8 @@ export async function buyShares({
   eventId,
   amount,
   position,
+  pfp,
+  username,
 }: {
   socialProvider: 'eoa' | 'farcaster';
   provider: 'limitless' | 'polymarket' | 'custom';
@@ -53,6 +55,8 @@ export async function buyShares({
   eventId: string;
   amount: number;
   position: 'Yes' | 'No';
+  pfp?: string;
+  username?: string;
 }) {
   const url = `${env.NEXT_PUBLIC_VIRAL_GAMES_BE_API}/buy`;
 
@@ -70,6 +74,8 @@ export async function buyShares({
       eventId,
       amount,
       position,
+      pfp,
+      username,
     }),
   };
 

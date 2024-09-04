@@ -193,6 +193,8 @@ app.frame('/paid-bet/:provider/:address', neynarMiddleware, async (c) => {
       socialProvider: 'farcaster',
       userId: c.var.interactor.fid.toString(),
       provider: _provider as 'limitless' | 'polymarket',
+      pfp: c.var.interactor.pfpUrl,
+      username: c.var.interactor.username,
     });
 
     if (!error) {
