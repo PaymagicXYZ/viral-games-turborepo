@@ -116,6 +116,10 @@ const app = new Frog<{
       };
     }
 
+    if (market.ogImageURI?.includes('.svg')) {
+      market.ogImageURI = '/frames/default.png'
+    }
+    // market.ogImageURI = '/market-thumbnail.svg'
     return {
       market: { market, metadata: marketMetadata },
       collateralToken: token,
