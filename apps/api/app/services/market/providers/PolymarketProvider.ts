@@ -31,6 +31,7 @@ export class PolymarketProvider extends BaseProvider {
       .from('events')
       .select('*')
       .eq('provider', 'polymarket')
+      .eq('isActive', true)
       .order('endDate', { ascending: false })
       .range(+offset, +offset + limit - 1);
 
