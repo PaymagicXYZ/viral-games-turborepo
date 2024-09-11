@@ -309,6 +309,10 @@ export function OrderDetails({
   withReturn?: boolean;
   withROI?: boolean;
 }) {
+  const priceImpact =
+    quotes?.priceImpact && quotes.priceImpact === 'Infinity'
+      ? '2'
+      : quotes?.priceImpact;
   return (
     <div className='flex flex-col gap-8'>
       <div className='flex justify-between'>
@@ -321,7 +325,7 @@ export function OrderDetails({
       {withPriceImpact && (
         <div className='flex justify-between'>
           <Label className='text-gray-500'>Price Impact</Label>
-          <Label>{NumberUtil.toFixed(quotes?.priceImpact, 2)} %</Label>
+          <Label>{NumberUtil.toFixed(priceImpact, 2)} %</Label>
         </div>
       )}
       {withROI && (
