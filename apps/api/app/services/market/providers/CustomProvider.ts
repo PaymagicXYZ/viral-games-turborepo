@@ -13,7 +13,7 @@ export class CustomProvider extends BaseProvider {
     const { data: event } = await supabase
       .from('events')
       .select('*')
-      .eq('slug', marketId)
+      .ilike('slug', marketId)
       .limit(1)
       .maybeSingle();
 
@@ -27,7 +27,7 @@ export class CustomProvider extends BaseProvider {
     const { data } = await supabase
       .from('markets')
       .select('*')
-      .eq('eventSlug', marketId)
+      .ilike('eventSlug', marketId)
       .limit(1)
       .maybeSingle();
 
